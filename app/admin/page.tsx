@@ -8,10 +8,11 @@ type Testimonial = { id: string; name: string; role: string; company: string; qu
 type SiteSetting = { id: string; key: string; value: string }
 
 const STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #0F1117; color: #E8E8E8; font-family: 'Inter', sans-serif; font-size: 14px; min-height: 100vh; }
 
+  /* LOGIN */
   .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0F1117; }
   .login-card { background: #1A1D27; border: 1px solid rgba(255,255,255,0.06); padding: 48px 44px; width: 100%; max-width: 400px; }
   .login-logo { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #fff; margin-bottom: 4px; }
@@ -19,81 +20,153 @@ const STYLES = `
   .login-title { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 24px; }
   .login-input { width: 100%; background: #0F1117; border: 1px solid rgba(255,255,255,0.1); color: #E8E8E8; font-family: 'Inter', sans-serif; font-size: 14px; padding: 12px 16px; outline: none; transition: border-color 0.2s; margin-bottom: 16px; }
   .login-input:focus { border-color: #C9A23A; }
-  .login-btn { width: 100%; background: #C9A23A; color: #0D1B2A; border: none; padding: 14px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
-  .login-btn:hover { opacity: 0.9; }
+  .login-btn { width: 100%; background: #C9A23A; color: #0D1B2A; border: none; padding: 14px; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
   .login-error { font-size: 12px; color: #e74c3c; margin-bottom: 12px; }
 
-  .admin-wrap { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
-  .sidebar { background: #1A1D27; border-right: 1px solid rgba(255,255,255,0.06); padding: 32px 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
-  .sidebar-logo { padding: 0 24px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 20px; }
-  .sidebar-logo-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: #fff; margin-bottom: 2px; }
-  .sidebar-logo-sub { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; }
-  .sidebar-section { font-size: 0.6rem; color: rgba(255,255,255,0.25); letter-spacing: 0.15em; text-transform: uppercase; padding: 0 24px; margin: 20px 0 8px; }
-  .sidebar-item { display: flex; align-items: center; gap: 10px; padding: 10px 24px; font-size: 13px; color: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent; }
-  .sidebar-item:hover { color: #fff; background: rgba(255,255,255,0.04); }
-  .sidebar-item.active { color: #C9A23A; border-left-color: #C9A23A; background: rgba(201,162,58,0.06); }
-  .sidebar-bottom { margin-top: auto; padding: 24px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .logout-btn { font-size: 12px; color: rgba(255,255,255,0.3); background: none; border: none; cursor: pointer; transition: color 0.2s; }
-  .logout-btn:hover { color: #e74c3c; }
+  /* SHELL */
+  .admin-shell { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
 
-  .main { background: #0F1117; padding: 48px; overflow-y: auto; }
-  .page-header { margin-bottom: 36px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .page-title { font-size: 1.5rem; font-weight: 600; color: #FFFFFF; margin-bottom: 6px; }
-  .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
+  /* SIDEBAR */
+  .sidebar { background: #12151E; border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .sidebar-logo { padding: 28px 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .sidebar-logo-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; color: #fff; margin-bottom: 2px; }
+  .sidebar-logo-sub { font-size: 0.58rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; }
+  .sidebar-group { padding: 20px 0 8px; }
+  .sidebar-group-label { font-size: 0.58rem; color: rgba(255,255,255,0.2); letter-spacing: 0.15em; text-transform: uppercase; padding: 0 20px 8px; }
+  .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 20px; font-size: 12.5px; color: rgba(255,255,255,0.45); cursor: pointer; transition: all 0.15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: #C9A23A; border-left-color: #C9A23A; background: rgba(201,162,58,0.05); }
+  .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); }
+  .signout-btn { font-size: 11px; color: rgba(255,255,255,0.25); background: none; border: none; cursor: pointer; transition: color 0.2s; }
+  .signout-btn:hover { color: #e74c3c; }
 
-  .section-card { background: #1A1D27; border: 1px solid rgba(255,255,255,0.06); padding: 28px 32px; margin-bottom: 16px; }
-  .section-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .section-card-title { font-size: 0.65rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; }
-  .section-card-location { font-size: 11px; color: rgba(255,255,255,0.25); }
-
-  .field-group { margin-bottom: 20px; }
-  .field-label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .field-hint { font-size: 10px; color: rgba(255,255,255,0.25); font-weight: 400; text-transform: none; letter-spacing: 0; }
-  .field-input { width: 100%; background: #0F1117; border: 1px solid rgba(255,255,255,0.08); color: #E8E8E8; font-family: 'Inter', sans-serif; font-size: 13px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
-  .field-input:focus { border-color: #C9A23A; }
-  .field-input.gold-preview { color: #C9A23A; font-style: italic; }
-  textarea.field-input { resize: vertical; min-height: 90px; line-height: 1.65; }
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-  .preview-box { background: #0F1117; border: 1px solid rgba(255,255,255,0.06); border-left: 3px solid #C9A23A; padding: 16px 20px; margin-bottom: 20px; }
-  .preview-label { font-size: 10px; color: rgba(201,162,58,0.6); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
-  .preview-headline { font-size: 18px; font-weight: 600; color: #fff; line-height: 1.2; }
-  .preview-headline em { font-style: italic; color: #C9A23A; }
-
-  .image-upload-area { border: 1.5px dashed rgba(255,255,255,0.12); padding: 32px; text-align: center; cursor: pointer; transition: border-color 0.2s; position: relative; }
-  .image-upload-area:hover { border-color: rgba(201,162,58,0.4); }
-  .image-upload-area input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-  .image-upload-text { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 8px; }
-  .image-preview { width: 100%; max-height: 200px; object-fit: cover; display: block; margin-bottom: 12px; }
-  .image-name { font-size: 11px; color: #C9A23A; margin-top: 8px; }
-
-  .save-row { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); }
-  .save-btn { background: #C9A23A; color: #0D1B2A; border: none; padding: 12px 28px; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
-  .save-btn:hover:not(:disabled) { opacity: 0.9; }
+  /* MAIN */
+  .main-area { background: #0F1117; display: flex; flex-direction: column; min-height: 100vh; }
+  .main-topbar { background: #12151E; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; }
+  .main-topbar-title { font-size: 13px; font-weight: 500; color: #fff; }
+  .main-topbar-sub { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .save-bar { display: flex; align-items: center; gap: 12px; }
+  .save-btn { background: #C9A23A; color: #0D1B2A; border: none; padding: 9px 22px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
   .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .preview-link { font-size: 12px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
-  .preview-link:hover { color: #C9A23A; }
-  .save-success { font-size: 12px; color: #27ae60; }
+  .save-btn:hover:not(:disabled) { opacity: 0.88; }
+  .save-success { font-size: 11px; color: #27ae60; }
+  .preview-btn { font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+  .preview-btn:hover { color: #C9A23A; }
 
-  .testimonial-item { background: #0F1117; border: 1px solid rgba(255,255,255,0.06); padding: 20px 24px; margin-bottom: 10px; }
-  .testimonial-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-  .testimonial-name { font-size: 14px; font-weight: 500; color: #fff; }
-  .testimonial-meta { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
-  .testimonial-quote { font-size: 13px; color: rgba(255,255,255,0.5); font-style: italic; line-height: 1.6; }
-  .t-actions { display: flex; gap: 8px; align-items: center; }
-  .t-btn { background: none; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 5px 12px; font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  /* EDITOR LAYOUT */
+  .editor-layout { display: grid; grid-template-columns: 380px 1fr; flex: 1; }
+  .editor-fields { background: #1A1D27; border-right: 1px solid rgba(255,255,255,0.05); padding: 28px 24px; overflow-y: auto; }
+  .editor-preview { background: #0F1117; overflow-y: auto; }
+
+  /* FIELDS */
+  .field-section { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .field-section:last-child { border-bottom: none; margin-bottom: 0; }
+  .field-section-title { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-bottom: 16px; }
+  .field { margin-bottom: 14px; }
+  .field-label { font-size: 10.5px; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+  .field-hint { font-size: 10px; color: rgba(255,255,255,0.2); display: block; margin-bottom: 6px; font-style: italic; text-transform: none; letter-spacing: 0; }
+  .field-input { width: 100%; background: #0F1117; border: 1px solid rgba(255,255,255,0.07); color: #E8E8E8; font-family: 'Inter', sans-serif; font-size: 12.5px; padding: 9px 12px; outline: none; transition: border-color 0.2s; }
+  .field-input:focus { border-color: #C9A23A; }
+  .field-input.accent { color: #C9A23A; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 14px; }
+  textarea.field-input { resize: vertical; min-height: 80px; line-height: 1.6; }
+
+  /* IMAGE UPLOAD */
+  .upload-zone { border: 1.5px dashed rgba(255,255,255,0.1); padding: 24px 16px; text-align: center; cursor: pointer; transition: border-color 0.2s; position: relative; }
+  .upload-zone:hover { border-color: rgba(201,162,58,0.3); }
+  .upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .upload-preview { width: 100%; max-height: 160px; object-fit: cover; display: block; margin-bottom: 8px; }
+  .upload-label { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 6px; }
+
+  /* ===================== */
+  /* LIVE PREVIEW STYLES   */
+  /* These match the real  */
+  /* site exactly          */
+  /* ===================== */
+
+  /* HERO PREVIEW */
+  .preview-hero { background: #0D1B2A; padding: 60px 48px; position: relative; overflow: hidden; }
+  .preview-hero-pattern { position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, #C9A23A 0, #C9A23A 1px, transparent 0, transparent 50%); background-size: 30px 30px; pointer-events: none; }
+  .preview-hero-gold-line { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, transparent, #C9A23A, transparent); }
+  .preview-hero-inner { position: relative; z-index: 2; max-width: 560px; }
+  .preview-eyebrow { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .preview-eyebrow::before { content: ''; width: 24px; height: 1px; background: #C9A23A; }
+  .preview-hero-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 56px); font-weight: 600; line-height: 1.05; color: #fff; margin-bottom: 16px; }
+  .preview-hero-headline em { font-style: italic; color: #C9A23A; }
+  .preview-hero-desc { font-size: 0.88rem; line-height: 1.75; color: rgba(247,244,237,0.6); margin-bottom: 28px; max-width: 420px; }
+  .preview-btn-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .preview-cta { background: #C9A23A; color: #0D1B2A; padding: 11px 24px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 500; border: none; }
+  .preview-cta-outline { background: transparent; color: rgba(247,244,237,0.7); border: 1px solid rgba(247,244,237,0.2); padding: 11px 24px; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .preview-stats { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; }
+  .preview-stat { background: rgba(255,255,255,0.04); border: 1px solid rgba(201,162,58,0.15); border-left: 2px solid #C9A23A; padding: 14px 18px; }
+  .preview-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: #C9A23A; line-height: 1; margin-bottom: 3px; }
+  .preview-stat-label { font-size: 0.72rem; color: rgba(247,244,237,0.5); }
+
+  /* ABOUT PREVIEW */
+  .preview-about { background: #F7F4ED; padding: 48px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 48px; align-items: start; }
+  .preview-about-photo { width: 100%; aspect-ratio: 3/4; background: linear-gradient(135deg, #1A2E45, #4C78A0); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; overflow: hidden; }
+  .preview-about-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .preview-about-eyebrow { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .preview-about-eyebrow::before { content: ''; width: 20px; height: 1px; background: #C9A23A; }
+  .preview-about-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 3vw, 36px); font-weight: 600; line-height: 1.1; color: #0D1B2A; margin-bottom: 16px; }
+  .preview-about-title em { font-style: italic; color: #4C78A0; }
+  .preview-about-body { font-size: 0.84rem; line-height: 1.8; color: #2C3E50; margin-bottom: 12px; }
+  .preview-credentials { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .preview-credential { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; color: #6B7A8D; }
+  .preview-credential::before { content: ''; width: 16px; height: 1px; background: #C9A23A; flex-shrink: 0; }
+
+  /* SECTION PREVIEW (business/individual/contact) */
+  .preview-page-hero { background: #0D1B2A; padding: 60px 48px; position: relative; overflow: hidden; min-height: 280px; display: flex; align-items: center; }
+  .preview-page-hero-pattern { position: absolute; inset: 0; opacity: 0.04; background-image: repeating-linear-gradient(45deg, #C9A23A 0, #C9A23A 1px, transparent 0, transparent 50%); background-size: 30px 30px; pointer-events: none; }
+  .preview-page-hero-inner { position: relative; z-index: 2; max-width: 600px; }
+  .preview-breadcrumb { font-size: 0.6rem; color: rgba(247,244,237,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; }
+  .preview-page-eyebrow { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 500; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .preview-page-eyebrow::before { content: ''; width: 24px; height: 1px; background: #C9A23A; }
+  .preview-page-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 5vw, 56px); font-weight: 600; line-height: 1.05; color: #fff; margin-bottom: 16px; }
+  .preview-page-title em { font-style: italic; color: #C9A23A; }
+  .preview-page-desc { font-size: 0.88rem; line-height: 1.75; color: rgba(247,244,237,0.6); margin-bottom: 28px; max-width: 480px; }
+
+  /* TESTIMONIAL PREVIEW */
+  .preview-testimonials { background: #0D1B2A; padding: 48px; }
+  .preview-t-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .preview-t-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); padding: 24px 20px; }
+  .preview-t-quote { font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; font-style: italic; line-height: 1.65; color: rgba(247,244,237,0.7); margin-bottom: 16px; }
+  .preview-t-author { font-size: 0.7rem; color: #C9A23A; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500; }
+  .preview-t-role { font-size: 0.65rem; color: rgba(247,244,237,0.3); margin-top: 3px; }
+
+  /* SETTINGS PREVIEW */
+  .preview-footer { background: #0D1B2A; padding: 40px 48px; }
+  .preview-footer-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
+  .preview-footer-sub { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
+  .preview-footer-item { font-size: 0.8rem; color: rgba(247,244,237,0.4); margin-bottom: 8px; }
+
+  /* PREVIEW LABEL */
+  .preview-section-label { background: rgba(201,162,58,0.08); border-bottom: 1px solid rgba(201,162,58,0.15); padding: 8px 16px; font-size: 10px; color: rgba(201,162,58,0.7); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* TESTIMONIAL MANAGER */
+  .t-manager { padding: 28px 24px; }
+  .add-t-btn { background: rgba(201,162,58,0.08); border: 1px solid rgba(201,162,58,0.2); color: #C9A23A; padding: 9px 18px; font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
+  .add-t-btn:hover { background: rgba(201,162,58,0.14); }
+  .t-item { background: #12151E; border: 1px solid rgba(255,255,255,0.05); padding: 18px 20px; margin-bottom: 10px; }
+  .t-item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .t-item-name { font-size: 13px; font-weight: 500; color: #fff; }
+  .t-item-meta { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+  .t-item-quote { font-size: 12px; color: rgba(255,255,255,0.45); font-style: italic; line-height: 1.6; }
+  .t-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .t-status { font-size: 10px; font-weight: 500; }
+  .t-status.on { color: #27ae60; }
+  .t-status.off { color: rgba(255,255,255,0.25); }
+  .t-btn { background: none; border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.35); padding: 4px 10px; font-size: 10.5px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
   .t-btn:hover { border-color: #C9A23A; color: #C9A23A; }
   .t-btn.del:hover { border-color: #e74c3c; color: #e74c3c; }
-  .t-active { font-size: 11px; color: #27ae60; }
-  .t-hidden { font-size: 11px; color: rgba(255,255,255,0.3); }
-  .add-btn { background: rgba(201,162,58,0.08); border: 1px solid rgba(201,162,58,0.2); color: #C9A23A; padding: 10px 20px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
-  .add-btn:hover { background: rgba(201,162,58,0.14); }
 
+  @media (max-width: 1100px) {
+    .editor-layout { grid-template-columns: 320px 1fr; }
+  }
   @media (max-width: 900px) {
-    .admin-wrap { grid-template-columns: 1fr; }
+    .admin-shell { grid-template-columns: 1fr; }
     .sidebar { position: relative; height: auto; }
-    .main { padding: 24px; }
-    .two-col { grid-template-columns: 1fr; }
+    .editor-layout { grid-template-columns: 1fr; }
+    .editor-preview { display: none; }
   }
 `
 
@@ -110,12 +183,11 @@ export default function AdminPanel() {
   const [editingPage, setEditingPage] = useState<Page | null>(null)
   const [newT, setNewT] = useState({ name: '', role: '', company: '', quote: '' })
   const [addingT, setAddingT] = useState(false)
-  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const a = sessionStorage.getItem('bth_admin')
-    if (a === 'true') { setAuthed(true); fetchAll() }
+    if (sessionStorage.getItem('bth_admin') === 'true') { setAuthed(true); fetchAll() }
   }, [])
 
   async function login() {
@@ -132,7 +204,7 @@ export default function AdminPanel() {
       supabase.from('testimonials').select('*').order('sort_order'),
       supabase.from('site_settings').select('*'),
     ])
-    if (pRes.data) setPages(pRes.data)
+    if (pRes.data) { setPages(pRes.data); const p = pRes.data.find((p: Page) => p.slug === 'home'); if (p) setEditingPage({...p, content: {...p.content}}) }
     if (tRes.data) setTestimonials(tRes.data)
     if (sRes.data) setSettings(sRes.data)
   }
@@ -144,7 +216,7 @@ export default function AdminPanel() {
     setSaved('')
   }
 
-  function updateContent(key: string, value: string) {
+  function u(key: string, value: string) {
     if (!editingPage) return
     setEditingPage({ ...editingPage, content: { ...editingPage.content, [key]: value } })
   }
@@ -153,27 +225,26 @@ export default function AdminPanel() {
     if (!editingPage) return
     setSaving(true)
     await supabase.from('pages').update({ content: editingPage.content, updated_at: new Date().toISOString() }).eq('id', editingPage.id)
-    setSaving(false); setSaved('Saved successfully'); setTimeout(() => setSaved(''), 3000)
-    fetchAll()
+    setSaving(false); setSaved('Saved'); setTimeout(() => setSaved(''), 2500); fetchAll()
   }
 
-  async function uploadImage(e: React.ChangeEvent<HTMLInputElement>) {
+  async function uploadPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file || !editingPage) return
-    setUploadingImage(true)
-    const path = `pages/${editingPage.slug}/${Date.now()}_${file.name}`
+    setUploading(true)
+    const path = `pages/${editingPage.slug}/${Date.now()}_${file.name.replace(/\s/g, '_')}`
     const { error } = await supabase.storage.from('images').upload(path, file, { upsert: true })
     if (!error) {
       const { data } = supabase.storage.from('images').getPublicUrl(path)
-      updateContent('about_photo', data.publicUrl)
+      u('about_photo', data.publicUrl)
     }
-    setUploadingImage(false)
+    setUploading(false)
   }
 
   async function saveSettings() {
     setSaving(true)
     await Promise.all(settings.map(s => supabase.from('site_settings').update({ value: s.value, updated_at: new Date().toISOString() }).eq('id', s.id)))
-    setSaving(false); setSaved('Saved successfully'); setTimeout(() => setSaved(''), 3000)
+    setSaving(false); setSaved('Saved'); setTimeout(() => setSaved(''), 2500)
   }
 
   async function addTestimonial() {
@@ -182,13 +253,13 @@ export default function AdminPanel() {
     setNewT({ name: '', role: '', company: '', quote: '' }); setAddingT(false); fetchAll()
   }
 
-  async function deleteTestimonial(id: string) {
-    if (!confirm('Delete this testimonial? This cannot be undone.')) return
-    await supabase.from('testimonials').delete().eq('id', id); fetchAll()
+  async function toggleT(id: string, current: boolean) {
+    await supabase.from('testimonials').update({ is_active: !current }).eq('id', id); fetchAll()
   }
 
-  async function toggleTestimonial(id: string, current: boolean) {
-    await supabase.from('testimonials').update({ is_active: !current }).eq('id', id); fetchAll()
+  async function deleteT(id: string) {
+    if (!confirm('Delete this testimonial?')) return
+    await supabase.from('testimonials').delete().eq('id', id); fetchAll()
   }
 
   function updateSetting(key: string, value: string) {
@@ -196,6 +267,10 @@ export default function AdminPanel() {
   }
 
   const c = editingPage?.content || {}
+  const getSetting = (key: string) => settings.find(s => s.key === key)?.value || ''
+
+  const pageLinks: Record<string, string> = { home: '/', business: '/business', individual: '/individual', contact: '/contact' }
+  const pageLabels: Record<string, string> = { home: 'Home Page', business: 'Business Coaching', individual: 'Individual Coaching', contact: 'Contact Page' }
 
   if (!authed) return (
     <>
@@ -206,7 +281,7 @@ export default function AdminPanel() {
           <div className="login-sub">Content Management</div>
           <div className="login-title">Sign in to edit your site</div>
           {loginError && <div className="login-error">{loginError}</div>}
-          <input className="login-input" type="password" placeholder="Admin password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && login()} />
+          <input className="login-input" type="password" placeholder="Admin password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && login()} autoFocus />
           <button className="login-btn" onClick={login}>Sign In →</button>
         </div>
       </div>
@@ -216,314 +291,297 @@ export default function AdminPanel() {
   return (
     <>
       <style>{STYLES}</style>
-      <div className="admin-wrap">
+      <div className="admin-shell">
+
+        {/* SIDEBAR */}
         <div className="sidebar">
           <div className="sidebar-logo">
             <div className="sidebar-logo-name">Beyond the Horizon</div>
             <div className="sidebar-logo-sub">Content Management</div>
           </div>
-          <div className="sidebar-section">Pages</div>
-          {[
-            { id: 'home', icon: '🏠', label: 'Home Page' },
-            { id: 'business', icon: '💼', label: 'Business Coaching' },
-            { id: 'individual', icon: '👤', label: 'Individual Coaching' },
-            { id: 'contact', icon: '📧', label: 'Contact Page' },
-          ].map(item => (
-            <div key={item.id} className={`sidebar-item ${view === item.id ? 'active' : ''}`} onClick={() => selectPage(item.id)}>
-              <span>{item.icon}</span>{item.label}
-            </div>
-          ))}
-          <div className="sidebar-section">Content</div>
-          {[
-            { id: 'testimonials', icon: '💬', label: 'Testimonials' },
-            { id: 'settings', icon: '⚙️', label: 'Site Settings' },
-          ].map(item => (
-            <div key={item.id} className={`sidebar-item ${view === item.id ? 'active' : ''}`} onClick={() => { setView(item.id); setSaved('') }}>
-              <span>{item.icon}</span>{item.label}
-            </div>
-          ))}
-          <div className="sidebar-bottom">
-            <button className="logout-btn" onClick={() => { sessionStorage.removeItem('bth_admin'); setAuthed(false) }}>Sign out</button>
+          <div className="sidebar-group">
+            <div className="sidebar-group-label">Pages</div>
+            {['home','business','individual','contact'].map(slug => (
+              <div key={slug} className={`nav-item ${view === slug ? 'active' : ''}`} onClick={() => selectPage(slug)}>
+                <span>{slug === 'home' ? '🏠' : slug === 'business' ? '💼' : slug === 'individual' ? '👤' : '📧'}</span>
+                {pageLabels[slug]}
+              </div>
+            ))}
+          </div>
+          <div className="sidebar-group">
+            <div className="sidebar-group-label">Content</div>
+            {[{ id: 'testimonials', icon: '💬', label: 'Testimonials' }, { id: 'settings', icon: '⚙️', label: 'Site Settings' }].map(item => (
+              <div key={item.id} className={`nav-item ${view === item.id ? 'active' : ''}`} onClick={() => { setView(item.id); setSaved('') }}>
+                <span>{item.icon}</span>{item.label}
+              </div>
+            ))}
+          </div>
+          <div className="sidebar-footer">
+            <button className="signout-btn" onClick={() => { sessionStorage.removeItem('bth_admin'); setAuthed(false) }}>Sign out</button>
           </div>
         </div>
 
-        <div className="main">
+        {/* MAIN */}
+        <div className="main-area">
+          <div className="main-topbar">
+            <div>
+              <div className="main-topbar-title">{pageLabels[view] || (view === 'testimonials' ? 'Testimonials' : 'Site Settings')}</div>
+              <div className="main-topbar-sub">{['home','business','individual','contact'].includes(view) ? 'Left: edit fields · Right: live preview exactly as it appears on your site' : view === 'testimonials' ? 'Manage client testimonials' : 'Update contact info and global settings'}</div>
+            </div>
+            <div className="save-bar">
+              {saved && <span className="save-success">✓ {saved}</span>}
+              {['home','business','individual','contact'].includes(view) && (
+                <a className="preview-btn" href={pageLinks[view]} target="_blank">Open live page →</a>
+              )}
+              {['home','business','individual','contact'].includes(view) && (
+                <button className="save-btn" onClick={savePage} disabled={saving}>{saving ? 'Saving...' : 'Save Changes'}</button>
+              )}
+              {view === 'settings' && (
+                <button className="save-btn" onClick={saveSettings} disabled={saving}>{saving ? 'Saving...' : 'Save Settings'}</button>
+              )}
+            </div>
+          </div>
 
-          {/* HOME PAGE */}
+          {/* HOME */}
           {view === 'home' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Home Page</div>
-                <div className="page-sub">These fields control the content on your homepage. Save when done and click Preview to see changes live.</div>
-              </div>
-
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">Hero Section — Top of the page</div>
-                  <div className="section-card-location">Visitors see this first</div>
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Main headline <span className="field-hint">— appears in white, large text</span></div>
-                  <input className="field-input" value={c.hero_headline || ''} onChange={e => updateContent('hero_headline', e.target.value)} placeholder="Navigate. Elevate. Transform." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Accent line <span className="field-hint">— appears in gold italic text below the headline</span></div>
-                  <input className="field-input gold-preview" value={c.hero_accent || ''} onChange={e => updateContent('hero_accent', e.target.value)} placeholder="e.g. Transform." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Subheadline <span className="field-hint">— one or two sentences below the headline</span></div>
-                  <textarea className="field-input" value={c.hero_subheadline || ''} onChange={e => updateContent('hero_subheadline', e.target.value)} placeholder="Strategic guidance for leaders who are ready to go beyond the horizon." rows={3} />
-                </div>
-                {(c.hero_headline || c.hero_accent) && (
-                  <div className="preview-box">
-                    <div className="preview-label">Preview — how the headline looks on the site</div>
-                    <div className="preview-headline">{c.hero_headline || ''}<br /><em>{c.hero_accent || ''}</em></div>
+            <div className="editor-layout">
+              <div className="editor-fields">
+                <div className="field-section">
+                  <div className="field-section-title">Hero — Top of the homepage</div>
+                  <div className="field">
+                    <div className="field-label">Main headline</div>
+                    <span className="field-hint">White text. Large. First thing visitors read.</span>
+                    <input className="field-input" value={c.hero_headline || ''} onChange={e => u('hero_headline', e.target.value)} placeholder="Navigate. Elevate." />
                   </div>
-                )}
+                  <div className="field">
+                    <div className="field-label">Gold accent line</div>
+                    <span className="field-hint">Gold italic text. Appears on the line below the headline.</span>
+                    <input className="field-input accent" value={c.hero_accent || ''} onChange={e => u('hero_accent', e.target.value)} placeholder="Transform." />
+                  </div>
+                  <div className="field">
+                    <div className="field-label">Subheadline</div>
+                    <span className="field-hint">One or two sentences. Appears below the headline in smaller text.</span>
+                    <textarea className="field-input" value={c.hero_subheadline || ''} onChange={e => u('hero_subheadline', e.target.value)} placeholder="Strategic guidance for leaders..." rows={3} />
+                  </div>
+                </div>
+                <div className="field-section">
+                  <div className="field-section-title">About — Your photo and bio section</div>
+                  <div className="field">
+                    <div className="field-label">Your photo</div>
+                    <span className="field-hint">Professional headshot or portrait. Recommended: at least 800x1000px.</span>
+                    <div className="upload-zone" onClick={() => fileRef.current?.click()}>
+                      <input ref={fileRef} type="file" accept="image/*" onChange={uploadPhoto} style={{display:'none'}} />
+                      {c.about_photo
+                        ? <><img src={c.about_photo} alt="About" className="upload-preview" /><div className="upload-label">Click to replace</div></>
+                        : <><div style={{fontSize:28,marginBottom:6}}>📷</div><div style={{fontSize:12,color:'rgba(255,255,255,0.4)'}}>{uploading ? 'Uploading...' : 'Click to upload your photo'}</div><div className="upload-label">JPG or PNG</div></>
+                      }
+                    </div>
+                  </div>
+                  <div className="field">
+                    <div className="field-label">Section title</div>
+                    <span className="field-hint">Heading above your bio.</span>
+                    <input className="field-input" value={c.about_title || ''} onChange={e => u('about_title', e.target.value)} placeholder="Leadership forged through experience." />
+                  </div>
+                  <div className="field">
+                    <div className="field-label">Bio — first paragraph</div>
+                    <span className="field-hint">Introduce yourself and your background.</span>
+                    <textarea className="field-input" value={c.about_body_1 || ''} onChange={e => u('about_body_1', e.target.value)} rows={4} placeholder="John McCracken is a retired U.S. Navy Captain..." />
+                  </div>
+                  <div className="field">
+                    <div className="field-label">Bio — second paragraph</div>
+                    <span className="field-hint">What you offer your clients.</span>
+                    <textarea className="field-input" value={c.about_body_2 || ''} onChange={e => u('about_body_2', e.target.value)} rows={4} placeholder="Whether you are leading a team through change..." />
+                  </div>
+                  <div className="field">
+                    <div className="field-label">Credentials</div>
+                    <span className="field-hint">One credential per line. Each one appears as a separate line item below your bio.</span>
+                    <textarea className="field-input" value={c.about_credentials || ''} onChange={e => u('about_credentials', e.target.value)} rows={5} placeholder={"CAPT, USN (Ret.) — U.S. Navy\nExecutive MBA (EMBA)\nACC Certified Coach — ICF"} />
+                  </div>
+                </div>
               </div>
 
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">About Section — Midway down the page</div>
-                  <div className="section-card-location">Your photo, name, and bio appear here</div>
+              {/* HOME PREVIEW */}
+              <div className="editor-preview">
+                <div className="preview-section-label">Hero section — exactly as it appears on your site</div>
+                <div className="preview-hero">
+                  <div className="preview-hero-pattern" />
+                  <div className="preview-hero-gold-line" />
+                  <div className="preview-hero-inner">
+                    <div className="preview-eyebrow">Executive Coaching and Consulting</div>
+                    <div className="preview-hero-headline">
+                      {c.hero_headline || 'Navigate. Elevate.'}<br />
+                      <em>{c.hero_accent || 'Transform.'}</em>
+                    </div>
+                    <div className="preview-hero-desc">{c.hero_subheadline || 'Strategic guidance for leaders who are ready to go beyond the horizon.'}</div>
+                    <div className="preview-btn-row">
+                      <div className="preview-cta">Schedule a Session →</div>
+                      <div className="preview-cta-outline">Explore Coaching →</div>
+                    </div>
+                    <div className="preview-stats">
+                      <div className="preview-stat"><div className="preview-stat-num">20+</div><div className="preview-stat-label">Years of leadership experience</div></div>
+                      <div className="preview-stat"><div className="preview-stat-num">EMBA</div><div className="preview-stat-label">Executive MBA and ACC certified coach through the ICF</div></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="field-group">
-                  <div className="field-label">Your photo <span className="field-hint">— upload a professional headshot or portrait</span></div>
-                  <div className="image-upload-area" onClick={() => fileRef.current?.click()}>
-                    <input ref={fileRef} type="file" accept="image/*" onChange={uploadImage} style={{display:'none'}} />
-                    {c.about_photo ? (
-                      <>
-                        <img src={c.about_photo} alt="About photo" className="image-preview" />
-                        <div className="image-name">Click to replace photo</div>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{fontSize:32,marginBottom:8}}>📷</div>
-                        <div style={{fontSize:13,color:'rgba(255,255,255,0.5)',fontWeight:500}}>{uploadingImage ? 'Uploading...' : 'Click to upload your photo'}</div>
-                        <div className="image-upload-text">Recommended: Professional headshot, at least 800x1000px, JPG or PNG</div>
-                      </>
+                <div className="preview-section-label">About section — exactly as it appears on your site</div>
+                <div className="preview-about">
+                  <div className="preview-about-photo">
+                    {c.about_photo
+                      ? <img src={c.about_photo} alt="John McCracken" />
+                      : 'Your photo goes here'}
+                  </div>
+                  <div>
+                    <div className="preview-about-eyebrow">About John McCracken</div>
+                    <div className="preview-about-title">{c.about_title || 'Leadership forged through experience.'}</div>
+                    {c.about_body_1 && <div className="preview-about-body">{c.about_body_1}</div>}
+                    {c.about_body_2 && <div className="preview-about-body">{c.about_body_2}</div>}
+                    {c.about_credentials && (
+                      <div className="preview-credentials">
+                        {c.about_credentials.split('\n').filter(Boolean).map((cred, i) => (
+                          <div key={i} className="preview-credential">{cred}</div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
-                <div className="field-group">
-                  <div className="field-label">Section title <span className="field-hint">— the heading above your bio</span></div>
-                  <input className="field-input" value={c.about_title || ''} onChange={e => updateContent('about_title', e.target.value)} placeholder="Leadership forged through experience." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Bio paragraph 1 <span className="field-hint">— introduce yourself and your background</span></div>
-                  <textarea className="field-input" value={c.about_body_1 || ''} onChange={e => updateContent('about_body_1', e.target.value)} placeholder="John McCracken is a retired U.S. Navy Captain..." rows={4} />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Bio paragraph 2 <span className="field-hint">— what you offer clients</span></div>
-                  <textarea className="field-input" value={c.about_body_2 || ''} onChange={e => updateContent('about_body_2', e.target.value)} placeholder="Whether you are leading a team through change..." rows={4} />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Credentials <span className="field-hint">— one per line, shown as a list below your bio</span></div>
-                  <textarea className="field-input" value={c.about_credentials || ''} onChange={e => updateContent('about_credentials', e.target.value)} placeholder={"CAPT, USN (Ret.) — U.S. Navy\nExecutive MBA (EMBA)\nACC Certified Coach — ICF\nFounder, Beyond the Horizon"} rows={5} />
-                </div>
               </div>
-
-              <div className="save-row">
-                <button className="save-btn" onClick={savePage} disabled={saving}>{saving ? 'Saving...' : 'Save Home Page'}</button>
-                <a className="preview-link" href="/" target="_blank">Open homepage to preview →</a>
-                {saved && <span className="save-success">✓ {saved}</span>}
-              </div>
-            </>
+            </div>
           )}
 
-          {/* BUSINESS PAGE */}
-          {view === 'business' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Business Coaching Page</div>
-                <div className="page-sub">Edit the hero section content for the Business Coaching page.</div>
-              </div>
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">Hero Section — Top of the Business Coaching page</div>
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Main headline <span className="field-hint">— white text, large</span></div>
-                  <input className="field-input" value={c.headline || ''} onChange={e => updateContent('headline', e.target.value)} placeholder="Coaching that moves" />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Accent line <span className="field-hint">— gold italic text, second line of the headline</span></div>
-                  <input className="field-input gold-preview" value={c.headline_accent || ''} onChange={e => updateContent('headline_accent', e.target.value)} placeholder="your business forward." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Subheadline <span className="field-hint">— one or two sentences below the headline</span></div>
-                  <textarea className="field-input" value={c.subheadline || ''} onChange={e => updateContent('subheadline', e.target.value)} rows={3} placeholder="Strategic coaching for executives, leadership teams, and organizations navigating change, growth, and transformation." />
-                </div>
-                {(c.headline || c.headline_accent) && (
-                  <div className="preview-box">
-                    <div className="preview-label">Preview — how the headline looks on the site</div>
-                    <div className="preview-headline">{c.headline || ''}<br /><em>{c.headline_accent || ''}</em></div>
+          {/* BUSINESS / INDIVIDUAL / CONTACT */}
+          {['business','individual','contact'].includes(view) && (
+            <div className="editor-layout">
+              <div className="editor-fields">
+                <div className="field-section">
+                  <div className="field-section-title">Hero — Top of the {pageLabels[view]} page</div>
+                  <div className="field">
+                    <div className="field-label">Main headline</div>
+                    <span className="field-hint">White text. Large. First thing visitors read on this page.</span>
+                    <input className="field-input" value={c.headline || ''} onChange={e => u('headline', e.target.value)} placeholder={view === 'business' ? 'Coaching that moves' : view === 'individual' ? 'Invest in the leader' : "Let's start a"} />
                   </div>
-                )}
-              </div>
-              <div className="save-row">
-                <button className="save-btn" onClick={savePage} disabled={saving}>{saving ? 'Saving...' : 'Save Business Page'}</button>
-                <a className="preview-link" href="/business" target="_blank">Open Business Coaching page →</a>
-                {saved && <span className="save-success">✓ {saved}</span>}
-              </div>
-            </>
-          )}
-
-          {/* INDIVIDUAL PAGE */}
-          {view === 'individual' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Individual Coaching Page</div>
-                <div className="page-sub">Edit the hero section content for the Individual Coaching page.</div>
-              </div>
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">Hero Section — Top of the Individual Coaching page</div>
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Main headline <span className="field-hint">— white text, large</span></div>
-                  <input className="field-input" value={c.headline || ''} onChange={e => updateContent('headline', e.target.value)} placeholder="Invest in the leader" />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Accent line <span className="field-hint">— gold italic text, second line of the headline</span></div>
-                  <input className="field-input gold-preview" value={c.headline_accent || ''} onChange={e => updateContent('headline_accent', e.target.value)} placeholder="you are becoming." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Subheadline <span className="field-hint">— one or two sentences below the headline</span></div>
-                  <textarea className="field-input" value={c.subheadline || ''} onChange={e => updateContent('subheadline', e.target.value)} rows={3} placeholder="Personalized coaching for professionals and leaders who are ready to grow." />
-                </div>
-                {(c.headline || c.headline_accent) && (
-                  <div className="preview-box">
-                    <div className="preview-label">Preview — how the headline looks on the site</div>
-                    <div className="preview-headline">{c.headline || ''}<br /><em>{c.headline_accent || ''}</em></div>
+                  <div className="field">
+                    <div className="field-label">Gold accent line</div>
+                    <span className="field-hint">Gold italic text. Appears on the next line after the headline.</span>
+                    <input className="field-input accent" value={c.headline_accent || ''} onChange={e => u('headline_accent', e.target.value)} placeholder={view === 'business' ? 'your business forward.' : view === 'individual' ? 'you are becoming.' : 'conversation.'} />
                   </div>
-                )}
-              </div>
-              <div className="save-row">
-                <button className="save-btn" onClick={savePage} disabled={saving}>{saving ? 'Saving...' : 'Save Individual Page'}</button>
-                <a className="preview-link" href="/individual" target="_blank">Open Individual Coaching page →</a>
-                {saved && <span className="save-success">✓ {saved}</span>}
-              </div>
-            </>
-          )}
-
-          {/* CONTACT PAGE */}
-          {view === 'contact' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Contact Page</div>
-                <div className="page-sub">Edit the contact page headline and subheadline.</div>
-              </div>
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">Hero Section — Top of the Contact page</div>
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Main headline <span className="field-hint">— white text, large</span></div>
-                  <input className="field-input" value={c.headline || ''} onChange={e => updateContent('headline', e.target.value)} placeholder="Let's start a" />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Accent line <span className="field-hint">— gold italic text</span></div>
-                  <input className="field-input gold-preview" value={c.headline_accent || ''} onChange={e => updateContent('headline_accent', e.target.value)} placeholder="conversation." />
-                </div>
-                <div className="field-group">
-                  <div className="field-label">Subheadline <span className="field-hint">— sentence below the headline</span></div>
-                  <textarea className="field-input" value={c.subheadline || ''} onChange={e => updateContent('subheadline', e.target.value)} rows={3} placeholder="Whether you are ready to get started or just exploring, the first conversation is always complimentary." />
+                  <div className="field">
+                    <div className="field-label">Subheadline</div>
+                    <span className="field-hint">One or two sentences. Appears below the headline.</span>
+                    <textarea className="field-input" value={c.subheadline || ''} onChange={e => u('subheadline', e.target.value)} rows={3} placeholder="Describe this service in one or two sentences..." />
+                  </div>
                 </div>
               </div>
-              <div className="save-row">
-                <button className="save-btn" onClick={savePage} disabled={saving}>{saving ? 'Saving...' : 'Save Contact Page'}</button>
-                <a className="preview-link" href="/contact" target="_blank">Open Contact page →</a>
-                {saved && <span className="save-success">✓ {saved}</span>}
+              <div className="editor-preview">
+                <div className="preview-section-label">Hero section — exactly as it appears on your {pageLabels[view]} page</div>
+                <div className="preview-page-hero">
+                  <div className="preview-page-hero-pattern" />
+                  <div className="preview-page-hero-inner">
+                    <div className="preview-breadcrumb">Home → {pageLabels[view]}</div>
+                    <div className="preview-page-eyebrow">{view === 'business' ? 'For Organizations and Teams' : view === 'individual' ? 'One on One Coaching' : 'Get in Touch'}</div>
+                    <div className="preview-page-title">
+                      {c.headline || (view === 'business' ? 'Coaching that moves' : view === 'individual' ? 'Invest in the leader' : "Let's start a")}<br />
+                      <em>{c.headline_accent || (view === 'business' ? 'your business forward.' : view === 'individual' ? 'you are becoming.' : 'conversation.')}</em>
+                    </div>
+                    <div className="preview-page-desc">{c.subheadline || 'Your subheadline will appear here.'}</div>
+                    <div className="preview-btn-row">
+                      <div className="preview-cta">Schedule a Consultation →</div>
+                      {view !== 'contact' && <div className="preview-cta-outline">View Offerings →</div>}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </>
+            </div>
           )}
 
           {/* TESTIMONIALS */}
           {view === 'testimonials' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Testimonials</div>
-                <div className="page-sub">Add and manage client testimonials. Only testimonials marked as Active will appear on your site. You can hide a testimonial without deleting it.</div>
+            <div className="editor-layout">
+              <div className="editor-fields" style={{gridColumn:'1/-1'}}>
+                <div className="t-manager">
+                  <button className="add-t-btn" onClick={() => setAddingT(!addingT)}>+ Add New Testimonial</button>
+                  {addingT && (
+                    <div style={{background:'#12151E',border:'1px solid rgba(255,255,255,0.06)',padding:24,marginBottom:20}}>
+                      <div className="field-section-title" style={{marginBottom:16}}>New Testimonial</div>
+                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
+                        <div className="field">
+                          <div className="field-label">Client name *</div>
+                          <input className="field-input" value={newT.name} onChange={e => setNewT({...newT, name: e.target.value})} placeholder="Full name" />
+                        </div>
+                        <div className="field">
+                          <div className="field-label">Title or role</div>
+                          <input className="field-input" value={newT.role} onChange={e => setNewT({...newT, role: e.target.value})} placeholder="CEO, VP of Operations, etc." />
+                        </div>
+                        <div className="field">
+                          <div className="field-label">Company</div>
+                          <input className="field-input" value={newT.company} onChange={e => setNewT({...newT, company: e.target.value})} placeholder="Company name" />
+                        </div>
+                      </div>
+                      <div className="field">
+                        <div className="field-label">What they said *</div>
+                        <span className="field-hint">Copy their exact words. Do not add quote marks — the site adds them automatically.</span>
+                        <textarea className="field-input" value={newT.quote} onChange={e => setNewT({...newT, quote: e.target.value})} rows={5} placeholder="Paste the testimonial here..." />
+                      </div>
+                      <div style={{display:'flex',gap:10,marginTop:16}}>
+                        <button className="save-btn" onClick={addTestimonial}>Add Testimonial</button>
+                        <button style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.35)',padding:'9px 16px',fontSize:11,cursor:'pointer'}} onClick={() => setAddingT(false)}>Cancel</button>
+                      </div>
+                    </div>
+                  )}
+                  {testimonials.length === 0 && !addingT && (
+                    <div style={{color:'rgba(255,255,255,0.25)',fontSize:13,padding:'24px 0'}}>No testimonials yet. Click the button above to add your first one.</div>
+                  )}
+                  {testimonials.map(t => (
+                    <div key={t.id} className="t-item">
+                      <div className="t-item-top">
+                        <div>
+                          <div className="t-item-name">{t.name}</div>
+                          {(t.role || t.company) && <div className="t-item-meta">{[t.role, t.company].filter(Boolean).join(' · ')}</div>}
+                        </div>
+                        <div className="t-actions">
+                          <span className={`t-status ${t.is_active ? 'on' : 'off'}`}>{t.is_active ? '● Showing on site' : '○ Hidden'}</span>
+                          <button className="t-btn" onClick={() => toggleT(t.id, t.is_active)}>{t.is_active ? 'Hide' : 'Show'}</button>
+                          <button className="t-btn del" onClick={() => deleteT(t.id)}>Delete</button>
+                        </div>
+                      </div>
+                      <div className="t-item-quote">"{t.quote}"</div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <button className="add-btn" onClick={() => setAddingT(!addingT)}>+ Add New Testimonial</button>
-              {addingT && (
-                <div className="section-card">
-                  <div className="section-card-header">
-                    <div className="section-card-title">New Testimonial</div>
-                  </div>
-                  <div className="two-col">
-                    <div className="field-group">
-                      <div className="field-label">Client name *</div>
-                      <input className="field-input" value={newT.name} onChange={e => setNewT({...newT, name: e.target.value})} placeholder="Full name" />
-                    </div>
-                    <div className="field-group">
-                      <div className="field-label">Title or role</div>
-                      <input className="field-input" value={newT.role} onChange={e => setNewT({...newT, role: e.target.value})} placeholder="CEO, VP of Operations, etc." />
-                    </div>
-                    <div className="field-group">
-                      <div className="field-label">Company</div>
-                      <input className="field-input" value={newT.company} onChange={e => setNewT({...newT, company: e.target.value})} placeholder="Company or organization name" />
-                    </div>
-                  </div>
-                  <div className="field-group">
-                    <div className="field-label">What they said * <span className="field-hint">— copy their exact words</span></div>
-                    <textarea className="field-input" value={newT.quote} onChange={e => setNewT({...newT, quote: e.target.value})} placeholder="Type or paste the testimonial here..." rows={5} />
-                  </div>
-                  <div className="save-row">
-                    <button className="save-btn" onClick={addTestimonial}>Add Testimonial</button>
-                    <button style={{background:'none',border:'1px solid rgba(255,255,255,0.1)',color:'rgba(255,255,255,0.4)',padding:'12px 20px',fontSize:12,cursor:'pointer'}} onClick={() => setAddingT(false)}>Cancel</button>
-                  </div>
-                </div>
-              )}
-              {testimonials.length === 0 && !addingT && (
-                <div style={{color:'rgba(255,255,255,0.3)',fontSize:13,padding:'32px 0'}}>No testimonials yet. Click the button above to add your first one.</div>
-              )}
-              {testimonials.map(t => (
-                <div key={t.id} className="testimonial-item">
-                  <div className="testimonial-top">
-                    <div>
-                      <div className="testimonial-name">{t.name}</div>
-                      {(t.role || t.company) && <div className="testimonial-meta">{[t.role, t.company].filter(Boolean).join(' · ')}</div>}
-                    </div>
-                    <div className="t-actions">
-                      <span className={t.is_active ? 't-active' : 't-hidden'}>{t.is_active ? '● Active' : '○ Hidden'}</span>
-                      <button className="t-btn" onClick={() => toggleTestimonial(t.id, t.is_active)}>{t.is_active ? 'Hide' : 'Show'}</button>
-                      <button className="t-btn del" onClick={() => deleteTestimonial(t.id)}>Delete</button>
-                    </div>
-                  </div>
-                  <div className="testimonial-quote">"{t.quote}"</div>
-                </div>
-              ))}
-            </>
+            </div>
           )}
 
           {/* SETTINGS */}
           {view === 'settings' && (
-            <>
-              <div className="page-header">
-                <div className="page-title">Site Settings</div>
-                <div className="page-sub">Update your contact information and other global details that appear across the site.</div>
-              </div>
-              <div className="section-card">
-                <div className="section-card-header">
-                  <div className="section-card-title">Contact Information — appears in footer and contact page</div>
-                </div>
-                {settings.map(s => (
-                  <div key={s.id} className="field-group">
-                    <div className="field-label">
-                      {s.key === 'phone' ? 'Phone number' : s.key === 'email' ? 'Email address' : s.key === 'linkedin' ? 'LinkedIn profile URL' : s.key === 'tagline' ? 'Tagline' : s.key}
-                      <span className="field-hint">— {s.key === 'phone' ? 'shown in footer and contact page' : s.key === 'email' ? 'where inquiries are sent' : s.key === 'linkedin' ? 'optional, leave blank if not needed' : 'shown under your name in the footer'}</span>
+            <div className="editor-layout">
+              <div className="editor-fields">
+                <div className="field-section">
+                  <div className="field-section-title">Contact Information</div>
+                  {[
+                    { key: 'phone', label: 'Phone number', hint: 'Appears in the footer and contact page.' },
+                    { key: 'email', label: 'Email address', hint: 'Where contact form submissions are sent.' },
+                    { key: 'linkedin', label: 'LinkedIn URL', hint: 'Optional. Leave blank if you do not want a LinkedIn link.' },
+                    { key: 'tagline', label: 'Tagline', hint: 'Short line shown under your name in the footer.' },
+                  ].map(({ key, label, hint }) => (
+                    <div key={key} className="field">
+                      <div className="field-label">{label}</div>
+                      <span className="field-hint">{hint}</span>
+                      <input className="field-input" value={getSetting(key)} onChange={e => updateSetting(key, e.target.value)} placeholder={key} />
                     </div>
-                    <input className="field-input" value={s.value || ''} onChange={e => updateSetting(s.key, e.target.value)} placeholder={s.key} />
-                  </div>
-                ))}
-                <div className="save-row">
-                  <button className="save-btn" onClick={saveSettings} disabled={saving}>{saving ? 'Saving...' : 'Save Settings'}</button>
-                  {saved && <span className="save-success">✓ {saved}</span>}
+                  ))}
                 </div>
               </div>
-            </>
+              <div className="editor-preview">
+                <div className="preview-section-label">Footer — how your contact info appears at the bottom of every page</div>
+                <div className="preview-footer">
+                  <div className="preview-footer-name">Beyond the Horizon</div>
+                  <div className="preview-footer-sub">{getSetting('tagline') || 'Executive Coaching and Consulting'}</div>
+                  <div className="preview-footer-item">📧 {getSetting('email') || 'john@mccrackencoaching.com'}</div>
+                  <div className="preview-footer-item">📞 {getSetting('phone') || '703.343.6960'}</div>
+                  {getSetting('linkedin') && <div className="preview-footer-item">🔗 {getSetting('linkedin')}</div>}
+                </div>
+              </div>
+            </div>
           )}
 
         </div>
