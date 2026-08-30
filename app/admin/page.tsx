@@ -40,10 +40,10 @@ const STYLES = `
   .logout-btn:hover { color: #e74c3c; }
 
   /* MAIN */
-  .main { padding: 48px; overflow-y: auto; }
+  .main { padding: 48px; overflow-y: auto; background: #0F1117; }
   .page-header { margin-bottom: 40px; }
-  .page-title { font-size: 1.6rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
-  .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .page-title { font-size: 1.6rem; font-weight: 600; color: #FFFFFF; margin-bottom: 6px; }
+  .page-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
 
   /* CARDS */
   .card { background: #1A1D27; border: 1px solid rgba(255,255,255,0.06); padding: 32px; margin-bottom: 20px; }
