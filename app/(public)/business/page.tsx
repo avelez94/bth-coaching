@@ -1,20 +1,18 @@
-'use client'
+import { createClient } from '@supabase/supabase-js'
 
-import { useEffect } from 'react'
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-export default function BusinessCoaching() {
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed')
-          observer.unobserve(entry.target)
-        }
-      })
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' })
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+async function getPageContent() {
+  const { data } = await supabase.from('pages').select('*').eq('slug', 'business').single()
+  return data?.content || {}
+}
+
+export default async function BusinessCoaching() {
+  const c = await getPageContent()
+  const get = (key: string, fallback: string) => c[key] || fallback
 
   return (
     <>
@@ -153,8 +151,8 @@ export default function BusinessCoaching() {
             <span>Business Coaching</span>
           </div>
           <div className="page-eyebrow">For Organizations and Teams</div>
-          <h1 className="page-hero-title">Coaching that moves<br /><em>your business forward.</em></h1>
-          <p className="page-hero-desc">Strategic coaching for executives, leadership teams, and organizations navigating change, growth, and transformation. Built on decades of real leadership experience.</p>
+          <h1 className="page-hero-title">{get('headline', 'Coaching that moves')}<br /><em>{get('headline_accent', 'your business forward.')}</em></h1>
+          <p className="page-hero-desc">{get('subheadline', 'Strategic coaching for executives, leadership teams, and organizations navigating change, growth, and transformation. Built on decades of real leadership experience.')}</p>
           <div className="hero-btns">
             <a href="/contact" className="btn btn-gold">Schedule a Consultation →</a>
             <a href="#offerings" className="btn btn-outline-light">View Offerings →</a>

@@ -1,20 +1,18 @@
-'use client'
+import { createClient } from '@supabase/supabase-js'
 
-import { useEffect } from 'react'
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-export default function IndividualCoaching() {
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed')
-          observer.unobserve(entry.target)
-        }
-      })
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' })
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
+async function getPageContent() {
+  const { data } = await supabase.from('pages').select('*').eq('slug', 'individual').single()
+  return data?.content || {}
+}
+
+export default async function IndividualCoaching() {
+  const c = await getPageContent()
+  const get = (key: string, fallback: string) => c[key] || fallback
 
   return (
     <>
@@ -127,8 +125,8 @@ export default function IndividualCoaching() {
             <span>Individual Coaching</span>
           </div>
           <div className="page-eyebrow">One on One Coaching</div>
-          <h1 className="page-hero-title">Invest in the leader<br /><em>you are becoming.</em></h1>
-          <p className="page-hero-desc">Personalized coaching for professionals and leaders who are ready to grow, transition, or unlock the next level of their potential. Built around you.</p>
+          <h1 className="page-hero-title">{get('headline', 'Invest in the leader')}<br /><em>{get('headline_accent', 'you are becoming.')}</em></h1>
+          <p className="page-hero-desc">{get('subheadline', 'Personalized coaching for professionals and leaders who are ready to grow, transition, or unlock the next level of their potential. Built around you.')}</p>
           <div className="hero-btns">
             <a href="/contact" className="btn btn-gold">Schedule a Consultation →</a>
             <a href="#programs" className="btn btn-outline-light">View Programs →</a>

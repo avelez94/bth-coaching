@@ -7,6 +7,15 @@ export default function Contact() {
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  const [pageContent, setPageContent] = useState<Record<string,string>>({})
+
+  useEffect(() => {
+    supabase.from('pages').select('content').eq('slug', 'contact').single().then(({ data }) => {
+      if (data?.content) setPageContent(data.content)
+    })
+  }, [])
+
+  const pc = (key: string, fallback: string) => pageContent[key] || fallback
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -136,8 +145,8 @@ export default function Contact() {
         <div className="page-hero-pattern" />
         <div className="page-hero-content">
           <div className="page-eyebrow">Get in Touch</div>
-          <h1 className="page-hero-title">Let's start a<br /><em>conversation.</em></h1>
-          <p className="page-hero-desc">Whether you are ready to get started or just exploring what coaching might look like, reach out. The first conversation is always complimentary.</p>
+          <h1 className="page-hero-title">{pc('headline', "Let's start a")}<br /><em>{pc('headline_accent', 'conversation.')}</em></h1>
+          <p className="page-hero-desc">{pc('subheadline', 'Whether you are ready to get started or just exploring what coaching might look like, reach out. The first conversation is always complimentary.')}</p>
         </div>
       </div>
 
