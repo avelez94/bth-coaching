@@ -177,7 +177,7 @@ export default async function Home() {
           <div className="hero-left">
             <div className="hero-eyebrow">Executive Coaching and Consulting</div>
             <h1 className="hero-headline">
-              {heroLines.map((line, i) => <span key={i} style={{display:'block'}}>{line}</span>)}
+              {heroLines.map((line: string, i: number) => <span key={i} style={{display:'block'}}>{line}</span>)}
               <em>{get('hero_accent', 'Transform.')}</em>
             </h1>
             <p className="hero-desc">{get('hero_subheadline', 'Strategic guidance for leaders who are ready to go beyond the horizon. Executive coaching and consulting designed to help you lead with confidence and purpose.')}</p>
@@ -232,7 +232,7 @@ export default async function Home() {
             <p className="body-text">{get('about_body_1', 'John McCracken is a retired U.S. Navy Captain and certified executive coach with over two decades of leadership experience. He founded Beyond the Horizon to bring the same clarity, discipline, and strategic thinking that defined his military career to business leaders and individuals ready to grow.')}</p>
             <p className="body-text">{get('about_body_2', 'Whether you are leading a team through change, building a business, or seeking to unlock your own potential, John provides the guidance and accountability to help you get there.')}</p>
             <div className="credentials">
-              {credentials.map((cred, i) => (
+              {credentials.map((cred: string, i: number) => (
                 <div key={i} className="credential">{cred}</div>
               ))}
             </div>
