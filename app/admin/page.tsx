@@ -400,49 +400,99 @@ export default function AdminPanel() {
                 </div>
               </div>
 
-              {/* HOME PREVIEW */}
+              {/* HOME PREVIEW - exact site markup */}
               <div className="editor-preview">
-                <div className="preview-section-label">Hero section — exactly as it appears on your site</div>
-                <div className="preview-hero">
-                  <div className="preview-hero-pattern" />
-                  <div className="preview-hero-gold-line" />
-                  <div className="preview-hero-inner">
-                    <div className="preview-eyebrow">Executive Coaching and Consulting</div>
-                    <div className="preview-hero-headline">
-                      {c.hero_headline || 'Navigate. Elevate.'}<br />
-                      <em>{c.hero_accent || 'Transform.'}</em>
-                    </div>
-                    <div className="preview-hero-desc">{c.hero_subheadline || 'Strategic guidance for leaders who are ready to go beyond the horizon.'}</div>
-                    <div className="preview-btn-row">
-                      <div className="preview-cta">Schedule a Session →</div>
-                      <div className="preview-cta-outline">Explore Coaching →</div>
-                    </div>
-                    <div className="preview-stats">
-                      <div className="preview-stat"><div className="preview-stat-num">20+</div><div className="preview-stat-label">Years of leadership experience</div></div>
-                      <div className="preview-stat"><div className="preview-stat-num">EMBA</div><div className="preview-stat-label">Executive MBA and ACC certified coach through the ICF</div></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="preview-section-label">About section — exactly as it appears on your site</div>
-                <div className="preview-about">
-                  <div className="preview-about-photo">
-                    {c.about_photo
-                      ? <img src={c.about_photo} alt="John McCracken" />
-                      : 'Your photo goes here'}
-                  </div>
-                  <div>
-                    <div className="preview-about-eyebrow">About John McCracken</div>
-                    <div className="preview-about-title">{c.about_title || 'Leadership forged through experience.'}</div>
-                    {c.about_body_1 && <div className="preview-about-body">{c.about_body_1}</div>}
-                    {c.about_body_2 && <div className="preview-about-body">{c.about_body_2}</div>}
-                    {c.about_credentials && (
-                      <div className="preview-credentials">
-                        {c.about_credentials.split('\n').filter(Boolean).map((cred, i) => (
-                          <div key={i} className="preview-credential">{cred}</div>
-                        ))}
+                <div className="preview-section-label">↓ Live preview — this is exactly how your homepage looks to visitors</div>
+                <div className="site-preview">
+                  <style>{`
+                    .site-preview { font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; }
+                    ` + homepage_css.replace(/`/g, "'") + `
+                    .site-preview .hero { min-height: unset; }
+                    .site-preview .hero-content { padding: 60px 40px 60px; }
+                    .site-preview .hero-eyebrow { animation: none; opacity: 1; }
+                    .site-preview .hero-headline { animation: none; opacity: 1; font-size: clamp(32px, 4vw, 52px); }
+                    .site-preview .hero-desc { animation: none; opacity: 1; }
+                    .site-preview .hero-btns { animation: none; opacity: 1; }
+                    .site-preview .hero-right { animation: none; opacity: 1; }
+                    .site-preview .about { padding: 60px 40px; }
+                    .site-preview .reveal { opacity: 1; transform: none; }
+                    .site-preview .btn { cursor: default; }
+                    .site-preview .btn-magnetic { transform: none !important; }
+                  `}</style>
+
+                  <section className="hero">
+                    <div className="hero-bg" />
+                    <div className="hero-pattern" />
+                    <div className="hero-gold-line" />
+                    <div className="hero-content">
+                      <div className="hero-left">
+                        <div className="hero-eyebrow">Executive Coaching and Consulting</div>
+                        <h1 className="hero-headline">
+                          {(c.hero_headline || 'Navigate.\nElevate.').split('\n').map((line, i) => (
+                            <span key={i} style={{display:'block'}}>{line}</span>
+                          ))}
+                          <em>{c.hero_accent || 'Transform.'}</em>
+                        </h1>
+                        <p className="hero-desc">{c.hero_subheadline || 'Strategic guidance for leaders who are ready to go beyond the horizon. Executive coaching and consulting designed to help you lead with confidence and purpose.'}</p>
+                        <div className="hero-btns">
+                          <span className="btn btn-gold">Schedule a Session →</span>
+                          <span className="btn btn-outline">Explore Coaching →</span>
+                        </div>
                       </div>
-                    )}
+                      <div className="hero-right">
+                        <div className="hero-stat-card">
+                          <div className="stat-num">20+</div>
+                          <div className="stat-label">Years of leadership experience in the U.S. Navy and private sector</div>
+                        </div>
+                        <div className="hero-stat-card">
+                          <div className="stat-num">EMBA</div>
+                          <div className="stat-label">Executive MBA and ACC certified coach through the ICF</div>
+                        </div>
+                        <div className="hero-stat-card">
+                          <div className="stat-num">CAPT</div>
+                          <div className="stat-label">Retired U.S. Navy Captain with proven leadership at every level</div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <div className="intro-strip">
+                    <div className="intro-item">Business Coaching</div>
+                    <div className="intro-dot" />
+                    <div className="intro-item">Individual Coaching</div>
+                    <div className="intro-dot" />
+                    <div className="intro-item">Executive Leadership</div>
+                    <div className="intro-dot" />
+                    <div className="intro-item">Strategic Consulting</div>
                   </div>
+
+                  <section className="about">
+                    <div className="about-inner">
+                      <div className="about-image">
+                        <div className="about-photo">
+                          {c.about_photo
+                            ? <img src={c.about_photo} alt="John McCracken" style={{width:'100%',height:'100%',objectFit:'cover',display:'block'}} />
+                            : 'Your photo will appear here'}
+                        </div>
+                        <div className="about-badge">
+                          <div className="about-badge-num">20+</div>
+                          <div className="about-badge-label">Years Leading</div>
+                        </div>
+                      </div>
+                      <div className="about-content">
+                        <div className="eyebrow">About John McCracken</div>
+                        <h2 className="section-title">{c.about_title || 'Leadership forged through experience.'}</h2>
+                        <p className="body-text">{c.about_body_1 || 'John McCracken is a retired U.S. Navy Captain and certified executive coach with over two decades of leadership experience.'}</p>
+                        {c.about_body_2 && <p className="body-text">{c.about_body_2}</p>}
+                        <div className="credentials">
+                          {(c.about_credentials || 'CAPT, USN (Ret.) — U.S. Navy\nExecutive MBA (EMBA)\nACC Certified Coach — International Coaching Federation\nFounder, Beyond the Horizon Executive Coaching and Consulting').split('\n').filter(Boolean).map((cred, i) => (
+                            <div key={i} className="credential">{cred}</div>
+                          ))}
+                        </div>
+                        <span className="btn btn-navy" style={{display:'inline-flex',marginTop:8}}>Work with John →</span>
+                      </div>
+                    </div>
+                  </section>
                 </div>
               </div>
             </div>
@@ -472,20 +522,38 @@ export default function AdminPanel() {
                 </div>
               </div>
               <div className="editor-preview">
-                <div className="preview-section-label">Hero section — exactly as it appears on your {pageLabels[view]} page</div>
-                <div className="preview-page-hero">
-                  <div className="preview-page-hero-pattern" />
-                  <div className="preview-page-hero-inner">
-                    <div className="preview-breadcrumb">Home → {pageLabels[view]}</div>
-                    <div className="preview-page-eyebrow">{view === 'business' ? 'For Organizations and Teams' : view === 'individual' ? 'One on One Coaching' : 'Get in Touch'}</div>
-                    <div className="preview-page-title">
-                      {c.headline || (view === 'business' ? 'Coaching that moves' : view === 'individual' ? 'Invest in the leader' : "Let's start a")}<br />
-                      <em>{c.headline_accent || (view === 'business' ? 'your business forward.' : view === 'individual' ? 'you are becoming.' : 'conversation.')}</em>
-                    </div>
-                    <div className="preview-page-desc">{c.subheadline || 'Your subheadline will appear here.'}</div>
-                    <div className="preview-btn-row">
-                      <div className="preview-cta">Schedule a Consultation →</div>
-                      {view !== 'contact' && <div className="preview-cta-outline">View Offerings →</div>}
+                <div className="preview-section-label">↓ Live preview — exactly how this page looks to visitors</div>
+                <div className="site-preview-page">
+                  <style>{`
+                    .site-preview-page { font-family: 'Inter', sans-serif; font-weight: 300; }
+                    ` + biz_css.replace(/`/g, "'") + `
+                    .site-preview-page .page-hero { min-height: unset; }
+                    .site-preview-page .page-hero-content { padding: 80px 40px 60px; }
+                    .site-preview-page .btn { cursor: default; }
+                    .site-preview-page .reveal { opacity: 1 !important; transform: none !important; }
+                  `}</style>
+                  <div className="page-hero">
+                    <div className="page-hero-bg" />
+                    <div className="page-hero-pattern" />
+                    <div className="page-hero-line" />
+                    <div className="page-hero-content">
+                      <div className="breadcrumb">
+                        <a href="/" style={{color:'rgba(247,244,237,0.4)',textDecoration:'none'}}>Home</a>
+                        <span className="breadcrumb-sep">→</span>
+                        <span>{pageLabels[view]}</span>
+                      </div>
+                      <div className="page-eyebrow">
+                        {view === 'business' ? 'For Organizations and Teams' : view === 'individual' ? 'One on One Coaching' : 'Get in Touch'}
+                      </div>
+                      <h1 className="page-hero-title">
+                        {c.headline || (view === 'business' ? 'Coaching that moves' : view === 'individual' ? 'Invest in the leader' : "Let's start a")}<br />
+                        <em>{c.headline_accent || (view === 'business' ? 'your business forward.' : view === 'individual' ? 'you are becoming.' : 'conversation.')}</em>
+                      </h1>
+                      <p className="page-hero-desc">{c.subheadline || 'Your subheadline will appear here.'}</p>
+                      <div className="hero-btns">
+                        <span className="btn btn-gold">Schedule a Consultation →</span>
+                        {view !== 'contact' && <span className="btn btn-outline-light">View Offerings →</span>}
+                      </div>
                     </div>
                   </div>
                 </div>
