@@ -51,10 +51,6 @@ export default function Home() {
       const pattern = document.querySelector('.hero-pattern') as HTMLElement
       if (hero) hero.style.transform = `translateY(${window.scrollY * 0.3}px)`
       if (pattern) pattern.style.transform = `translateY(${window.scrollY * 0.15}px)`
-
-      // Nav scroll
-      const nav = document.querySelector('nav') as HTMLElement
-      if (nav) nav.style.background = window.scrollY > 60 ? 'rgba(247,244,237,0.98)' : 'rgba(247,244,237,0.95)'
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -128,18 +124,6 @@ export default function Home() {
 
         /* MAGNETIC */
         .btn-magnetic { transition: transform 0.3s cubic-bezier(0.16,1,0.3,1) !important; }
-
-        /* NAV */
-        nav { position: fixed; top: 0; left: 0; right: 0; padding: 20px 60px; display: flex; justify-content: space-between; align-items: center; z-index: 100; background: rgba(247,244,237,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: background 0.3s; }
-        .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-        .nav-logo-text { display: flex; flex-direction: column; }
-        .nav-name { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--navy); letter-spacing: 0.04em; line-height: 1.1; }
-        .nav-sub { font-size: 0.6rem; color: var(--gold); letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; }
-        .nav-links { display: flex; gap: 36px; align-items: center; }
-        .nav-links a { font-size: 0.75rem; color: var(--text-muted); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; font-weight: 500; }
-        .nav-links a:hover { color: var(--navy); }
-        .nav-cta { background: var(--navy); color: var(--ivory); padding: 12px 28px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.3s; font-weight: 500; }
-        .nav-cta:hover { background: var(--gold); color: var(--navy); }
 
         /* HERO */
         .hero { min-height: 100vh; background: var(--navy); position: relative; overflow: hidden; display: flex; align-items: center; }
@@ -250,19 +234,7 @@ export default function Home() {
         .btn-outline-navy { background: transparent; color: var(--navy); border: 1px solid rgba(13,27,42,0.25); }
         .btn-outline-navy:hover { border-color: var(--navy); }
 
-        /* FOOTER */
-        footer { background: var(--navy); padding: 80px 60px 40px; border-top: 1px solid rgba(201,162,58,0.15); }
-        .footer-inner { max-width: 1200px; margin: 0 auto; }
-        .footer-top { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
-        .footer-brand-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 4px; }
-        .footer-brand-sub { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; }
-        .footer-desc { font-size: 0.82rem; line-height: 1.75; color: rgba(247,244,237,0.35); }
-        .footer-col-title { font-size: 0.65rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-bottom: 20px; }
-        .footer-col a { display: block; font-size: 0.82rem; color: rgba(247,244,237,0.45); text-decoration: none; margin-bottom: 12px; transition: color 0.2s; }
-        .footer-col a:hover { color: var(--white); }
-        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; }
-        .footer-copy { font-size: 0.75rem; color: rgba(247,244,237,0.25); }
-        .footer-gold-line { width: 40px; height: 2px; background: var(--gold); opacity: 0.4; }
+
 
         @media (max-width: 900px) {
           .hero-content { grid-template-columns: 1fr; padding: 120px 24px 80px; gap: 48px; }
@@ -303,21 +275,6 @@ export default function Home() {
           .testimonials-header .eyebrow-light, .approach-header .eyebrow, .cta-inner .eyebrow { justify-content: flex-start; }
         }
       `}</style>
-
-      <nav>
-        <a href="/" className="nav-brand">
-          <div className="nav-logo-text">
-            <div className="nav-name">Beyond the Horizon</div>
-            <div className="nav-sub">Executive Coaching and Consulting</div>
-          </div>
-        </a>
-        <div className="nav-links">
-          <a href="/business">Business Coaching</a>
-          <a href="/individual">Individual Coaching</a>
-          <a href="/contact">Contact</a>
-        </div>
-        <a href="/contact" className="nav-cta btn-magnetic">Schedule a Session</a>
-      </nav>
 
       {/* HERO */}
       <section className="hero">
@@ -478,39 +435,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer>
-        <div className="footer-inner">
-          <div className="footer-top">
-            <div>
-              <div className="footer-brand-name">Beyond the Horizon</div>
-              <div className="footer-brand-sub">Executive Coaching and Consulting</div>
-              <p className="footer-desc">Strategic coaching and consulting for leaders who are ready to navigate change, unlock potential, and create lasting impact.</p>
-            </div>
-            <div className="footer-col">
-              <div className="footer-col-title">Services</div>
-              <a href="/business">Business Coaching</a>
-              <a href="/individual">Individual Coaching</a>
-              <a href="/contact">Executive Leadership</a>
-              <a href="/contact">Strategic Consulting</a>
-            </div>
-            <div className="footer-col">
-              <div className="footer-col-title">Company</div>
-              <a href="/">About John</a>
-              <a href="/contact">Contact</a>
-            </div>
-            <div className="footer-col">
-              <div className="footer-col-title">Contact</div>
-              <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
-              <a href="tel:7033436960">703.343.6960</a>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <div className="footer-copy">© 2026 Beyond the Horizon Executive Coaching and Consulting. All rights reserved.</div>
-            <div className="footer-gold-line" />
-          </div>
-        </div>
-      </footer>
+
     </>
   )
 }
