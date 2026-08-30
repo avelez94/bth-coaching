@@ -56,7 +56,7 @@ export default function Nav() {
             {links.map(l => <a key={l.href} href={l.href} className="nav-link">{l.label}</a>)}
           </div>
           <a href="/contact" className="nav-cta">Schedule a Session</a>
-          <button className="nav-hamburger" onClick={() => setMenuOpen(true)} aria-label="Open menu">
+          <button className="nav-hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
             <span /><span /><span />
           </button>
         </div>
