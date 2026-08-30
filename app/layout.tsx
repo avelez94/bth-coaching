@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Beyond the Horizon — Executive Coaching & Consulting',
-  description: 'Executive coaching and consulting to help leaders navigate change, unlock potential, and create lasting impact.',
-}
+import Nav from './components/Nav'
+import Footer from './components/Footer'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Nav />
+        {children}
+        <Footer />
+      </body>
     </html>
   )
 }
