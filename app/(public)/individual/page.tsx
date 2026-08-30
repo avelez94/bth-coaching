@@ -10,6 +10,8 @@ async function getPageContent() {
   return data?.content || {}
 }
 
+export const revalidate = 0
+
 export default async function IndividualCoaching() {
   const c = await getPageContent()
   const get = (key: string, fallback: string) => c[key] || fallback
