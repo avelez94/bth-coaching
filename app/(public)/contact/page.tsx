@@ -10,9 +10,17 @@ export default function Contact() {
   const [pageContent, setPageContent] = useState<Record<string,string>>({})
 
   useEffect(() => {
-    supabase.from('pages').select('content').eq('slug', 'contact').single().then(({ data }) => {
-      if (data?.content) setPageContent(data.content)
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) return
+    fetch(`${url}/rest/v1/pages?slug=eq.contact&select=content`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` }
     })
+      .then(r => r.json())
+      .then((rows: Array<{content: Record<string,string>}>) => {
+        if (rows?.[0]?.content) setPageContent(rows[0].content)
+      })
+      .catch(() => {})
   }, [])
 
   const pc = (key: string, fallback: string) => pageContent[key] || fallback
