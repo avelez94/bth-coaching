@@ -139,11 +139,11 @@ export default async function IndividualCoaching() {
       <section className="intro">
         <div className="intro-inner">
           <div>
-            <div className="eyebrow reveal">About Individual Coaching</div>
-            <h2 className="section-title reveal delay-1">Coaching built around<br /><em>you.</em></h2>
-            <p className="body-text reveal delay-2">Individual coaching is a deeply personal investment. It is not about following a script — it is about having a trusted thinking partner who challenges you, holds you accountable, and helps you see what you cannot see on your own.</p>
-            <p className="body-text reveal delay-3">John brings the same discipline and strategic clarity that defined his naval career to every individual coaching relationship. The sessions are direct, practical, and always focused on what moves you forward.</p>
-            <div className="quote-block reveal delay-4">
+            <div className="eyebrow">About Individual Coaching</div>
+            <h2 className="section-title">Coaching built around<br /><em>you.</em></h2>
+            <p className="body-text">Individual coaching is a deeply personal investment. It is not about following a script — it is about having a trusted thinking partner who challenges you, holds you accountable, and helps you see what you cannot see on your own.</p>
+            <p className="body-text">John brings the same discipline and strategic clarity that defined his naval career to every individual coaching relationship. The sessions are direct, practical, and always focused on what moves you forward.</p>
+            <div className="quote-block">
               <div className="quote-text">"The goal is not to become someone different. It is to become a more fully realized version of who you already are."</div>
             </div>
           </div>
@@ -171,8 +171,8 @@ export default async function IndividualCoaching() {
       <section className="programs" id="programs">
         <div className="programs-inner">
           <div className="programs-header">
-            <div className="eyebrow-dark reveal">Coaching Programs</div>
-            <h2 className="section-title reveal delay-1">Find the right <em>program for you.</em></h2>
+            <div className="eyebrow-dark">Coaching Programs</div>
+            <h2 className="section-title">Find the right <em>program for you.</em></h2>
           </div>
           <div className="programs-grid">
             {[
@@ -201,7 +201,7 @@ export default async function IndividualCoaching() {
                 features: ['Flexible session frequency', 'Full access to all frameworks', 'Priority scheduling', 'Ad hoc support as needed', 'Annual progress review'],
               },
             ].map((p, i) => (
-              <div key={i} className={`program-card reveal delay-${(i % 2) + 1}`}>
+              <div key={i} className={`program-card delay-${(i % 2) + 1}`}>
                 <div className="program-tag">{p.tag}</div>
                 <div className="program-name">{p.name}</div>
                 <p className="program-desc">{p.desc}</p>
@@ -217,8 +217,8 @@ export default async function IndividualCoaching() {
       <section className="outcomes">
         <div className="outcomes-inner">
           <div className="outcomes-header">
-            <div className="eyebrow-light reveal">What You Gain</div>
-            <h2 className="section-title-light reveal delay-1">Real outcomes for <em>real leaders.</em></h2>
+            <div className="eyebrow-light">What You Gain</div>
+            <h2 className="section-title-light">Real outcomes for <em>real leaders.</em></h2>
           </div>
           <div className="outcomes-grid">
             {[
@@ -229,7 +229,7 @@ export default async function IndividualCoaching() {
               { icon: '📈', title: 'Performance', desc: 'Consistently show up at your best and build the habits and systems that sustain high performance.' },
               { icon: '🌱', title: 'Growth', desc: 'Become the leader you know you are capable of being — and lay the foundation for continued growth.' },
             ].map((o, i) => (
-              <div key={i} className={`outcome-card reveal delay-${(i % 3) + 1}`}>
+              <div key={i} className={`outcome-card delay-${(i % 3) + 1}`}>
                 <div className="outcome-icon">{o.icon}</div>
                 <div className="outcome-title">{o.title}</div>
                 <p className="outcome-desc">{o.desc}</p>
@@ -241,10 +241,10 @@ export default async function IndividualCoaching() {
 
       <section className="cta-section">
         <div className="cta-inner">
-          <div className="eyebrow reveal">Take the First Step</div>
-          <h2 className="cta-title reveal delay-1">Your growth starts with a <em>conversation.</em></h2>
-          <p className="cta-desc reveal delay-2">Schedule a complimentary discovery call. No commitment, no pressure — just an honest conversation about where you are and where you want to go.</p>
-          <div className="cta-btns reveal delay-3">
+          <div className="eyebrow">Take the First Step</div>
+          <h2 className="cta-title">Your growth starts with a <em>conversation.</em></h2>
+          <p className="cta-desc">Schedule a complimentary discovery call. No commitment, no pressure — just an honest conversation about where you are and where you want to go.</p>
+          <div className="cta-btns">
             <a href="/contact" className="btn btn-navy">Schedule a Discovery Call →</a>
           </div>
         </div>

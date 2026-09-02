@@ -166,12 +166,12 @@ export default async function BusinessCoaching() {
       <section className="intro">
         <div className="intro-inner">
           <div className="intro-left">
-            <div className="eyebrow reveal">Why Business Coaching</div>
-            <h2 className="section-title reveal delay-1">The right guidance<br /><em>at the right time.</em></h2>
-            <p className="body-text reveal delay-2">Most leadership challenges are not about strategy — they are about execution, alignment, and the human dynamics that either drive or stall progress. Business coaching creates the conditions for your people and your organization to perform at their best.</p>
-            <p className="body-text reveal delay-3">John McCracken brings over two decades of high-stakes leadership experience to every engagement. From commanding naval operations to building organizations in the private sector, he has led through complexity — and he brings that same clarity to his clients.</p>
+            <div className="eyebrow">Why Business Coaching</div>
+            <h2 className="section-title">The right guidance<br /><em>at the right time.</em></h2>
+            <p className="body-text">Most leadership challenges are not about strategy — they are about execution, alignment, and the human dynamics that either drive or stall progress. Business coaching creates the conditions for your people and your organization to perform at their best.</p>
+            <p className="body-text">John McCracken brings over two decades of high-stakes leadership experience to every engagement. From commanding naval operations to building organizations in the private sector, he has led through complexity — and he brings that same clarity to his clients.</p>
           </div>
-          <div className="intro-right reveal delay-2">
+          <div className="intro-right">
             <div className="stat-row">
               <div className="stat-box">
                 <div className="stat-num">20+</div>
@@ -199,8 +199,8 @@ export default async function BusinessCoaching() {
       <section className="offerings" id="offerings">
         <div className="offerings-inner">
           <div className="offerings-header">
-            <div className="eyebrow-light reveal">What I Offer</div>
-            <h2 className="section-title-light reveal delay-1">Business coaching <em>programs.</em></h2>
+            <div className="eyebrow-light">What I Offer</div>
+            <h2 className="section-title-light">Business coaching <em>programs.</em></h2>
           </div>
           <div className="offerings-grid">
             {[
@@ -211,7 +211,7 @@ export default async function BusinessCoaching() {
               { num: '05', name: 'High Performance Teams', desc: 'Build the foundations of a high performing team — clear roles, accountability systems, psychological safety, and a culture of continuous improvement.' },
               { num: '06', name: 'Strategic Advisory', desc: 'Ongoing advisory relationships for founders and executives who want a trusted thinking partner to pressure test ideas and navigate complex decisions.' },
             ].map((o, i) => (
-              <div key={i} className={`offering-card reveal delay-${(i % 3) + 1}`}>
+              <div key={i} className={`offering-card delay-${(i % 3) + 1}`}>
                 <div className="offering-num">{o.num}</div>
                 <div className="offering-name">{o.name}</div>
                 <p className="offering-desc">{o.desc}</p>
@@ -225,8 +225,8 @@ export default async function BusinessCoaching() {
       <section className="who">
         <div className="who-inner">
           <div className="who-header">
-            <div className="eyebrow reveal">Who This Is For</div>
-            <h2 className="section-title reveal delay-1">Business coaching works best for leaders who are <em>ready.</em></h2>
+            <div className="eyebrow">Who This Is For</div>
+            <h2 className="section-title">Business coaching works best for leaders who are <em>ready.</em></h2>
           </div>
           <div className="who-grid">
             {[
@@ -234,7 +234,7 @@ export default async function BusinessCoaching() {
               { icon: '📈', title: 'Growing Businesses', desc: 'Founders and operators scaling their teams and organizations who need structure, accountability, and an outside perspective.' },
               { icon: '🔄', title: 'Teams in Transition', desc: 'Leadership teams navigating change — new ownership, restructuring, rapid growth, or cultural shifts that require alignment.' },
             ].map((w, i) => (
-              <div key={i} className={`who-card reveal delay-${i + 1}`}>
+              <div key={i} className={`who-card delay-${i + 1}`}>
                 <div className="who-icon">{w.icon}</div>
                 <div className="who-title">{w.title}</div>
                 <p className="who-desc">{w.desc}</p>
@@ -248,8 +248,8 @@ export default async function BusinessCoaching() {
       <section className="process">
         <div className="process-inner">
           <div className="process-header">
-            <div className="eyebrow reveal">How It Works</div>
-            <h2 className="section-title reveal delay-1">A structured path to <em>results.</em></h2>
+            <div className="eyebrow">How It Works</div>
+            <h2 className="section-title">A structured path to <em>results.</em></h2>
           </div>
           <div className="process-steps">
             {[
@@ -259,7 +259,7 @@ export default async function BusinessCoaching() {
               { title: 'Coaching and Accountability', desc: 'Regular sessions, real work, and the accountability structures that keep progress moving. This is where the transformation happens.' },
               { title: 'Measure and Adjust', desc: 'We track what matters, measure progress, and adjust the approach as needed. Results are the standard we hold ourselves to.' },
             ].map((s, i) => (
-              <div key={i} className={`process-step reveal delay-${(i % 3) + 1}`}>
+              <div key={i} className={`process-step delay-${(i % 3) + 1}`}>
                 <div className="step-num">0{i + 1}</div>
                 <div className="step-content">
                   <h4>{s.title}</h4>
@@ -274,10 +274,10 @@ export default async function BusinessCoaching() {
       {/* CTA */}
       <section className="cta-section">
         <div className="cta-inner">
-          <div className="eyebrow-light reveal">Get Started</div>
-          <h2 className="cta-title reveal delay-1">Ready to invest in your <em>leadership?</em></h2>
-          <p className="cta-desc reveal delay-2">The first step is a conversation. Schedule a complimentary discovery call and let's talk about what is possible.</p>
-          <div className="cta-btns reveal delay-3">
+          <div className="eyebrow-light">Get Started</div>
+          <h2 className="cta-title">Ready to invest in your <em>leadership?</em></h2>
+          <p className="cta-desc">The first step is a conversation. Schedule a complimentary discovery call and let's talk about what is possible.</p>
+          <div className="cta-btns">
             <a href="/contact" className="btn btn-gold">Schedule a Discovery Call →</a>
           </div>
         </div>
