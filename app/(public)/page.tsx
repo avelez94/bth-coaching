@@ -240,7 +240,7 @@ export default async function Home() {
             <cite>John McCracken</cite>
           </div>
           <p className="about-body" style={{marginBottom:32}}>{g('about_body_3',"That's what I bring to every client.")}</p>
-          <a href="/contact" className="btn btn-outline-light" style={{alignSelf:'flex-start'}}>Read more of my story →</a>
+          <a href="/contact" className="btn btn-outline-light" style={{alignSelf:'flex-start'}}>Work with John →</a>
         </div>
       </section>
 
