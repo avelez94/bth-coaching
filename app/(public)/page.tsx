@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import TestimonialSlider from '@/components/TestimonialSlider'
+import TestimonialSlider from '../components/TestimonialSlider'
 
 export const revalidate = 0
 
