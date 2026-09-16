@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import TestimonialSlider from '@/components/TestimonialSlider'
 
 export const revalidate = 0
 
@@ -516,36 +517,7 @@ export default async function Home() {
           margin-bottom: 48px;
           font-weight: 400;
         }
-        .testimonial-quote {
-          font-family: 'Lora', serif;
-          font-size: clamp(1rem, 1.4vw, 1.15rem);
-          font-style: italic;
-          line-height: 1.82;
-          color: rgba(247,244,237,0.88);
-          margin-bottom: 36px;
-        }
-        .testimonial-attribution {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        .testimonial-rule {
-          width: 32px;
-          height: 1px;
-          background: var(--gold);
-          flex-shrink: 0;
-        }
-        .testimonial-name {
-          font-size: 0.82rem;
-          color: rgba(247,244,237,0.7);
-          font-weight: 500;
-          margin-bottom: 2px;
-        }
-        .testimonial-role {
-          font-size: 0.75rem;
-          color: rgba(247,244,237,0.4);
-          line-height: 1.5;
-        }
+
 
         /* ============================================================
            8. CLOSING CTA
@@ -776,18 +748,7 @@ export default async function Home() {
       <section className="testimonial-section">
         <div className="testimonial-inner">
           <div className="testimonial-label">What clients say</div>
-          {displayTestimonials.slice(0, 1).map(t => (
-            <div key={t.id}>
-              <div className="testimonial-quote">{t.quote}</div>
-              <div className="testimonial-attribution">
-                <div className="testimonial-rule" />
-                <div>
-                  <div className="testimonial-name">{t.name}</div>
-                  <div className="testimonial-role">{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
+          <TestimonialSlider testimonials={displayTestimonials} />
         </div>
       </section>
 
