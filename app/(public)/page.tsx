@@ -20,27 +20,25 @@ async function getData() {
 
 export default async function Home() {
   const { c, testimonials } = await getData()
-  const g = (key: string, fallback: string) => c[key] || fallback
 
-  const credentials = g('about_credentials',
-    'Commanding Officer, U.S. Navy — 30 years of progressively responsible leadership, command, and strategic development positions\nDirector, Manpower and Human Capital Strategy — Department of the Navy\nExecutive Coach and Director — Office of the Secretary of Defense, 7 years'
-  ).split('\n').filter(Boolean)
-
-  const services = [
-    { num: '01', name: g('service1_name', 'Business Coaching'), desc: g('service1_desc', 'Strategic coaching for organizations, executives, and teams navigating complexity, change, and growth.'), href: '/business' },
-    { num: '02', name: g('service2_name', 'Individual Coaching'), desc: g('service2_desc', 'One on one coaching for professionals and leaders ready to unlock what is next — professionally, personally, relationally.'), href: '/individual' },
-    { num: '03', name: g('service3_name', 'Mission-Ready Leadership'), desc: g('service3_desc', 'A science-grounded, whole-person coaching program built around the 8 Pillars of Mission-Ready Leadership — for executives, teams, organizations, and individuals in transition.'), href: '/mission-ready-leadership' },
-    { num: '04', name: g('service4_name', 'Strategic Consulting'), desc: g('service4_desc', 'Experienced guidance for complex organizational challenges — from strategy to change management and leadership development.'), href: '/contact' },
-  ]
+  // Linnea's confirmed testimonial — shown even if Supabase is empty at launch
+  const displayTestimonials = testimonials.length > 0 ? testimonials : [{
+    id: 'linnea',
+    name: 'Linnea Landowski',
+    role: 'Director of Camping-Programs, Scouting America, Western Los Angeles County Council',
+    company: '',
+    quote: 'When I started coaching, I was looking to become a stronger leader. What I found was far more transformative. Through our work together, I learned that empathy and accountability are not opposites — and that much of my identity and self-worth had become tied to my work in ways that weren\'t serving me. Coaching helped me redefine success to include my relationships, health, and personal happiness — not just professional achievement. Rather than giving me answers, John consistently asked the right questions, helping me uncover insights that felt authentic and sustainable. I leave with greater confidence, stronger boundaries, and a much deeper understanding of the value I bring as both a leader and a person.',
+  }]
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;1,400;1,500&display=swap');
 
         :root {
           --ivory: #F7F4ED;
           --ivory-dark: #EDE8DC;
+          --ivory-mid: #E8E2D4;
           --slate: #4C78A0;
           --slate-mid: #3A607F;
           --slate-light: #6B9ABF;
@@ -51,26 +49,29 @@ export default async function Home() {
           --text: #1C2B3A;
           --text-mid: #3D5166;
           --text-muted: #6B7A8D;
-          --rule: rgba(28,43,58,0.12);
+          --rule: rgba(28,43,58,0.1);
+          --rule-slate: rgba(247,244,237,0.12);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body { background: var(--ivory); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; }
+        .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
         .btn-navy { background: var(--navy); color: var(--ivory); }
         .btn-navy:hover { background: var(--slate-mid); }
         .btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(28,43,58,0.28); }
         .btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
         .btn-outline-light { background: transparent; color: var(--ivory); border: 1px solid rgba(247,244,237,0.35); }
         .btn-outline-light:hover { background: rgba(247,244,237,0.1); }
+        .btn-gold { background: var(--gold); color: var(--navy); }
+        .btn-gold:hover { background: #D4B563; }
 
         /* ============================================================
-           HERO
-           Split: left ivory with copy, right slate with photo.
-           Vertical slate rule divides them — the site's quiet signature.
-           No eyebrow. No decorative type. John's words create the hierarchy.
+           1. HERO
+           Ivory left, slate right with photo.
+           Vertical slate rule — site's quiet signature.
+           v5 headline and CTAs.
         ============================================================ */
         .hero {
           min-height: 100vh;
@@ -86,7 +87,7 @@ export default async function Home() {
           bottom: 0;
           width: 2px;
           background: var(--slate);
-          opacity: 0.25;
+          opacity: 0.2;
           z-index: 3;
           transform: translateX(-50%);
         }
@@ -98,43 +99,33 @@ export default async function Home() {
           position: relative;
           z-index: 2;
         }
-        .hero-context {
-          font-size: 0.72rem;
-          color: var(--text-muted);
-          letter-spacing: 0.04em;
-          margin-bottom: 36px;
-          font-weight: 400;
-        }
         .hero-headline {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(38px, 4.2vw, 54px);
+          font-size: clamp(36px, 3.8vw, 50px);
           font-weight: 400;
-          line-height: 1.15;
+          line-height: 1.18;
           color: var(--text);
           margin-bottom: 28px;
           letter-spacing: -0.01em;
+          max-width: 480px;
         }
-        .hero-headline em {
-          font-style: italic;
-          color: var(--slate-mid);
-        }
-        .hero-body {
-          font-size: 1rem;
+        .hero-subhead {
+          font-size: 0.95rem;
           line-height: 1.8;
           color: var(--text-mid);
-          margin-bottom: 14px;
+          margin-bottom: 12px;
           max-width: 420px;
           font-weight: 300;
         }
-        .hero-body-2 {
-          font-size: 0.9rem;
-          line-height: 1.85;
+        .hero-credentials-line {
+          font-size: 0.78rem;
+          line-height: 1.6;
           color: var(--text-muted);
-          margin-bottom: 44px;
+          margin-bottom: 40px;
           max-width: 420px;
+          font-weight: 400;
         }
         .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-
         .hero-right {
           position: relative;
           background: var(--slate);
@@ -152,88 +143,9 @@ export default async function Home() {
         .hero-photo-scrim {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom, transparent 60%, rgba(13,27,42,0.35) 100%);
+          background: linear-gradient(to bottom, transparent 60%, rgba(13,27,42,0.3) 100%);
         }
         .hero-photo-placeholder {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          gap: 10px;
-          color: rgba(247,244,237,0.2);
-          font-size: 0.68rem;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-
-        /* ============================================================
-           CREDENTIALS
-           Slate pale background. Typographic only. No decorative devices.
-           Reads as a quiet authority statement, not a marketing badge row.
-        ============================================================ */
-        .credentials {
-          background: var(--slate-pale);
-          padding: 48px 72px;
-          border-top: 1px solid rgba(76,120,160,0.15);
-          border-bottom: 1px solid rgba(76,120,160,0.15);
-        }
-        .credentials-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-          display: flex;
-          gap: 0;
-          align-items: stretch;
-        }
-        .credential-item {
-          flex: 1;
-          padding: 0 36px;
-          border-right: 1px solid rgba(76,120,160,0.2);
-        }
-        .credential-item:first-child { padding-left: 0; }
-        .credential-item:last-child { border-right: none; }
-        .credential-main {
-          font-family: 'DM Serif Display', serif;
-          font-size: 1.05rem;
-          font-weight: 400;
-          color: var(--slate-mid);
-          line-height: 1.3;
-          margin-bottom: 4px;
-        }
-        .credential-detail {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-          line-height: 1.5;
-          font-weight: 400;
-        }
-
-        /* ============================================================
-           ABOUT / STORY
-           Slate blue background. Photo left, story right.
-           Story opens directly with John's copy — no section label needed.
-           Pull quote uses a slate vertical rule, not gold.
-        ============================================================ */
-        .about {
-          background: var(--slate);
-          display: grid;
-          grid-template-columns: 5fr 7fr;
-          min-height: 660px;
-        }
-        .about-photo {
-          position: relative;
-          overflow: hidden;
-          background: var(--slate-mid);
-        }
-        .about-photo img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .about-photo-placeholder {
           position: absolute;
           inset: 0;
           display: flex;
@@ -246,287 +158,428 @@ export default async function Home() {
           letter-spacing: 0.1em;
           text-transform: uppercase;
         }
-        .about-content {
-          padding: 80px 72px 80px 64px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+
+        /* ============================================================
+           2. THE PROBLEM
+           Single column, generous whitespace.
+           Emotional hook — not a card, not a box.
+        ============================================================ */
+        .problem {
+          background: var(--ivory-dark);
+          padding: 100px 72px;
         }
-        .about-name {
+        .problem-inner {
+          max-width: 720px;
+          margin: 0 auto;
+        }
+        .problem-label {
           font-size: 0.72rem;
-          color: rgba(247,244,237,0.5);
+          color: var(--slate-mid);
           letter-spacing: 0.06em;
-          margin-bottom: 28px;
-          font-weight: 400;
+          text-transform: uppercase;
+          margin-bottom: 32px;
+          font-weight: 500;
         }
-        .about-opening {
+        .problem-headline {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.6vw, 32px);
+          font-size: clamp(28px, 3vw, 40px);
           font-weight: 400;
-          line-height: 1.3;
-          color: var(--ivory);
-          margin-bottom: 24px;
+          line-height: 1.22;
+          color: var(--text);
+          margin-bottom: 40px;
           letter-spacing: -0.01em;
-          max-width: 520px;
         }
-        .about-body {
-          font-size: 0.93rem;
-          line-height: 1.85;
-          color: rgba(247,244,237,0.75);
+        .problem-body {
+          font-size: 0.97rem;
+          line-height: 1.88;
+          color: var(--text-mid);
           margin-bottom: 20px;
           font-weight: 300;
         }
-        .about-body strong {
-          color: rgba(247,244,237,0.92);
-          font-weight: 500;
-        }
-        .about-pull {
-          margin: 28px 0;
-          padding: 18px 24px;
-          border-left: 2px solid var(--slate-light);
-          background: rgba(13,27,42,0.2);
-        }
-        .about-pull p {
-          font-family: 'Lora', serif;
-          font-size: 1rem;
-          font-style: italic;
-          line-height: 1.7;
-          color: rgba(247,244,237,0.88);
-        }
+        .problem-body:last-child { margin-bottom: 0; }
 
         /* ============================================================
-           SERVICES
-           Ivory background. Heading present — it improves usability.
-           Listed as a clean numbered typographic list.
-           No cards. No icons. Hover is a subtle left shift.
+           3. AUDIENCE + SERVICES
+           Audience identifiers as a quiet typographic list.
+           Thin rule transition into Services.
+           Services as open vertical list — editorial, not card grid.
+           Mission-Ready gets a single 2px gold left rule.
         ============================================================ */
-        .services {
+        .audience-services {
           background: var(--ivory);
-          padding: 112px 72px;
+          padding: 100px 72px;
         }
-        .services-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        .services-header {
+        .audience-services-inner { max-width: 1100px; margin: 0 auto; }
+
+        .audience-block {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 280px 1fr;
           gap: 60px;
           margin-bottom: 72px;
-          align-items: end;
-          padding-bottom: 40px;
+          padding-bottom: 60px;
           border-bottom: 1px solid var(--rule);
+          align-items: start;
         }
+        .audience-label {
+          font-size: 0.72rem;
+          color: var(--text-muted);
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          padding-top: 4px;
+          font-weight: 500;
+        }
+        .audience-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .audience-item {
+          padding: 16px 0;
+          border-bottom: 1px solid var(--rule);
+          display: grid;
+          grid-template-columns: 200px 1fr;
+          gap: 32px;
+          align-items: baseline;
+        }
+        .audience-item:first-child { border-top: 1px solid var(--rule); }
+        .audience-name {
+          font-family: 'DM Serif Display', serif;
+          font-size: 1rem;
+          font-weight: 400;
+          color: var(--text);
+          line-height: 1.3;
+        }
+        .audience-desc {
+          font-size: 0.85rem;
+          line-height: 1.7;
+          color: var(--text-muted);
+        }
+
         .services-heading {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(28px, 3vw, 38px);
+          font-size: clamp(24px, 2.8vw, 34px);
           font-weight: 400;
-          line-height: 1.2;
           color: var(--text);
+          margin-bottom: 48px;
           letter-spacing: -0.01em;
-        }
-        .services-intro {
-          font-size: 0.92rem;
-          line-height: 1.8;
-          color: var(--text-muted);
         }
         .services-list { display: flex; flex-direction: column; }
         .service-item {
           display: grid;
-          grid-template-columns: 56px 1fr;
-          gap: 28px;
+          grid-template-columns: 44px 1fr auto;
+          gap: 24px;
           align-items: start;
-          padding: 32px 0;
+          padding: 28px 0;
           border-bottom: 1px solid var(--rule);
           text-decoration: none;
           color: inherit;
           transition: padding-left 0.2s ease;
+          position: relative;
         }
-        .service-item:hover { padding-left: 8px; }
+        .service-item:first-child { border-top: 1px solid var(--rule); }
+        .service-item:hover { padding-left: 6px; }
         .service-item:hover .service-name { color: var(--slate-mid); }
+        .service-item:hover .service-arrow { color: var(--slate-mid); opacity: 1; }
+        .service-item.featured {
+          border-left: 2px solid var(--gold);
+          padding-left: 16px;
+          margin-left: -18px;
+        }
+        .service-item.featured:hover { padding-left: 22px; }
         .service-num {
-          font-family: 'DM Serif Display', serif;
-          font-size: 1rem;
-          font-weight: 400;
+          font-size: 0.72rem;
           color: var(--text-muted);
-          padding-top: 3px;
-          line-height: 1;
+          padding-top: 4px;
+          font-weight: 400;
+          letter-spacing: 0.04em;
         }
+        .service-content { }
         .service-name {
-          font-family: 'DM Serif Display', serif;
-          font-size: 1.25rem;
-          font-weight: 400;
-          color: var(--text);
-          margin-bottom: 8px;
-          letter-spacing: -0.01em;
-          transition: color 0.2s;
-          line-height: 1.25;
-        }
-        .service-desc {
-          font-size: 0.86rem;
-          line-height: 1.7;
-          color: var(--text-muted);
-          max-width: 520px;
-        }
-
-        /* ============================================================
-           APPROACH
-           Ivory dark background. Opens directly with John's phrase —
-           confirmed from bio: "Coaching that follows your lead."
-           Three steps as plain numbered prose. No visual devices.
-        ============================================================ */
-        .approach {
-          background: var(--ivory-dark);
-          padding: 112px 72px;
-        }
-        .approach-inner {
-          max-width: 1200px;
-          margin: 0 auto;
-        }
-        .approach-lead {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(28px, 3.2vw, 42px);
-          font-weight: 400;
-          font-style: italic;
-          color: var(--text);
-          line-height: 1.2;
-          margin-bottom: 20px;
-          max-width: 560px;
-          letter-spacing: -0.01em;
-        }
-        .approach-sub {
-          font-size: 0.9rem;
-          line-height: 1.8;
-          color: var(--text-muted);
-          max-width: 560px;
-          margin-bottom: 64px;
-        }
-        .approach-steps {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 56px;
-          padding-top: 48px;
-          border-top: 1px solid var(--rule);
-        }
-        .step-num {
-          font-size: 0.68rem;
-          color: var(--slate);
-          letter-spacing: 0.08em;
-          margin-bottom: 14px;
-          font-weight: 500;
-        }
-        .step-title {
           font-family: 'DM Serif Display', serif;
           font-size: 1.15rem;
           font-weight: 400;
           color: var(--text);
-          margin-bottom: 12px;
+          margin-bottom: 4px;
+          transition: color 0.2s;
+          letter-spacing: -0.01em;
           line-height: 1.3;
         }
-        .step-body {
-          font-size: 0.87rem;
-          line-height: 1.78;
+        .service-audience {
+          font-size: 0.72rem;
           color: var(--text-muted);
+          margin-bottom: 8px;
+        }
+        .service-desc {
+          font-size: 0.85rem;
+          line-height: 1.72;
+          color: var(--text-muted);
+          max-width: 540px;
+        }
+        .service-arrow {
+          font-size: 0.85rem;
+          color: var(--text-muted);
+          opacity: 0.4;
+          transition: all 0.2s;
+          padding-top: 6px;
+          align-self: start;
         }
 
         /* ============================================================
-           TESTIMONIALS
-           Slate blue. Stacked vertically with rules between.
-           Lora italic for quote text. No cards.
+           4. PHILOSOPHY / FRAMEWORK
+           Slate blue background — visual authority without a navy block.
+           John's exact v5 copy. Framework link in gold.
         ============================================================ */
-        .testimonials {
+        .philosophy {
           background: var(--slate);
           padding: 100px 72px;
         }
-        .testimonials-inner {
-          max-width: 1200px;
+        .philosophy-inner {
+          max-width: 800px;
           margin: 0 auto;
         }
-        .testimonials-label {
-          font-size: 0.72rem;
-          color: rgba(247,244,237,0.45);
-          letter-spacing: 0.06em;
-          margin-bottom: 52px;
+        .philosophy-headline {
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(26px, 3vw, 38px);
           font-weight: 400;
+          line-height: 1.25;
+          color: var(--ivory);
+          margin-bottom: 36px;
+          letter-spacing: -0.01em;
         }
-        .testimonial-stack { display: flex; flex-direction: column; }
-        .testimonial-entry {
-          display: grid;
-          grid-template-columns: 1fr auto;
-          gap: 48px;
-          align-items: start;
-          padding: 36px 0;
-          border-top: 1px solid rgba(247,244,237,0.1);
+        .philosophy-body {
+          font-size: 0.97rem;
+          line-height: 1.88;
+          color: rgba(247,244,237,0.75);
+          margin-bottom: 20px;
+          font-weight: 300;
         }
-        .testimonial-entry:last-child { border-bottom: 1px solid rgba(247,244,237,0.1); }
-        .testimonial-text {
-          font-family: 'Lora', serif;
-          font-size: 1.05rem;
-          font-style: italic;
-          line-height: 1.72;
-          color: rgba(247,244,237,0.85);
-        }
-        .testimonial-attr {
-          text-align: right;
-          min-width: 180px;
-        }
-        .testimonial-name {
-          font-size: 0.8rem;
-          color: rgba(247,244,237,0.7);
+        .philosophy-body:last-of-type { margin-bottom: 36px; }
+        .philosophy-link {
+          font-size: 0.78rem;
+          color: var(--gold);
+          text-decoration: none;
+          letter-spacing: 0.06em;
           font-weight: 500;
-          margin-bottom: 3px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          transition: gap 0.2s;
         }
-        .testimonial-role {
+        .philosophy-link:hover { gap: 14px; }
+
+        /* ============================================================
+           5. ABOUT STRIP
+           v5 homepage About Strip copy — brief, drives to full About page.
+           Split layout — photo left, copy right.
+        ============================================================ */
+        .about-strip {
+          background: var(--ivory-dark);
+          display: grid;
+          grid-template-columns: 5fr 7fr;
+        }
+        .about-strip-photo {
+          position: relative;
+          overflow: hidden;
+          background: var(--slate-mid);
+          min-height: 480px;
+        }
+        .about-strip-photo img {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+        .about-strip-photo-placeholder {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          gap: 10px;
+          color: rgba(247,244,237,0.18);
+          font-size: 0.68rem;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+        .about-strip-content {
+          padding: 72px 72px 72px 64px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .about-strip-label {
           font-size: 0.72rem;
-          color: rgba(247,244,237,0.38);
+          color: var(--text-muted);
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          margin-bottom: 28px;
+          font-weight: 500;
+        }
+        .about-strip-body {
+          font-size: 0.95rem;
+          line-height: 1.85;
+          color: var(--text-mid);
+          margin-bottom: 20px;
+          font-weight: 300;
+        }
+        .about-strip-credentials {
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          margin: 24px 0 32px;
+          line-height: 1.8;
+          padding-top: 20px;
+          border-top: 1px solid var(--rule);
         }
 
         /* ============================================================
-           FINAL CTA
-           Ivory. Quiet close. John's exact words from the bio.
-           Left: his statement. Right: his description and CTA.
+           6. SCIENCE + CREDENTIALS
+           John's "Science-grounded. Experience-tested." copy from v5.
+           Credentials integrated as supporting proof — no generic badges.
         ============================================================ */
-        .final-cta {
+        .science {
+          background: var(--ivory);
+          padding: 100px 72px;
+          border-top: 1px solid var(--rule);
+        }
+        .science-inner {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 80px;
+          align-items: start;
+        }
+        .science-headline {
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(24px, 2.8vw, 34px);
+          font-weight: 400;
+          color: var(--text);
+          margin-bottom: 24px;
+          letter-spacing: -0.01em;
+          line-height: 1.25;
+        }
+        .science-body {
+          font-size: 0.93rem;
+          line-height: 1.85;
+          color: var(--text-mid);
+          font-weight: 300;
+        }
+        .credentials-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+        .credential-row {
+          display: flex;
+          align-items: baseline;
+          gap: 20px;
+          padding: 18px 0;
+          border-bottom: 1px solid var(--rule);
+        }
+        .credential-row:first-child { border-top: 1px solid var(--rule); }
+        .credential-main {
+          font-family: 'DM Serif Display', serif;
+          font-size: 0.95rem;
+          font-weight: 400;
+          color: var(--slate-mid);
+          min-width: 100px;
+          line-height: 1.3;
+          flex-shrink: 0;
+        }
+        .credential-detail {
+          font-size: 0.82rem;
+          color: var(--text-muted);
+          line-height: 1.5;
+        }
+
+        /* ============================================================
+           7. TESTIMONIAL
+           Linnea Landowski's confirmed testimonial.
+           Lora italic for the quote. Slate background. Generous space.
+        ============================================================ */
+        .testimonial-section {
+          background: var(--slate);
+          padding: 100px 72px;
+        }
+        .testimonial-inner {
+          max-width: 860px;
+          margin: 0 auto;
+        }
+        .testimonial-label {
+          font-size: 0.72rem;
+          color: rgba(247,244,237,0.45);
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          margin-bottom: 48px;
+          font-weight: 400;
+        }
+        .testimonial-quote {
+          font-family: 'Lora', serif;
+          font-size: clamp(1rem, 1.4vw, 1.15rem);
+          font-style: italic;
+          line-height: 1.82;
+          color: rgba(247,244,237,0.88);
+          margin-bottom: 36px;
+        }
+        .testimonial-attribution {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        .testimonial-rule {
+          width: 32px;
+          height: 1px;
+          background: var(--gold);
+          flex-shrink: 0;
+        }
+        .testimonial-name {
+          font-size: 0.82rem;
+          color: rgba(247,244,237,0.7);
+          font-weight: 500;
+          margin-bottom: 2px;
+        }
+        .testimonial-role {
+          font-size: 0.75rem;
+          color: rgba(247,244,237,0.4);
+          line-height: 1.5;
+        }
+
+        /* ============================================================
+           8. CLOSING CTA
+           v5 copy: "It starts with a single conversation."
+           Ivory background. Quiet close.
+        ============================================================ */
+        .closing-cta {
           background: var(--ivory);
           padding: 120px 72px;
           border-top: 1px solid var(--rule);
         }
-        .final-cta-inner {
-          max-width: 1200px;
+        .closing-cta-inner {
+          max-width: 1100px;
           margin: 0 auto;
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 80px;
           align-items: center;
         }
-        .cta-statement {
+        .cta-headline {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(28px, 3.2vw, 40px);
+          font-size: clamp(28px, 3.2vw, 42px);
           font-weight: 400;
-          line-height: 1.25;
+          line-height: 1.2;
           color: var(--text);
           letter-spacing: -0.01em;
         }
-        .cta-statement em {
-          font-style: italic;
-          color: var(--slate-mid);
-        }
         .cta-body {
-          font-size: 0.93rem;
+          font-size: 0.95rem;
           line-height: 1.85;
           color: var(--text-muted);
           margin-bottom: 32px;
+          font-weight: 300;
         }
-        .cta-note {
-          margin-top: 18px;
-          font-size: 0.78rem;
-          color: var(--text-muted);
-        }
-        .cta-note a {
-          color: var(--slate-mid);
-          text-decoration: none;
-        }
-        .cta-note a:hover { text-decoration: underline; }
 
         /* ============================================================
            RESPONSIVE
@@ -535,175 +588,192 @@ export default async function Home() {
           .hero { grid-template-columns: 1fr; min-height: unset; }
           .hero-divider { display: none; }
           .hero-left { padding: 130px 48px 60px; }
-          .hero-right { min-height: 480px; }
-          .credentials { padding: 40px 48px; }
-          .credentials-inner { flex-wrap: wrap; }
-          .credential-item { min-width: 48%; padding: 16px 20px; border-right: none; border-bottom: 1px solid rgba(76,120,160,0.2); }
-          .credential-item:nth-child(odd) { border-right: 1px solid rgba(76,120,160,0.2); }
-          .about { grid-template-columns: 1fr; }
-          .about-photo { min-height: 400px; }
-          .about-content { padding: 60px 48px; }
-          .services { padding: 80px 48px; }
-          .services-header { grid-template-columns: 1fr; gap: 20px; }
-          .approach { padding: 80px 48px; }
-          .approach-steps { grid-template-columns: 1fr; gap: 36px; }
-          .testimonials { padding: 80px 48px; }
-          .testimonial-entry { grid-template-columns: 1fr; gap: 16px; }
-          .testimonial-attr { text-align: left; }
-          .final-cta { padding: 80px 48px; }
-          .final-cta-inner { grid-template-columns: 1fr; gap: 40px; }
+          .hero-right { min-height: 460px; }
+          .problem { padding: 80px 48px; }
+          .audience-services { padding: 80px 48px; }
+          .audience-block { grid-template-columns: 1fr; gap: 32px; }
+          .audience-item { grid-template-columns: 1fr; gap: 8px; }
+          .philosophy { padding: 80px 48px; }
+          .about-strip { grid-template-columns: 1fr; }
+          .about-strip-photo { min-height: 360px; }
+          .about-strip-content { padding: 60px 48px; }
+          .science { padding: 80px 48px; }
+          .science-inner { grid-template-columns: 1fr; gap: 48px; }
+          .testimonial-section { padding: 80px 48px; }
+          .closing-cta { padding: 80px 48px; }
+          .closing-cta-inner { grid-template-columns: 1fr; gap: 40px; }
         }
         @media (max-width: 640px) {
           .hero-left { padding: 110px 24px 48px; }
-          .hero-headline { font-size: clamp(32px, 8vw, 44px); }
+          .hero-headline { font-size: clamp(30px, 8vw, 42px); }
           .hero-btns { flex-direction: column; }
-          .credentials { padding: 32px 24px; }
-          .credential-item { min-width: 100%; border-right: none; }
-          .credential-item:nth-child(odd) { border-right: none; }
-          .about-content { padding: 48px 24px; }
-          .services { padding: 64px 24px; }
-          .approach { padding: 64px 24px; }
-          .testimonials { padding: 64px 24px; }
-          .final-cta { padding: 64px 24px; }
+          .problem { padding: 64px 24px; }
+          .audience-services { padding: 64px 24px; }
+          .service-item { grid-template-columns: 36px 1fr; }
+          .service-arrow { display: none; }
+          .service-item.featured { margin-left: -14px; padding-left: 12px; }
+          .service-item.featured:hover { padding-left: 18px; }
+          .philosophy { padding: 64px 24px; }
+          .about-strip-content { padding: 48px 24px; }
+          .science { padding: 64px 24px; }
+          .testimonial-section { padding: 64px 24px; }
+          .closing-cta { padding: 64px 24px; }
         }
       `}</style>
 
-      {/* ===== HERO ===== */}
+      {/* ===== 1. HERO ===== */}
       <section className="hero">
         <div className="hero-divider" />
         <div className="hero-left">
-          <p className="hero-context">John McCracken, EMBA, ACC — Executive Coaching and Consulting</p>
           <h1 className="hero-headline">
-            {g('hero_headline', 'I help people find and get\nwhat they want.').split('\n').map((line: string, i: number) => (
-              <span key={i} style={{display:'block'}}>{line}</span>
-            ))}
+            I help people get through wind and waves to get where and what they want — even if the goals aren't clear yet.
           </h1>
-          <p className="hero-body">{g('hero_subtext', "You earned your success — and now you're looking to unlock what's next. Professionally, personally, relationally. All of it, together.")}</p>
-          <p className="hero-body-2">{g('hero_subtext_2', 'I bring a lifetime of hard-won insights, alongside genuine curiosity and unwavering support, to help you get clear on what you want — and unlock the potential already in you to achieve it.')}</p>
+          <p className="hero-subhead">We work the whole chart — professional, personal, relational — because they're never really separate.</p>
+          <p className="hero-credentials-line">John McCracken, CAPT, USN (Ret.), EMBA, ACC (ICF), DoD Certified Executive Coach, LCOP — Over 30 years in senior leadership.</p>
           <div className="hero-btns">
-            <a href="/contact" className="btn btn-navy">Schedule Your Free 15-Minute Intro Call</a>
-            <a href="/business" className="btn btn-outline">Explore Coaching</a>
+            <a href="/contact" className="btn btn-navy">Schedule a Conversation</a>
+            <a href="#problem" className="btn btn-outline">Learn More</a>
           </div>
         </div>
         <div className="hero-right">
           {c.hero_photo
             ? <><img src={c.hero_photo} alt="John McCracken" className="hero-photo-img" /><div className="hero-photo-scrim" /></>
-            : <div className="hero-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John</span><span>Coming soon</span></div>
+            : <div className="hero-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John — coming soon</span></div>
           }
         </div>
       </section>
 
-      {/* ===== CREDENTIALS ===== */}
-      <div className="credentials">
-        <div className="credentials-inner">
-          {[
-            { main: '30 Years', detail: 'U.S. Navy — leadership, command, and strategic development' },
-            { main: 'CAPT, USN (Ret.)', detail: 'Commanding Officer and Director-level roles' },
-            { main: 'EMBA', detail: 'Naval Postgraduate School' },
-            { main: 'ACC — ICF', detail: 'Associate Certified Coach, International Coaching Federation' },
-          ].map((cred, i) => (
-            <div key={i} className="credential-item">
-              <div className="credential-main">{cred.main}</div>
-              <div className="credential-detail">{cred.detail}</div>
+      {/* ===== 2. THE PROBLEM ===== */}
+      <section className="problem" id="problem">
+        <div className="problem-inner">
+          <div className="problem-label">Why people reach out</div>
+          <h2 className="problem-headline">The immediate challenge is rarely the whole story.</h2>
+          <p className="problem-body">Complexity is a fact of life. Most people carry more than the role accounts for. A demanding career, a family that deserves your best, goals that keep getting pushed to next quarter — the weight of it is real. And most people carry it alone.</p>
+          <p className="problem-body">What brings someone to coaching is usually a professional challenge. What we discover together is almost always bigger than that. My clients generally start with a work challenge and quickly identify work-life integration as a key component of reaching their personal and professional goals.</p>
+          <p className="problem-body">The pressure you're feeling at work has company somewhere else. The pattern that keeps showing up in meetings, or with that one difficult colleague, usually has roots outside of work entirely. The clarity you're looking for isn't just a leadership skill — it's what happens when you get honest about who you are and what you actually want, across every part of your life.</p>
+          <p className="problem-body">That's where this coaching goes. And that's what makes it different.</p>
+        </div>
+      </section>
+
+      {/* ===== 3. AUDIENCE + SERVICES ===== */}
+      <section className="audience-services">
+        <div className="audience-services-inner">
+
+          <div className="audience-block">
+            <div className="audience-label">Who we work with</div>
+            <div className="audience-list">
+              {[
+                { name: 'Senior Executives and Leaders', desc: "You're performing well and know your next level requires something different — more strategic clarity, stronger team leverage, and a more sustainable way to lead without burning through what you have." },
+                { name: 'High-Potential Professionals', desc: "You've been identified as ready for more, and you want the tools to get there. Coaching builds the capabilities your next role requires, and addresses the whole-person foundation that makes growth sustainable and lasting." },
+                { name: 'Military and Federal Professionals in Transition', desc: "You've built a remarkable career in uniform or government. What comes next involves more than a resume — it involves identity, purpose, and figuring out who you are when the structure changes." },
+                { name: 'Over-Stressed Professionals', desc: "You've succeeded — but something is straining that success, and it's starting to show. Coaching helps you name what's actually happening, reconnect to the values that got you here, and find sustainable footing in the new normal. This is territory I know personally, not just professionally." },
+              ].map((a, i) => (
+                <div key={i} className="audience-item">
+                  <div className="audience-name">{a.name}</div>
+                  <div className="audience-desc">{a.desc}</div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* ===== ABOUT / STORY ===== */}
-      <section className="about">
-        <div className="about-photo">
-          {c.about_photo
-            ? <img src={c.about_photo} alt="John McCracken" />
-            : <div className="about-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John</span><span>Coming soon</span></div>
-          }
-        </div>
-        <div className="about-content">
-          <div className="about-name">About John McCracken</div>
-          <h2 className="about-opening">{g('about_title', 'I know what it\'s like to wake up in the middle of the night wondering how to do it all — and do it all well.')}</h2>
-          <p className="about-body">{g('about_body_1', 'Supporting a family, leading at work, taking care of yourself and your relationships, pursuing goals that matter — the weight of it is real. Most people carry it alone.')}</p>
-          <p className="about-body"><strong>{g('about_body_2', "What turned it around wasn't a new strategy or a reorganization. It was learning to lead and care for the whole person in the room — starting with myself. Two years later, that command was recognized as the best large Center in the nation.")}</strong></p>
-          <div className="about-pull">
-            <p>{g('about_quote', 'The immediate challenge is rarely the whole story. When we address the whole person — every dimension of who they are and what they\'re carrying — something unlocks.')}</p>
           </div>
-          <p className="about-body" style={{marginBottom:32}}>{g('about_body_3', "That's what I bring to every client.")}</p>
-          <a href="/about" className="btn btn-outline-light" style={{alignSelf:'flex-start'}}>Read John's story</a>
-        </div>
-      </section>
 
-      {/* ===== SERVICES ===== */}
-      <section className="services">
-        <div className="services-inner">
-          <div className="services-header">
-            <h2 className="services-heading">How I can help.</h2>
-            <p className="services-intro">{g('services_intro', 'Whether you are leading an organization, navigating a transition, or ready to invest in your own growth — the work is the same.')}</p>
-          </div>
+          <h2 className="services-heading">Four ways we work together.</h2>
           <div className="services-list">
-            {services.map((s, i) => (
-              <a key={i} href={s.href} className="service-item">
-                <div className="service-num">0{i+1}</div>
-                <div>
+            {[
+              { num: '01', name: 'Executive Coaching', audience: 'For Individuals and Organizations', desc: 'One-to-one coaching that follows your lead — addressing the challenge in front of you and everything connected to it.', href: '/executive-coaching', featured: false },
+              { num: '02', name: 'Transition Coaching', audience: 'For Individuals', desc: 'Structured coaching for military and federal professionals navigating what comes next — career, identity, and life, together.', href: '/transition-coaching', featured: false },
+              { num: '03', name: 'Mission-Ready Leadership', audience: 'For Executives, Teams, Organizations and Individuals in Transition', desc: "A science-grounded, whole-person coaching program built around the 8 Pillars of Mission-Ready Leadership — for leaders at any altitude, including anyone finding their footing in a new role.", href: '/mission-ready-leadership', featured: true },
+              { num: '04', name: 'Leadership Consulting', audience: 'For Organizations', desc: 'Custom design and delivery of leadership development systems for mission-driven enterprises, federal agencies, schools, and defense organizations.', href: '/leadership-consulting', featured: false },
+            ].map((s, i) => (
+              <a key={i} href={s.href} className={`service-item${s.featured ? ' featured' : ''}`}>
+                <div className="service-num">{s.num}</div>
+                <div className="service-content">
                   <div className="service-name">{s.name}</div>
+                  <div className="service-audience">{s.audience}</div>
                   <div className="service-desc">{s.desc}</div>
                 </div>
+                <div className="service-arrow">→</div>
               </a>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== APPROACH ===== */}
-      <section className="approach">
-        <div className="approach-inner">
-          <h2 className="approach-lead">Coaching that follows your lead.</h2>
-          <p className="approach-sub">{g('approach_desc', "You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together. Because life doesn't separate neatly into professional and personal, we don't either.")}</p>
-          <div className="approach-steps">
+      {/* ===== 4. PHILOSOPHY / FRAMEWORK ===== */}
+      <section className="philosophy">
+        <div className="philosophy-inner">
+          <h2 className="philosophy-headline">Most coaches work on the leader you are at work. This works on the person you are everywhere to create holistic change.</h2>
+          <p className="philosophy-body">When we address the whole person — every dimension of who they are and what they're carrying — something unlocks. Potential they didn't know they had. Clarity they couldn't find alone. An actionable, repeatable path forward that lasts.</p>
+          <p className="philosophy-body">That's why this coaching doesn't separate professional from personal. Because life doesn't either.</p>
+          <a href="/the-framework" className="philosophy-link">Explore the Framework →</a>
+        </div>
+      </section>
+
+      {/* ===== 5. ABOUT STRIP ===== */}
+      <section className="about-strip">
+        <div className="about-strip-photo">
+          {c.about_photo
+            ? <img src={c.about_photo} alt="John McCracken" />
+            : <div className="about-strip-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John — coming soon</span></div>
+          }
+        </div>
+        <div className="about-strip-content">
+          <p className="about-strip-body">I spent 30 years leading in the United States Navy and seven years as a senior civilian in the Office of the Secretary of Defense.</p>
+          <p className="about-strip-body">In those years I had successes, and frankly failures. I learned what creates success and what keeps people from it. In doing so, I developed a keen desire to help people avoid the pitfalls I hit, or at least recover more quickly from them.</p>
+          <p className="about-strip-body">Those decades also taught me how to lead, how to recover, and how to help others. I learned what it costs to try to carry it all — and what becomes possible when you finally stop pretending you have to.</p>
+          <div className="about-strip-credentials">CAPT, USN (Ret.) | EMBA | ACC (ICF) | DoD Certified Executive Coach</div>
+          <a href="/about" className="btn btn-outline">Read the full story</a>
+        </div>
+      </section>
+
+      {/* ===== 6. SCIENCE + CREDENTIALS ===== */}
+      <section className="science">
+        <div className="science-inner">
+          <div>
+            <h2 className="science-headline">Science-grounded. Experience-tested.</h2>
+            <p className="science-body">The coaching and programs at Beyond the Horizon are grounded in peer-reviewed research on human flourishing — the same science underlying the U.S. Army's resilience programs — and address how stress, depletion, and financial and relational friction impair the judgment, decision-making, and equanimity leadership demands most.</p>
+          </div>
+          <div className="credentials-list">
             {[
-              { num: '01', body: g('approach1_desc', "You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together.") },
-              { num: '02', body: g('approach2_desc', "We explore your values, challenge assumptions, and open perspectives you may not have considered from inside the situation. You lead the way.") },
-              { num: '03', body: g('approach3_desc', "Insight without action is just an interesting conversation — we go beyond that. Every session produces something concrete: a commitment you define, a step you choose, a thing you finally decide to do. You keep pushing forward.") },
-            ].map((step, i) => (
-              <div key={i}>
-                <div className="step-num">{step.num}</div>
-                <p className="step-body">{step.body}</p>
+              { main: 'ACC Certified', detail: 'International Coaching Federation' },
+              { main: 'DoD Certified', detail: 'Executive Coach' },
+              { main: 'LCOP', detail: 'Leadership Coaching and Organizational Performance' },
+              { main: 'Research-grounded', detail: 'Grounded in peer-reviewed research on human flourishing' },
+            ].map((cred, i) => (
+              <div key={i} className="credential-row">
+                <div className="credential-main">{cred.main}</div>
+                <div className="credential-detail">{cred.detail}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== TESTIMONIALS — only renders when content exists ===== */}
-      {testimonials.length > 0 && (
-        <section className="testimonials">
-          <div className="testimonials-inner">
-            <div className="testimonials-label">What clients say</div>
-            <div className="testimonial-stack">
-              {testimonials.map((t) => (
-                <div key={t.id} className="testimonial-entry">
-                  <div className="testimonial-text">{t.quote}</div>
-                  <div className="testimonial-attr">
-                    <div className="testimonial-name">{t.name}</div>
-                    <div className="testimonial-role">{[t.role, t.company].filter(Boolean).join(', ')}</div>
-                  </div>
+      {/* ===== 7. TESTIMONIAL ===== */}
+      <section className="testimonial-section">
+        <div className="testimonial-inner">
+          <div className="testimonial-label">What clients say</div>
+          {displayTestimonials.slice(0, 1).map(t => (
+            <div key={t.id}>
+              <div className="testimonial-quote">{t.quote}</div>
+              <div className="testimonial-attribution">
+                <div className="testimonial-rule" />
+                <div>
+                  <div className="testimonial-name">{t.name}</div>
+                  <div className="testimonial-role">{t.role}</div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          ))}
+        </div>
+      </section>
 
-      {/* ===== FINAL CTA ===== */}
-      <section className="final-cta">
-        <div className="final-cta-inner">
-          <div className="cta-statement">
-            That's the work. And it starts with a single conversation.
-          </div>
+      {/* ===== 8. CLOSING CTA ===== */}
+      <section className="closing-cta">
+        <div className="closing-cta-inner">
+          <h2 className="cta-headline">It starts with a single conversation.</h2>
           <div>
-            <p className="cta-body">{g('cta_desc', "No pitch. No pressure. Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.")}</p>
-            <a href="/contact" className="btn btn-navy">Schedule Your Free 15-Minute Intro Call</a>
-            <p className="cta-note">
-              <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a> · 703-343-6960
-            </p>
+            <p className="cta-body">Schedule a free 15-minute intro call. No pitch. No pressure. Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
+            <a href="/contact" className="btn btn-navy">Schedule Your Free Intro Call</a>
           </div>
         </div>
       </section>
