@@ -582,6 +582,25 @@ export default async function Home() {
         }
 
         /* ============================================================
+           CHERRY BLOSSOM VISUAL BREAK
+           Proportions chosen to preserve tree, blossoms, and sunset.
+           No overlay, no text, no decoration.
+        ============================================================ */
+        .cherry-break {
+          background: var(--ivory-dark);
+          overflow: hidden;
+          line-height: 0;
+        }
+        .cherry-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          max-height: 520px;
+          object-fit: cover;
+          object-position: center 30%;
+        }
+
+        /* ============================================================
            RESPONSIVE
         ============================================================ */
         @media (max-width: 1024px) {
@@ -636,10 +655,8 @@ export default async function Home() {
           </div>
         </div>
         <div className="hero-right">
-          {c.hero_photo
-            ? <><img src={c.hero_photo} alt="John McCracken" className="hero-photo-img" /><div className="hero-photo-scrim" /></>
-            : <div className="hero-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John — coming soon</span></div>
-          }
+          <img src="/images/john-mccracken-navy-anchor.jpg" alt="John McCracken in Navy dress whites beside the gold anchor" className="hero-photo-img" />
+        <div className="hero-photo-scrim" />
         </div>
       </section>
 
@@ -654,6 +671,16 @@ export default async function Home() {
           <p className="problem-body">That's where this coaching goes. And that's what makes it different.</p>
         </div>
       </section>
+
+      {/* ===== VISUAL BREAK — cherry blossoms ===== */}
+      <div className="cherry-break">
+        <img
+          src="/images/dc-cherry-blossoms-sunset.jpg"
+          alt=""
+          aria-hidden="true"
+          className="cherry-img"
+        />
+      </div>
 
       {/* ===== 3. AUDIENCE + SERVICES ===== */}
       <section className="audience-services">
@@ -711,10 +738,7 @@ export default async function Home() {
       {/* ===== 5. ABOUT STRIP ===== */}
       <section className="about-strip">
         <div className="about-strip-photo">
-          {c.about_photo
-            ? <img src={c.about_photo} alt="John McCracken" />
-            : <div className="about-strip-photo-placeholder"><span style={{fontSize:32,opacity:0.15}}>📷</span><span>Photo of John — coming soon</span></div>
-          }
+          <img src="/images/john-mccracken-anchor-portrait.jpg" alt="John McCracken" />
         </div>
         <div className="about-strip-content">
           <p className="about-strip-body">I spent 30 years leading in the United States Navy and seven years as a senior civilian in the Office of the Secretary of Defense.</p>
