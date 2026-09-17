@@ -68,14 +68,7 @@ export default async function TransitionCoaching() {
           padding: 160px 72px 100px;
         }
         .hero-inner { max-width: 760px; }
-        .page-label {
-          font-size: 0.72rem;
-          color: var(--text-muted);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          margin-bottom: 28px;
-          font-weight: 400;
-        }
+
         .hero-headline {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(36px, 4.2vw, 54px);
@@ -371,7 +364,6 @@ export default async function TransitionCoaching() {
       {/* ===== HERO ===== */}
       <section className="hero">
         <div className="hero-inner">
-          <div className="page-label">For Individuals — Transition</div>
           <h1 className="hero-headline">
             You've built something remarkable.<br />
             Now let's make sure the next chapter is worthy of it.

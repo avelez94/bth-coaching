@@ -41,14 +41,7 @@ export default async function ExecutiveCoaching() {
           position: relative;
         }
         .hero-inner { max-width: 720px; }
-        .page-label {
-          font-size: 0.72rem;
-          color: rgba(247,244,237,0.5);
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          margin-bottom: 28px;
-          font-weight: 400;
-        }
+
         .hero-headline {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(38px, 4.5vw, 58px);
@@ -380,7 +373,6 @@ export default async function ExecutiveCoaching() {
       {/* ===== HERO ===== */}
       <section className="hero">
         <div className="hero-inner">
-          <div className="page-label">For Individuals</div>
           <h1 className="hero-headline">Coaching that follows your lead.</h1>
           <p className="hero-subhead">One-to-one coaching for executives and senior leaders — addressing the professional challenge in front of you and everything connected to it. On your terms. For your success.</p>
           <a href="/contact" className="btn btn-outline-light">Schedule a Discovery Call</a>
