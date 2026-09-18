@@ -29,20 +29,22 @@ export default function Footer() {
             </div>
             <div className="footer-col">
               <div className="footer-col-title">Coaching</div>
-              <a href="/business">Business Coaching</a>
-              <a href="/individual">Individual Coaching</a>
+              <a href="/executive-coaching">Executive Coaching</a>
+              <a href="/transition-coaching">Transition Coaching</a>
               <a href="/mission-ready-leadership">Mission-Ready Leadership</a>
+              <a href="/leadership-consulting">Leadership Consulting</a>
             </div>
             <div className="footer-col">
               <div className="footer-col-title">Company</div>
-              <a href="/">About John</a>
+              <a href="/about">About John</a>
+              <a href="/the-framework">The Framework</a>
               <a href="/contact">Contact</a>
             </div>
             <div className="footer-col">
               <div className="footer-col-title">Get in Touch</div>
               <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
-              <a href="tel:7033436960">703-343-6960</a>
-              <a href="/contact">Schedule a Free Intro Call</a>
+              <a href="tel:7037052225">703-705-2225</a>
+              <a href="/contact">Schedule a Conversation</a>
             </div>
           </div>
           <div className="footer-bottom">
