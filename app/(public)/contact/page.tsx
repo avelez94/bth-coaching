@@ -363,8 +363,6 @@ export default function Contact() {
                 </>
               )}
             </div>
-
-            </div>
             </div>
 
             {/* Slate column — bleeds to right viewport edge */}
