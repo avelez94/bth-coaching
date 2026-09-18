@@ -123,42 +123,43 @@ export default function Contact() {
 
         /* ============================================================
            ZONE 3: FORM + SLATE FIELD
-           The lower section uses position:relative with a ::after
-           pseudo-element that creates the slate field. It begins at
-           ~58% from the left and bleeds completely to the right edge
-           of the viewport — architectural, not a column background.
-           The grid sits above this field; the right column is
-           positioned so its content lands within the slate area.
+           Full-width wrapper breaks out of the max-width canvas.
+           Left side: form on ivory.
+           Right side: genuine slate element that bleeds to the
+           right viewport edge via negative margin + overflow hidden
+           on the page, or simply by spanning the full remaining width.
         ============================================================ */
-        .contact-lower {
+        .contact-lower-wrap {
           margin-top: 80px;
-          display: grid;
-          grid-template-columns: 420px 1fr 360px;
-          gap: 0;
-          align-items: start;
           border-top: 1px solid var(--rule);
+          display: flex;
+          align-items: stretch;
+          width: 100vw;
+          margin-left: calc(-1 * ((100vw - 100%) / 2));
+        }
+        .form-col {
+          flex: 0 0 auto;
+          width: calc(((100vw - 1320px) / 2) + 540px);
+          min-width: 380px;
+          max-width: 600px;
           padding-top: 64px;
-          position: relative;
+          padding-left: max(72px, calc((100vw - 1320px) / 2));
+          padding-right: 0;
+          padding-bottom: 100px;
+          background: var(--ivory);
+          box-sizing: border-box;
         }
-        /* Architectural slate field — bleeds to viewport right edge */
-        .contact-lower::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          /* starts where the right column begins: 420px + 1fr gap.
-             We use left: 58% as a proportional approximation that
-             works across most desktop widths */
-          left: 58%;
-          right: -72px; /* matches page padding to reach viewport edge */
-          bottom: 0;
+        .slate-col {
+          flex: 1;
           background: var(--slate);
-          z-index: 0;
-          pointer-events: none;
+          padding: 0 72px 0 64px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 48px;
+          min-height: 420px;
         }
-        .form-zone {
-          position: relative;
-          z-index: 1;
-        }
+        .form-zone { }
 
         /* Form fields — bottom border only, no card */
         .field {
@@ -234,18 +235,9 @@ export default function Contact() {
         .btn-send:hover:not(:disabled) { background: var(--slate-mid); }
         .btn-send:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        /* Right column — sits above the slate ::after field */
+        /* Details inside slate-col */
         .details-zone {
-          position: relative;
-          z-index: 1;
-          padding-top: 48px;
-          padding-left: 52px;
-          padding-bottom: 80px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 48px;
-          min-height: 420px;
+          display: contents;
         }
         .details-name {
           font-family: 'DM Serif Display', serif;
@@ -287,41 +279,23 @@ export default function Contact() {
         ============================================================ */
         @media (max-width: 1100px) {
           .contact-primary { max-width: 480px; }
-          .contact-lower { grid-template-columns: 380px 1fr 300px; }
-          .contact-lower::after { left: 56%; right: -48px; }
+          .form-col { width: calc(((100vw - 1100px) / 2) + 480px); }
         }
 
         @media (max-width: 900px) {
           .contact-page { padding: 140px 48px 100px; }
           .contact-primary { margin-left: 0; max-width: 100%; margin-top: 36px; }
-          .contact-lower { grid-template-columns: 1fr; gap: 0; }
-          .contact-lower > div:nth-child(2) { display: none; }
-          /* Slate ::after becomes full-width below the form on mobile */
-          .contact-lower::after { left: 0; right: -48px; top: auto; bottom: 0; height: auto; }
-          .details-zone {
-            padding-top: 48px;
-            padding-left: 0;
-            padding-bottom: 56px;
-            min-height: unset;
-            /* Extend into the slate field area via margin */
-            margin-left: -48px;
-            margin-right: -48px;
-            padding-left: 48px;
-            padding-right: 48px;
-          }
-          .contact-closing { margin-top: 40px; padding-top: 0; font-size: clamp(22px, 5vw, 28px); }
+          .contact-lower-wrap { flex-direction: column; width: 100%; margin-left: 0; }
+          .form-col { width: 100%; max-width: 100%; padding: 48px 48px 56px; min-width: unset; }
+          .slate-col { padding: 56px 48px; min-height: unset; gap: 36px; }
+          .contact-closing { font-size: clamp(22px, 5vw, 28px); }
         }
 
         @media (max-width: 640px) {
           .contact-page { padding: 120px 24px 80px; }
           .contact-headline { font-size: clamp(32px, 9vw, 48px); }
-          .contact-lower::after { right: -24px; }
-          .details-zone {
-            margin-left: -24px;
-            margin-right: -24px;
-            padding-left: 24px;
-            padding-right: 24px;
-          }
+          .form-col { padding: 40px 24px 48px; }
+          .slate-col { padding: 48px 24px; }
         }
       `}</style>
 
@@ -340,10 +314,9 @@ export default function Contact() {
             </a>
           </div>
 
-          {/* ZONE 3: Optional form + contact details */}
-          <div className="contact-lower">
-
-            {/* Form — secondary action */}
+          {/* ZONE 3: Form left (ivory) + slate right (bleeds to edge) */}
+          <div className="contact-lower-wrap">
+            <div className="form-col">
             <div className="form-zone">
               {sent ? (
                 <p className="form-success">Thank you. Your message has been sent.</p>
@@ -391,12 +364,12 @@ export default function Contact() {
               )}
             </div>
 
-            {/* Middle column — gap; slate field bleeds through this area */}
-            <div style={{position:"relative",zIndex:1}} />
+            </div>
+            </div>
 
-            {/* Right column: contact details + closing statement */}
-            <div className="details-zone">
-              <div>
+            {/* Slate column — bleeds to right viewport edge */}
+            <div className="slate-col">
+              <div className="details-zone">
                 <div className="details-name">John McCracken, EMBA, ACC (ICF)</div>
                 <div className="details-item">
                   <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
@@ -406,7 +379,6 @@ export default function Contact() {
                 </div>
                 <div className="details-item">Washington, DC area | Virtual worldwide</div>
               </div>
-              {/* CLOSING — v5 verbatim, DM Serif Display, anchors the right column */}
               <div className="contact-closing">Together we get Beyond your Horizon.</div>
             </div>
 
@@ -416,4 +388,4 @@ export default function Contact() {
       </div>
     </>
   )
-} 
+}
