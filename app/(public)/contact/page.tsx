@@ -123,28 +123,20 @@ export default function Contact() {
 
         /* ============================================================
            ZONE 3: FORM + CONTACT DETAILS
-           Asymmetric two-column below the primary CTA area.
-           Form left (narrower), contact details far right and lower.
-           Neither begins at the same vertical position — the offset
-           is intentional. Details read as a quiet signature.
+           Three-column grid: form left, gap, details+closing right.
+           Contact details and closing line together anchor the right
+           side of the canvas — the closing statement gets real weight.
         ============================================================ */
         .contact-lower {
           margin-top: 80px;
           display: grid;
-          grid-template-columns: 480px 1fr;
+          grid-template-columns: 420px 1fr 340px;
           gap: 0;
           align-items: start;
           border-top: 1px solid var(--rule);
           padding-top: 64px;
         }
         .form-zone { }
-        .form-intro {
-          font-size: 0.82rem;
-          color: var(--text-muted);
-          margin-bottom: 36px;
-          line-height: 1.6;
-          font-weight: 400;
-        }
 
         /* Form fields — bottom border only, no card */
         .field {
@@ -153,17 +145,17 @@ export default function Contact() {
         .field label {
           display: block;
           font-size: 0.72rem;
-          color: var(--text-muted);
+          color: var(--text-mid);
           letter-spacing: 0.04em;
           margin-bottom: 8px;
-          font-weight: 400;
+          font-weight: 500;
         }
         .field input,
         .field textarea {
           width: 100%;
           background: transparent;
           border: none;
-          border-bottom: 1px solid var(--rule);
+          border-bottom: 1px solid rgba(28,43,58,0.28);
           border-radius: 0;
           color: var(--text);
           font-family: 'Inter', sans-serif;
@@ -220,10 +212,13 @@ export default function Contact() {
         .btn-send:hover:not(:disabled) { background: var(--slate-mid); }
         .btn-send:disabled { opacity: 0.55; cursor: not-allowed; }
 
-        /* Contact details — quiet signature, offset lower and right */
+        /* Contact details + closing — right column, offset lower */
         .details-zone {
-          padding-top: 120px;
-          padding-left: 80px;
+          padding-top: 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 400px;
         }
         .details-name {
           font-family: 'DM Serif Display', serif;
@@ -249,16 +244,18 @@ export default function Contact() {
         /* ============================================================
            CLOSING
            "Together we get Beyond your Horizon." — v5 approved.
-           Sits below everything as the page's quiet close.
+           DM Serif Display. Sits lower in the right column,
+           completing the asymmetric movement of the page.
         ============================================================ */
         .contact-closing {
-          margin-top: 100px;
-          padding-top: 40px;
-          border-top: 1px solid var(--rule);
-          font-size: 0.85rem;
-          color: var(--text-muted);
-          font-style: italic;
-          font-weight: 300;
+          margin-top: auto;
+          padding-top: 48px;
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(22px, 2.4vw, 32px);
+          font-weight: 400;
+          color: var(--text);
+          letter-spacing: -0.01em;
+          line-height: 1.25;
         }
 
         /* ============================================================
@@ -266,15 +263,16 @@ export default function Contact() {
         ============================================================ */
         @media (max-width: 1100px) {
           .contact-primary { max-width: 480px; }
-          .contact-lower { grid-template-columns: 420px 1fr; }
-          .details-zone { padding-left: 60px; padding-top: 80px; }
+          .contact-lower { grid-template-columns: 380px 1fr 280px; }
         }
 
         @media (max-width: 900px) {
           .contact-page { padding: 140px 48px 100px; }
           .contact-primary { margin-left: 0; max-width: 100%; margin-top: 36px; }
-          .contact-lower { grid-template-columns: 1fr; gap: 60px; }
-          .details-zone { padding-left: 0; padding-top: 0; }
+          .contact-lower { grid-template-columns: 1fr; gap: 56px; }
+          .contact-lower > div:nth-child(2) { display: none; }
+          .details-zone { padding-top: 0; min-height: unset; }
+          .contact-closing { margin-top: 48px; padding-top: 0; font-size: clamp(22px, 5vw, 28px); }
         }
 
         @media (max-width: 640px) {
@@ -304,8 +302,6 @@ export default function Contact() {
 
             {/* Form — secondary action */}
             <div className="form-zone">
-              <p className="form-intro">Or send John a message directly.</p>
-
               {sent ? (
                 <p className="form-success">Thank you. Your message has been sent.</p>
               ) : (
@@ -337,7 +333,6 @@ export default function Contact() {
                     <label htmlFor="message">Message</label>
                     <textarea
                       id="message"
-                      placeholder="Share a bit about where you are and what you're looking for."
                       value={form.message}
                       onChange={e => setForm({ ...form, message: e.target.value })}
                     />
@@ -353,22 +348,26 @@ export default function Contact() {
               )}
             </div>
 
-            {/* Contact details — quiet signature, offset lower via padding-top */}
+            {/* Middle column — intentional gap */}
+            <div />
+
+            {/* Right column: contact details + closing statement */}
             <div className="details-zone">
-              <div className="details-name">John McCracken, EMBA, ACC (ICF)</div>
-              <div className="details-item">
-                <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
+              <div>
+                <div className="details-name">John McCracken, EMBA, ACC (ICF)</div>
+                <div className="details-item">
+                  <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
+                </div>
+                <div className="details-item">
+                  <a href="tel:7037052225">703-705-2225</a>
+                </div>
+                <div className="details-item">Washington, DC area | Virtual worldwide</div>
               </div>
-              <div className="details-item">
-                <a href="tel:7037052225">703-705-2225</a>
-              </div>
-              <div className="details-item">Washington, DC area | Virtual worldwide</div>
+              {/* CLOSING — v5 verbatim, DM Serif Display, anchors the right column */}
+              <div className="contact-closing">Together we get Beyond your Horizon.</div>
             </div>
 
           </div>
-
-          {/* CLOSING — v5 verbatim */}
-          <div className="contact-closing">Together we get Beyond your Horizon.</div>
 
         </div>
       </div>
