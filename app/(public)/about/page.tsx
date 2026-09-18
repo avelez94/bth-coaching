@@ -62,25 +62,21 @@ export default function About() {
         }
         .opening-name {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(28px, 3.2vw, 44px);
+          font-size: clamp(18px, 1.8vw, 24px);
           font-weight: 400;
-          color: var(--text);
-          letter-spacing: -0.01em;
-          line-height: 1.1;
-          margin-bottom: 8px;
-        }
-        .opening-title {
-          font-size: 0.82rem;
           color: var(--text-muted);
-          font-weight: 400;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.01em;
+          line-height: 1.1;
+          margin-bottom: 0;
         }
+
         /* Portrait sits in the right column, spanning both rows,
            offset from top to align with the statement rather than the name */
         .opening-portrait-col {
           grid-column: 2;
           grid-row: 1 / 3;
           padding-top: 72px;
+          margin-left: -48px;
         }
         .opening-portrait {
           width: 100%;
@@ -168,22 +164,22 @@ export default function About() {
           letter-spacing: -0.01em;
         }
 
-        /* Navy ceremony photograph — editorial break within the narrative */
+        /* Navy ceremony photograph — contained editorial break within narrative */
         .story-photo-break {
-          margin: 48px -72px;
+          margin: 56px auto;
+          max-width: 980px;
           line-height: 0;
-          overflow: hidden;
         }
         .story-photo-img {
           width: 100%;
-          height: 340px;
-          object-fit: cover;
-          object-position: center 30%;
+          height: auto;
           display: block;
+          max-width: 980px;
         }
         .story-photo-placeholder {
           width: 100%;
-          height: 340px;
+          max-width: 980px;
+          height: 400px;
           background: var(--slate-pale);
           display: flex;
           align-items: center;
@@ -342,7 +338,7 @@ export default function About() {
           }
           .opening-portrait-col { padding-top: 48px; }
           .story { padding: 80px 48px; }
-          .story-photo-break { margin: 40px -48px; }
+          .story-photo-break { margin: 48px auto; max-width: 100%; }
           .approach { padding: 80px 48px; }
           .possible { padding: 80px 48px; }
           .credentials { padding: 80px 48px; }
@@ -375,8 +371,7 @@ export default function About() {
         @media (max-width: 640px) {
           .opening { padding: 120px 24px 64px; }
           .story { padding: 64px 24px; }
-          .story-photo-break { margin: 32px -24px; }
-          .story-photo-img { height: 240px; }
+          .story-photo-break { margin: 40px auto; }
           .approach { padding: 64px 24px; }
           .possible { padding: 64px 24px; }
           .credentials { padding: 64px 24px; }
@@ -394,7 +389,6 @@ export default function About() {
 
           <div className="opening-name-block">
             <div className="opening-name">John McCracken</div>
-            <div className="opening-title">EMBA, ACC — Executive Coach and Consultant</div>
           </div>
 
           <div className="opening-portrait-col">
@@ -532,4 +526,4 @@ export default function About() {
       </section>
     </>
   )
-}
+} 
