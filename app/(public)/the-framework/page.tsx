@@ -159,7 +159,7 @@ export default function TheFramework() {
           color: var(--text-mid);
           max-width: 420px;
           font-weight: 300;
-          margin-top: 10px;
+          margin-top: 5px;
           margin-left: auto;
           padding-right: 0;
         }
