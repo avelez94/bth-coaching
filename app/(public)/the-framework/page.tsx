@@ -231,12 +231,16 @@ export default function TheFramework() {
         }
         .science-inner { max-width: 1100px; margin: 0 auto; }
         .science-heading {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.4vw, 30px);
-          font-weight: 400;
-          color: var(--text);
-          margin-bottom: 56px;
-          letter-spacing: -0.01em;
+        font-family: 'DM Serif Display', serif;
+        font-size: clamp(22px, 2.4vw, 30px);
+        font-weight: 400;
+        color: var(--text);
+        margin-bottom: 56px;
+        letter-spacing: -0.01em;
+        text-align: center;
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
         }
         .science-grid {
           display: grid;
