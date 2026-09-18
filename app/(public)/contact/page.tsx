@@ -243,7 +243,8 @@ export default function Contact() {
           padding-bottom: 80px;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: center;
+          gap: 48px;
           min-height: 420px;
         }
         .details-name {
@@ -273,8 +274,6 @@ export default function Contact() {
            the slate area. Anchors the bottom of the right column.
         ============================================================ */
         .contact-closing {
-          margin-top: auto;
-          padding-top: 52px;
           font-family: 'DM Serif Display', serif;
           font-size: clamp(22px, 2.6vw, 34px);
           font-weight: 400;
