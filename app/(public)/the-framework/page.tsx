@@ -138,22 +138,30 @@ export default function TheFramework() {
           background: var(--ivory);
           padding: 160px 72px 100px;
         }
-        .hero-inner { max-width: 760px; }
+        /* Desktop: two-block asymmetric composition */
+        .hero-composition {
+          max-width: 1320px;
+          position: relative;
+        }
         .hero-headline {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(34px, 4vw, 52px);
+          font-size: clamp(34px, 4.8vw, 64px);
           font-weight: 400;
-          line-height: 1.15;
+          line-height: 1.1;
           color: var(--text);
-          margin-bottom: 28px;
-          letter-spacing: -0.01em;
+          letter-spacing: -0.02em;
+          max-width: 680px;
+          margin-bottom: 0;
         }
         .hero-subhead {
           font-size: 1rem;
           line-height: 1.82;
           color: var(--text-mid);
-          max-width: 640px;
+          max-width: 420px;
           font-weight: 300;
+          margin-top: 48px;
+          margin-left: auto;
+          padding-right: 0;
         }
 
         /* ============================================================
@@ -293,11 +301,15 @@ export default function TheFramework() {
         .pillars-inner { max-width: 1100px; margin: 0 auto; }
         .pillars-intro-head {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.4vw, 30px);
+          font-size: clamp(24px, 2.8vw, 36px);
           font-weight: 400;
           color: var(--text);
-          margin-bottom: 48px;
+          margin-bottom: 64px;
           letter-spacing: -0.01em;
+          text-align: center;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
 
@@ -573,6 +585,7 @@ export default function TheFramework() {
         ============================================================ */
         @media (max-width: 1024px) {
           .hero { padding: 140px 48px 80px; }
+          .hero-subhead { margin-left: 0; max-width: 560px; margin-top: 32px; }
           .miss { padding: 80px 48px; }
           .miss-inner { grid-template-columns: 1fr; gap: 40px; }
           .miss-quote-col { position: static; }
@@ -591,6 +604,7 @@ export default function TheFramework() {
 
         @media (max-width: 640px) {
           .hero { padding: 120px 24px 64px; }
+          .hero-subhead { margin-left: 0; max-width: 100%; margin-top: 24px; }
           .miss { padding: 64px 24px; }
           .science { padding: 64px 24px; }
           .river-img { height: 260px; }
@@ -602,7 +616,7 @@ export default function TheFramework() {
 
       {/* ===== HERO ===== */}
       <section className="hero">
-        <div className="hero-inner">
+        <div className="hero-composition">
           <h1 className="hero-headline">The immediate challenge is rarely the whole story.</h1>
           <p className="hero-subhead">The 8 Pillars of Mission-Ready Leadership is a whole-person framework grounded in peer-reviewed research on human flourishing and informed by neuroscience. It is the assessment and development foundation for all coaching and programs at Beyond the Horizon — because the whole person shows up everywhere, and that's who we develop.</p>
         </div>
