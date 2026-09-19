@@ -213,7 +213,7 @@ export default function ExecutiveCoaching() {
           background: none;
           border: none;
           border-bottom: none;
-          padding: 22px 28px 22px 0;
+          padding: 32px 28px 32px 20px;
           text-align: left;
           cursor: pointer;
           position: relative;
