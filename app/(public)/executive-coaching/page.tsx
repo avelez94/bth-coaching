@@ -625,7 +625,7 @@ export default function ExecutiveCoaching() {
           aria-hidden="true"
           style={{
             width:'100%',
-            height:'clamp(320px, 38vw, 560px)',
+            height:'clamp(280px, 32vw, 460px)',
             objectFit:'cover',
             objectPosition:'center center',
             display:'block',
