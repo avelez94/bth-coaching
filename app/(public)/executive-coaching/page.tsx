@@ -617,6 +617,22 @@ export default function ExecutiveCoaching() {
         </div>
       </section>
 
+      {/* ===== EDITORIAL PHOTO BREAK ===== */}
+      <div style={{lineHeight:0,overflow:'hidden'}}>
+        <img
+          src="/images/executive-coaching.jpg"
+          alt=""
+          aria-hidden="true"
+          style={{
+            width:'100%',
+            height:'clamp(320px, 38vw, 560px)',
+            objectFit:'cover',
+            objectPosition:'center center',
+            display:'block',
+          }}
+        />
+      </div>
+
       {/* ===== 5. FOR ORGANIZATIONS ===== */}
       <section className="organizational">
         <div className="organizational-inner">
