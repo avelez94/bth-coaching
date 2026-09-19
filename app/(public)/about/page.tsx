@@ -267,7 +267,7 @@ export default function About() {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(20px, 2.2vw, 28px);
           font-weight: 400;
-          color: var(--text-muted);
+          color: var(--text-mid);
           background: none;
           border: none;
           border-bottom: 2px solid transparent;
@@ -281,7 +281,7 @@ export default function About() {
           position: relative;
         }
         .cred-tab:last-child { margin-right: 0; }
-        .cred-tab:hover { color: var(--text-mid); }
+        .cred-tab:hover { color: var(--text); }
         .cred-tab:focus-visible { outline: 2px solid var(--slate); outline-offset: 4px; }
         .cred-tab.active {
           color: var(--text);
@@ -290,21 +290,27 @@ export default function About() {
 
         /* Credential entries panel */
         .cred-panel {
+          display: block;
           transition: opacity 0.175s ease;
         }
         .cred-panel.fading { opacity: 0; }
         .cred-panel.visible { opacity: 1; }
 
-        /* Each entry: generous space, thin rule above, clear hierarchy */
+        /* Three-column grid — same for all categories */
+        .cred-entries-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 0 48px;
+        }
+
+        /* Each entry: generous vertical space, thin rules, clear hierarchy */
         .cred-entry-block {
           padding: 32px 0;
-          border-bottom: 1px solid var(--rule);
-          max-width: 680px;
+          border-top: 1px solid var(--rule);
         }
-        .cred-entry-block:first-child { border-top: 1px solid var(--rule); }
         .cred-entry-title {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(18px, 2vw, 24px);
+          font-size: clamp(16px, 1.8vw, 22px);
           font-weight: 400;
           color: var(--text);
           line-height: 1.3;
@@ -312,7 +318,7 @@ export default function About() {
           margin-bottom: 8px;
         }
         .cred-entry-org {
-          font-size: 0.88rem;
+          font-size: 0.85rem;
           color: var(--text-muted);
           line-height: 1.6;
           font-weight: 300;
@@ -405,6 +411,7 @@ export default function About() {
           .possible { padding: 80px 48px; }
           .possible-outcome { margin-left: 20%; margin-top: 28px; }
           .credentials { padding: 80px 48px; }
+          .cred-entries-grid { grid-template-columns: 1fr; }
           .closing { padding: 80px 48px; }
         }
         @media (max-width: 768px) {
@@ -543,12 +550,14 @@ export default function About() {
             aria-labelledby={`cred-tab-${activeCred}`}
             className={`cred-panel cred-selector-desktop ${credFading ? 'fading' : 'visible'}`}
           >
-            {credCategories[activeCred].entries.map((entry, i) => (
-              <div key={i} className="cred-entry-block">
-                <div className="cred-entry-title">{entry.title}</div>
-                {entry.org && <div className="cred-entry-org">{entry.org}</div>}
-              </div>
-            ))}
+            <div className="cred-entries-grid">
+              {credCategories[activeCred].entries.map((entry, i) => (
+                <div key={i} className="cred-entry-block">
+                  <div className="cred-entry-title">{entry.title}</div>
+                  {entry.org && <div className="cred-entry-org">{entry.org}</div>}
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Mobile: accordion */}
