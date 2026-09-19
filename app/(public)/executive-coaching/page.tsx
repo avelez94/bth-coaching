@@ -212,12 +212,15 @@ export default function ExecutiveCoaching() {
           width: 100%;
           background: none;
           border: none;
-          border-bottom: 1px solid var(--rule);
-          padding: 24px 28px 24px 0;
+          border-bottom: none;
+          padding: 22px 28px 22px 0;
           text-align: left;
           cursor: pointer;
           position: relative;
           transition: none;
+        }
+        .work-index-btn + .work-index-btn {
+          border-top: 1px solid rgba(28,43,58,0.05);
         }
         .work-index-btn:focus-visible { outline: 2px solid var(--slate); outline-offset: -2px; z-index: 1; }
         /* Active: thin left indicator only, no background fill */
@@ -392,7 +395,7 @@ export default function ExecutiveCoaching() {
         ============================================================ */
         .engagement {
           background: var(--ivory);
-          padding: 100px 72px;
+          padding: 100px 72px 72px;
           border-top: 1px solid var(--rule);
         }
         .engagement-inner {
