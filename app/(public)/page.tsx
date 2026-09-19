@@ -296,12 +296,13 @@ export default function Home() {
           align-items: start;
         }
         .audience-label {
-          font-size: 0.72rem;
-          color: var(--text-muted);
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-          padding-top: 4px;
-          font-weight: 500;
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(22px, 2.4vw, 30px);
+          font-weight: 400;
+          color: var(--text);
+          letter-spacing: -0.01em;
+          line-height: 1.25;
+          padding-top: 0;
         }
         .audience-list { display: flex; flex-direction: column; }
         .audience-item {
@@ -337,7 +338,7 @@ export default function Home() {
         }
         .services-selector {
           display: grid;
-          grid-template-columns: 280px 1fr;
+          grid-template-columns: 320px 1fr;
           gap: 0;
           border-top: 1px solid var(--rule);
         }
@@ -352,7 +353,7 @@ export default function Home() {
           background: none;
           border: none;
           border-bottom: 1px solid var(--rule);
-          padding: 20px 24px 20px 0;
+          padding: 20px 24px 20px 20px;
           text-align: left;
           cursor: pointer;
           position: relative;
@@ -364,7 +365,7 @@ export default function Home() {
         }
         /* Active state: single 2px slate left indicator */
         .svc-index-btn.active {
-          background: rgba(237,232,220,0.5);
+          background: rgba(220,213,200,0.7);
         }
         .svc-index-btn.active::before {
           content: '';
@@ -472,8 +473,6 @@ export default function Home() {
           line-height: 1.28;
           color: var(--ivory);
           letter-spacing: -0.01em;
-          position: sticky;
-          top: 80px;
         }
         .philosophy-right { padding-top: 8px; }
         .philosophy-body {
@@ -554,7 +553,7 @@ export default function Home() {
            credential-main increased to 1.1rem.
         ============================================================ */
         .science {
-          background: var(--ivory-dark);
+          background: var(--ivory);
           padding: 100px 72px;
           border-top: 1px solid var(--rule);
         }
@@ -632,9 +631,9 @@ export default function Home() {
            Not centered. Conclusive.
         ============================================================ */
         .closing-cta {
-          background: var(--slate);
+          background: var(--ivory-dark);
           padding: 100px 72px;
-          border-top: 1px solid rgba(76,120,160,0.3);
+          border-top: 1px solid var(--rule);
         }
         .closing-cta-inner {
           max-width: 1100px;
@@ -649,13 +648,13 @@ export default function Home() {
           font-size: clamp(28px, 3.4vw, 46px);
           font-weight: 400;
           line-height: 1.15;
-          color: var(--ivory);
+          color: var(--text);
           letter-spacing: -0.01em;
         }
         .cta-body {
           font-size: 0.97rem;
           line-height: 1.85;
-          color: rgba(247,244,237,0.72);
+          color: var(--text-mid);
           margin-bottom: 32px;
           font-weight: 300;
         }
@@ -688,7 +687,7 @@ export default function Home() {
           .problem { padding: 80px 48px; }
           .audience-services { padding: 80px 48px; }
           .audience-block { grid-template-columns: 1fr; gap: 32px; }
-          .services-selector { grid-template-columns: 220px 1fr; }
+          .services-selector { grid-template-columns: 260px 1fr; }
           .philosophy { padding: 80px 48px; }
           .philosophy-inner { grid-template-columns: 1fr; gap: 40px; }
           .philosophy-headline { position: static; }
@@ -896,7 +895,7 @@ export default function Home() {
           <p className="about-strip-body">In those years I had successes, and frankly failures. I learned what creates success and what keeps people from it. In doing so, I developed a keen desire to help people avoid the pitfalls I hit, or at least recover more quickly from them.</p>
           <p className="about-strip-body">Those decades also taught me how to lead, how to recover, and how to help others. I learned what it costs to try to carry it all — and what becomes possible when you finally stop pretending you have to.</p>
           <div className="about-strip-credentials">CAPT, USN (Ret.) | EMBA | ACC (ICF) | DoD Certified Executive Coach</div>
-          <a href="/about" className="btn btn-outline">Read the full story</a>
+          <a href="/about" className="btn btn-outline" style={{alignSelf:'flex-start'}}>Read the full story</a>
         </div>
       </section>
 
@@ -937,7 +936,7 @@ export default function Home() {
           <h2 className="cta-headline">It starts with a single conversation.</h2>
           <div>
             <p className="cta-body">Schedule a free 15-minute intro call. No pitch. No pressure. Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
-            <a href="/contact" className="btn btn-outline-light">Schedule Your Free Intro Call</a>
+            <a href="/contact" className="btn btn-navy">Schedule Your Free Intro Call</a>
           </div>
         </div>
       </section>
