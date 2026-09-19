@@ -1,7 +1,3 @@
-'use client'
-
-import { useRef, useEffect } from 'react'
-
 export default function About() {
   return (
     <>
@@ -32,12 +28,9 @@ export default function About() {
 
         /* ============================================================
            OPENING
-           Desktop: asymmetric three-element composition.
-           Left column: John's name + Bio opening statement.
-           Right: portrait at controlled size, offset vertically
-           so it sits beside the opening statement, not floating alone.
-           The name anchors the top-left. The statement runs wide.
-           The portrait is an integrated presence, not a hero image.
+           Grid refined to 1fr / 360px. No negative portrait margin.
+           Name remains a quiet identity anchor — not enlarged.
+           Body measure widened to 620px.
         ============================================================ */
         .opening {
           background: var(--ivory);
@@ -50,7 +43,7 @@ export default function About() {
           max-width: 1320px;
           width: 100%;
           display: grid;
-          grid-template-columns: 1fr 320px;
+          grid-template-columns: 1fr 360px;
           grid-template-rows: auto auto;
           gap: 0 72px;
           align-items: start;
@@ -69,37 +62,18 @@ export default function About() {
           line-height: 1.1;
           margin-bottom: 0;
         }
-
-        /* Portrait sits in the right column, spanning both rows,
-           offset from top to align with the statement rather than the name */
         .opening-portrait-col {
           grid-column: 2;
           grid-row: 1 / 3;
           padding-top: 72px;
-          margin-left: -48px;
         }
         .opening-portrait {
           width: 100%;
-          max-width: 300px;
+          max-width: 360px;
           aspect-ratio: 3 / 4;
           object-fit: cover;
           object-position: center top;
           display: block;
-          filter: none;
-        }
-        .opening-portrait-placeholder {
-          width: 100%;
-          max-width: 300px;
-          aspect-ratio: 3 / 4;
-          background: var(--slate-pale);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          gap: 10px;
-          color: var(--text-muted);
-          font-size: 0.72rem;
-          letter-spacing: 0.06em;
         }
         .opening-statement {
           grid-column: 1;
@@ -120,21 +94,21 @@ export default function About() {
           line-height: 1.85;
           color: var(--text-mid);
           margin-bottom: 18px;
-          max-width: 560px;
+          max-width: 620px;
           font-weight: 300;
         }
         .opening-body:last-child { margin-bottom: 0; }
 
         /* ============================================================
            THE STORY
-           Ivory dark. Continuous long-form narrative.
-           Centered reading column — essay treatment, not service copy.
-           Navy ceremony photograph breaks the narrative editorially
-           at the Reserve Center turnaround moment.
+           Increased top padding — the narrative deserves an entrance.
+           Centered reading column at 680px.
+           Final thesis paragraph: stronger spacing + text color.
+           Bottom padding 140px — whitespace resolve before slate.
         ============================================================ */
         .story {
           background: var(--ivory-dark);
-          padding: 100px 72px;
+          padding: 120px 72px 140px;
         }
         .story-inner {
           max-width: 680px;
@@ -148,11 +122,16 @@ export default function About() {
           font-weight: 300;
         }
         .story-body:last-child { margin-bottom: 0; }
-        .story-body strong {
+        /* Final thesis paragraph — stronger color, breathing room above */
+        .story-body-thesis {
+          font-size: 0.97rem;
+          line-height: 1.92;
           color: var(--text);
-          font-weight: 500;
+          margin-top: 36px;
+          margin-bottom: 24px;
+          font-weight: 300;
         }
-        /* Bridge sentence — the pivot between turnaround and failure */
+        /* Bridge sentence — narrative pivot */
         .story-bridge {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(18px, 1.8vw, 22px);
@@ -160,13 +139,13 @@ export default function About() {
           font-style: italic;
           line-height: 1.5;
           color: var(--text);
-          margin: 40px 0;
+          margin-top: 56px;
+          margin-bottom: 48px;
           letter-spacing: -0.01em;
         }
-
-        /* Navy ceremony photograph — contained editorial break within narrative */
+        /* Ceremony photograph — contained, editorial */
         .story-photo-break {
-          margin: 56px auto;
+          margin: 72px auto 0;
           max-width: 980px;
           line-height: 0;
         }
@@ -176,45 +155,38 @@ export default function About() {
           display: block;
           max-width: 980px;
         }
-        .story-photo-placeholder {
-          width: 100%;
-          max-width: 980px;
-          height: 400px;
-          background: var(--slate-pale);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-direction: column;
-          gap: 10px;
-          color: var(--text-muted);
-          font-size: 0.72rem;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-        }
 
         /* ============================================================
-           MY APPROACH
-           Slate. Bio MY APPROACH section verbatim.
-           "Coaching that follows your lead." as display heading.
-           Three approach paragraphs in reading column.
+           APPROACH — "Coaching that follows your lead."
+           Slate. True asymmetric editorial composition.
+           Heading: left ~40%. Paragraphs: right ~50-55%.
+           Intentional negative space in the center.
+           Communicates transition from John's history to his work today.
         ============================================================ */
         .approach {
           background: var(--slate);
           padding: 100px 72px;
         }
         .approach-inner {
-          max-width: 720px;
+          max-width: 1200px;
           margin: 0 auto;
+          display: grid;
+          grid-template-columns: 2fr 1fr 3fr;
+          gap: 0;
+          align-items: start;
         }
         .approach-heading {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(28px, 3.2vw, 42px);
+          font-size: clamp(26px, 3vw, 40px);
           font-weight: 400;
-          line-height: 1.15;
+          line-height: 1.18;
           color: var(--ivory);
-          margin-bottom: 40px;
           letter-spacing: -0.01em;
+          grid-column: 1;
         }
+        /* Middle column: intentional negative space */
+        .approach-gap { grid-column: 2; }
+        .approach-body-col { grid-column: 3; padding-top: 8px; }
         .approach-body {
           font-size: 0.97rem;
           line-height: 1.9;
@@ -226,9 +198,9 @@ export default function About() {
 
         /* ============================================================
            WHAT BECOMES POSSIBLE
-           Ivory. Narrow centered reading column.
-           Natural emotional close of John's self-description.
-           "That's the work." closes without a CTA button.
+           Ivory. Editorial movement across the canvas.
+           Entry top-left → outcome right offset → conclusion returns left.
+           No borders, no cards, no columns.
         ============================================================ */
         .possible {
           background: var(--ivory);
@@ -236,31 +208,49 @@ export default function About() {
           border-top: 1px solid var(--rule);
         }
         .possible-inner {
-          max-width: 600px;
+          max-width: 1200px;
           margin: 0 auto;
         }
-        .possible-body {
+        /* Entry statement — upper left */
+        .possible-entry {
+          font-size: 0.97rem;
+          line-height: 1.85;
+          color: var(--text-muted);
+          max-width: 380px;
+          margin-bottom: 0;
+          font-weight: 300;
+        }
+        /* Outcome copy — offset right, indented, lower */
+        .possible-outcome {
+          max-width: 540px;
+          margin-top: 48px;
+          margin-left: auto;
+          margin-right: 0;
+          padding-right: 0;
+        }
+        .possible-outcome-body {
           font-size: 0.97rem;
           line-height: 1.9;
           color: var(--text-mid);
-          margin-bottom: 22px;
           font-weight: 300;
         }
-        .possible-body:last-child { margin-bottom: 0; }
+        /* Conclusion — returns to left, DM Serif Display landing */
         .possible-close {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(20px, 2.2vw, 28px);
+          font-size: clamp(22px, 2.4vw, 30px);
           font-weight: 400;
           color: var(--text);
-          margin-top: 40px;
+          margin-top: 56px;
+          max-width: 520px;
           letter-spacing: -0.01em;
           line-height: 1.3;
         }
 
         /* ============================================================
            CREDENTIALS
-           Ivory dark. Three columns: Experience, Education, Certifications.
-           Typographic list — restrained, secondary, honest.
+           Ivory dark. Three columns.
+           Labels refined — slightly larger, no heavy letter-spacing.
+           Container widened to 1200px.
         ============================================================ */
         .credentials {
           background: var(--ivory-dark);
@@ -268,7 +258,7 @@ export default function About() {
           border-top: 1px solid var(--rule);
         }
         .credentials-inner {
-          max-width: 1100px;
+          max-width: 1200px;
           margin: 0 auto;
         }
         .credentials-grid {
@@ -277,18 +267,16 @@ export default function About() {
           gap: 48px;
         }
         .cred-col-label {
-          font-size: 0.72rem;
+          font-size: 0.78rem;
           color: var(--text-muted);
-          letter-spacing: 0.06em;
+          letter-spacing: 0.03em;
           text-transform: uppercase;
           font-weight: 500;
           margin-bottom: 24px;
           padding-bottom: 12px;
           border-bottom: 1px solid var(--rule);
         }
-        .cred-entry {
-          margin-bottom: 20px;
-        }
+        .cred-entry { margin-bottom: 20px; }
         .cred-entry:last-child { margin-bottom: 0; }
         .cred-title {
           font-size: 0.88rem;
@@ -305,85 +293,87 @@ export default function About() {
         }
 
         /* ============================================================
-           CLOSING
-           Ivory. Sourced from Bio / v5.
-           "No pitch. No pressure." + Schedule a Conversation.
+           CLOSING CTA
+           Ivory-dark. Centered. Quiet resolution of John's story.
+           "No pitch. No pressure." carries stronger visual hierarchy.
+           Generous vertical breathing room.
         ============================================================ */
         .closing {
-          background: var(--ivory);
+          background: var(--ivory-dark);
           padding: 100px 72px;
           border-top: 1px solid var(--rule);
         }
         .closing-inner {
-          max-width: 640px;
+          max-width: 600px;
           margin: 0 auto;
           text-align: center;
         }
+        /* "No pitch. No pressure." — elevated hierarchy */
+        .closing-lead {
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(20px, 2.2vw, 28px);
+          font-weight: 400;
+          color: var(--text);
+          line-height: 1.35;
+          letter-spacing: -0.01em;
+          margin-bottom: 20px;
+        }
         .closing-body {
-          font-size: 0.97rem;
-          line-height: 1.85;
+          font-size: 0.93rem;
+          line-height: 1.82;
           color: var(--text-mid);
-          margin-bottom: 32px;
+          margin-bottom: 36px;
           font-weight: 300;
         }
 
         /* ============================================================
            RESPONSIVE
         ============================================================ */
+        @media (max-width: 1100px) {
+          .approach-inner { grid-template-columns: 1fr 48px 1fr; }
+        }
         @media (max-width: 1024px) {
           .opening { padding: 130px 48px 80px; min-height: unset; }
-          .opening-inner {
-            grid-template-columns: 1fr 260px;
-            gap: 0 48px;
-          }
+          .opening-inner { grid-template-columns: 1fr 280px; gap: 0 48px; }
           .opening-portrait-col { padding-top: 48px; }
-          .story { padding: 80px 48px; }
-          .story-photo-break { margin: 48px auto; max-width: 100%; }
+          .story { padding: 100px 48px 120px; }
           .approach { padding: 80px 48px; }
+          .approach-inner { grid-template-columns: 1fr 32px 1fr; }
           .possible { padding: 80px 48px; }
+          .possible-outcome { margin-left: 80px; }
           .credentials { padding: 80px 48px; }
           .closing { padding: 80px 48px; }
         }
-
         @media (max-width: 768px) {
           .opening-inner {
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
           }
           .opening-portrait-col {
-            grid-column: 1;
-            grid-row: 2;
-            padding-top: 32px;
-            padding-bottom: 32px;
+            grid-column: 1; grid-row: 2;
+            padding-top: 32px; padding-bottom: 32px;
           }
-          .opening-portrait,
-          .opening-portrait-placeholder {
-            max-width: 220px;
-          }
+          .opening-portrait { max-width: 220px; }
           .opening-name-block { grid-row: 1; }
-          .opening-statement {
-            grid-column: 1;
-            grid-row: 3;
-          }
+          .opening-statement { grid-column: 1; grid-row: 3; }
+          .approach-inner { grid-template-columns: 1fr; gap: 32px 0; }
+          .approach-gap { display: none; }
+          .approach-body-col { grid-column: 1; padding-top: 0; }
+          .possible-outcome { margin-left: 0; }
           .credentials-grid { grid-template-columns: 1fr; gap: 40px; }
         }
-
         @media (max-width: 640px) {
           .opening { padding: 120px 24px 64px; }
-          .story { padding: 64px 24px; }
-          .story-photo-break { margin: 40px auto; }
+          .story { padding: 80px 24px 100px; }
           .approach { padding: 64px 24px; }
           .possible { padding: 64px 24px; }
+          .possible-outcome { margin-top: 36px; }
           .credentials { padding: 64px 24px; }
           .closing { padding: 64px 24px; }
         }
       `}</style>
 
       {/* ===== OPENING ===== */}
-      {/* Desktop: name top-left, portrait right (offset to align with
-          statement), Bio opening statement spanning the left column.
-          Three elements in intentional asymmetric relationship.
-          Portrait is integrated presence, not dominant hero image. */}
       <section className="opening">
         <div className="opening-inner">
 
@@ -409,9 +399,6 @@ export default function About() {
       </section>
 
       {/* ===== THE STORY ===== */}
-      {/* Complete merged addendum narrative as one continuous reading experience.
-          Navy ceremony photograph inserts editorially at the Reserve Center moment.
-          Bridge sentence marks the pivot to the failure story. */}
       <section className="story">
         <div className="story-inner">
           <p className="story-body">I know what it's like to wake up in the middle of the night wondering how to do it all — and do it all well.</p>
@@ -422,7 +409,7 @@ export default function About() {
           <p className="story-body">But the award wasn't the point. What mattered was what we built: a culture of people genuinely taking care of themselves and one another — with dignity, with respect, pushing forward, and with a commitment to each other's ongoing growth. That culture outlasted every individual who left.</p>
         </div>
 
-        {/* Navy ceremony photograph — editorial break at the turnaround moment */}
+        {/* Navy ceremony photograph — editorial break, increased spacing above */}
         <div className="story-photo-break">
           <img
             src="/images/john-mccracken-navy-ceremony.jpg"
@@ -437,34 +424,39 @@ export default function About() {
           <p className="story-body">My greatest career setback was failing a command selection I'd spent 16 years working toward — 11 of them at sea. In the Navy, that failure isn't private. Whether you selected for command is visible to everyone, simply by looking at the pins on your uniform, or their absence. It reroutes your career and your opportunities, and for me, it landed hard.</p>
           <p className="story-body">If I'd been selected, I likely would have kept leading the way I always had — which wasn't always the kindest or most empowering way to lead people. Not selecting forced a change I wouldn't have made on my own. I had to step back and look honestly at what was working, and more importantly, what wasn't. I made more room for people's autonomy and empowerment. I made a conscious effort to listen more than I directed. And I stopped holding people to my own idea of perfection, and started holding them to a standard of "good enough, done well."</p>
           <p className="story-body">It took me years to get there. But I want to help people move through their own version of this — from the career-altering to the everyday challenge of showing up better in a hard meeting or a hard relationship — faster and more effectively than I did. That's part of what I bring to every session.</p>
-          <p className="story-body">That experience confirmed what most leadership and coaching programs still won't say directly: the immediate challenge is rarely the whole story. When we address the whole person — every dimension of who they are and what they're carrying — something unlocks. Potential they didn't know they had. Clarity they couldn't find alone. An actionable, repeatable path forward that lasts.</p>
+          <p className="story-body-thesis">That experience confirmed what most leadership and coaching programs still won't say directly: the immediate challenge is rarely the whole story. When we address the whole person — every dimension of who they are and what they're carrying — something unlocks. Potential they didn't know they had. Clarity they couldn't find alone. An actionable, repeatable path forward that lasts.</p>
           <p className="story-body">That's what I bring to every client.</p>
         </div>
       </section>
 
-      {/* ===== MY APPROACH ===== */}
-      {/* Bio: MY APPROACH — verbatim */}
+      {/* ===== APPROACH ===== */}
       <section className="approach">
         <div className="approach-inner">
           <h2 className="approach-heading">Coaching that follows your lead.</h2>
-          <p className="approach-body">You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together. We explore your values, challenge assumptions, and open perspectives you may not have considered from inside the situation. You lead the way.</p>
-          <p className="approach-body">And because life doesn't separate neatly into professional and personal, we don't either. We work with all of it — on your terms — for your success.</p>
-          <p className="approach-body">Insight without action is just an interesting conversation — we go beyond that. Every session produces something concrete: a commitment you define, a step you choose, a thing you finally decide to do. You keep pushing forward.</p>
+          <div className="approach-gap" />
+          <div className="approach-body-col">
+            <p className="approach-body">You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together. We explore your values, challenge assumptions, and open perspectives you may not have considered from inside the situation. You lead the way.</p>
+            <p className="approach-body">And because life doesn't separate neatly into professional and personal, we don't either. We work with all of it — on your terms — for your success.</p>
+            <p className="approach-body">Insight without action is just an interesting conversation — we go beyond that. Every session produces something concrete: a commitment you define, a step you choose, a thing you finally decide to do. You keep pushing forward.</p>
+          </div>
         </div>
       </section>
 
       {/* ===== WHAT BECOMES POSSIBLE ===== */}
-      {/* Bio: WHAT BECOMES POSSIBLE — verbatim */}
       <section className="possible">
         <div className="possible-inner">
-          <p className="possible-body">Clients describe it differently, but the through-line is consistent.</p>
-          <p className="possible-body">Real, lasting change — clarity, confidence, and a renewed sense of what's possible. A perspective you didn't know you had access to, and an action plan to match. Tools and approaches you hadn't considered. A sense that every part of your life is finally pulling in the same direction.</p>
+          {/* Entry — upper left */}
+          <p className="possible-entry">Clients describe it differently, but the through-line is consistent.</p>
+          {/* Outcome — offset right and lower */}
+          <div className="possible-outcome">
+            <p className="possible-outcome-body">Real, lasting change — clarity, confidence, and a renewed sense of what's possible. A perspective you didn't know you had access to, and an action plan to match. Tools and approaches you hadn't considered. A sense that every part of your life is finally pulling in the same direction.</p>
+          </div>
+          {/* Conclusion — returns to left */}
           <p className="possible-close">That's the work. And it starts with a single conversation.</p>
         </div>
       </section>
 
       {/* ===== CREDENTIALS ===== */}
-      {/* Bio: CREDENTIALS — full set, typographic list */}
       <section className="credentials">
         <div className="credentials-inner">
           <div className="credentials-grid">
@@ -517,10 +509,10 @@ export default function About() {
       </section>
 
       {/* ===== CLOSING ===== */}
-      {/* Bio / v5: closing invitation — sourced */}
       <section className="closing">
         <div className="closing-inner">
-          <p className="closing-body">No pitch. No pressure. Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
+          <p className="closing-lead">No pitch. No pressure.</p>
+          <p className="closing-body">Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
           <a href="/contact" className="btn-primary">Schedule a Conversation</a>
         </div>
       </section>
