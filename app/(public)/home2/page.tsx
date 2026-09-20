@@ -191,9 +191,9 @@ export default function Home2() {
            offset right — uses full canvas without a rigid grid.
         ============================================================ */
         .audiences {
-          background: var(--ivory);
+          background: var(--slate-pale);
           padding: 100px 72px;
-          border-top: 1px solid var(--rule);
+          border-top: none;
         }
         .audiences-inner { max-width: 1320px; margin: 0 auto; }
         .audiences-heading {
@@ -207,11 +207,11 @@ export default function Home2() {
           display: flex;
           gap: 20px;
           padding: 36px 0;
-          border-top: 1px solid var(--rule);
+          border-top: 1px solid rgba(76,120,160,0.18);
           align-items: start;
           max-width: 580px;
         }
-        .audience-item:last-child { border-bottom: 1px solid var(--rule); }
+        .audience-item:last-child { border-bottom: 1px solid rgba(76,120,160,0.18); }
         /* Even items offset right */
         .audience-item:nth-child(even) { margin-left: auto; }
         .audience-num {
@@ -249,7 +249,7 @@ export default function Home2() {
         .services-section {
           background: var(--ivory);
           padding: 100px 72px;
-          border-top: 1px solid var(--rule);
+          border-top: none;
         }
         .services-inner { max-width: 1320px; margin: 0 auto; }
         .services-heading {
@@ -258,36 +258,38 @@ export default function Home2() {
           font-weight: 400; color: var(--text);
           margin-bottom: 40px; letter-spacing: -0.01em;
         }
+        /* Selector: slate left index panel + ivory right panel
+           The slate index IS the visual density — no dark section bg needed */
         .services-selector {
           display: grid;
-          grid-template-columns: 380px 1fr;
+          grid-template-columns: 360px 1fr;
           gap: 0;
-          border-top: 1px solid var(--rule);
         }
-        .svc-index { border-right: 1px solid var(--rule); }
+        /* Slate index panel — the architectural anchor of the section */
+        .svc-index { background: var(--slate); }
         .svc-index-btn {
           display: block; width: 100%; background: none; border: none;
-          border-bottom: none; padding: 40px 36px 40px 28px;
+          border-bottom: none; padding: 40px 36px 40px 32px;
           text-align: left; cursor: pointer; position: relative;
-          transition: none;
+          transition: background 0.15s;
         }
-        .svc-index-btn + .svc-index-btn { border-top: 1px solid rgba(28,43,58,0.05); }
-        .svc-index-btn:focus-visible { outline: 2px solid var(--slate); outline-offset: -2px; z-index: 1; }
-        .svc-index-btn.active { background: rgba(220,213,200,0.7); }
+        .svc-index-btn + .svc-index-btn { border-top: 1px solid rgba(247,244,237,0.1); }
+        .svc-index-btn:focus-visible { outline: 2px solid rgba(247,244,237,0.6); outline-offset: -2px; z-index: 1; }
+        .svc-index-btn.active { background: rgba(255,255,255,0.1); }
         .svc-index-btn.active::before {
           content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-          width: 2px; background: var(--slate);
+          width: 3px; background: var(--gold);
         }
-        .svc-index-num { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.04em; margin-bottom: 6px; font-weight: 400; display: block; }
-        .svc-index-btn.active .svc-index-num { color: var(--slate-mid); }
+        .svc-index-num { font-size: 0.65rem; color: rgba(247,244,237,0.45); letter-spacing: 0.04em; margin-bottom: 8px; font-weight: 400; display: block; }
+        .svc-index-btn.active .svc-index-num { color: rgba(247,244,237,0.7); }
         .svc-index-name {
-          font-family: 'DM Serif Display', serif; font-size: 1.1rem;
-          font-weight: 400; color: var(--text-muted); line-height: 1.3;
+          font-family: 'DM Serif Display', serif; font-size: 1.2rem;
+          font-weight: 400; color: rgba(247,244,237,0.65); line-height: 1.3;
           letter-spacing: -0.01em; display: block; transition: color 0.15s;
         }
-        .svc-index-btn.active .svc-index-name { color: var(--text); font-weight: 400; }
-        .svc-index-btn:hover:not(.active) .svc-index-name { color: var(--text-mid); }
-        .svc-panel { padding: 72px 0 72px 80px; display: flex; flex-direction: column; justify-content: center; min-height: 380px; }
+        .svc-index-btn.active .svc-index-name { color: var(--ivory); }
+        .svc-index-btn:hover:not(.active) .svc-index-name { color: rgba(247,244,237,0.85); }
+        .svc-panel { background: var(--ivory-dark); padding: 72px 80px; display: flex; flex-direction: column; justify-content: center; min-height: 380px; }
         .svc-panel-content { transition: opacity 0.2s ease; }
         .svc-panel-content.fading { opacity: 0; }
         .svc-panel-content.visible { opacity: 1; }
@@ -334,10 +336,13 @@ export default function Home2() {
         .about-strip-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
         .about-strip-content { padding: 80px 64px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
         .about-strip-name {
-          font-size: 0.78rem; color: var(--text-muted); font-weight: 400;
-          letter-spacing: 0.02em; margin-bottom: 20px;
+          font-family: 'DM Serif Display', serif;
+          font-size: clamp(18px, 1.6vw, 22px);
+          font-weight: 400; color: var(--text);
+          letter-spacing: -0.01em; line-height: 1.2;
+          margin-bottom: 24px;
         }
-        .about-strip-body { font-size: 1.05rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 0; font-weight: 300; }
+        .about-strip-body { font-size: 1.08rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 0; font-weight: 300; }
         .about-strip-credentials {
           font-size: 0.78rem; color: var(--text-muted); line-height: 1.9;
           padding: 24px 0; margin: 32px 0 40px;
@@ -399,8 +404,8 @@ export default function Home2() {
           .difference-right { margin-left: 0; max-width: 100%; margin-top: 40px; }
           .audiences { padding: 80px 48px; }
           .services-section { padding: 80px 48px; }
-          .services-selector { grid-template-columns: 260px 1fr; }
-          .svc-panel { padding: 48px 0 48px 48px; }
+          .services-selector { grid-template-columns: 240px 1fr; }
+          .svc-panel { padding: 48px 48px; }
           .about-strip { grid-template-columns: 1fr; }
           .about-strip-photo { min-height: 420px; }
           .about-strip-content { padding: 60px 48px; }
