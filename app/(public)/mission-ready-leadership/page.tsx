@@ -269,13 +269,15 @@ export default function MissionReadyLeadership() {
         }
         .sessions-pair {
           display: grid;
-          grid-template-columns: 1fr 2px 1fr;
+          grid-template-columns: 1fr 100px 1fr;
           gap: 0;
           align-items: start;
         }
-        .session-divider { background: rgba(247,244,237,0.15); align-self: stretch; margin: 0 40px; }
-        /* Session two offset downward — the two modes are intentionally different */
-        .session-two { padding-top: 72px; }
+        /* Gap column — no divider, separation comes from negative space */
+        .session-divider { display: none; }
+        /* Cap reading width of each session so text never crowds the gap */
+        .session { max-width: 440px; }
+        .session-two { padding-top: 72px; justify-self: end; max-width: 440px; }
         .session-label { font-size: 0.8rem; color: rgba(247,244,237,0.72); margin-bottom: 12px; font-weight: 500; }
         .session-name { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2vw, 24px); font-weight: 400; color: var(--ivory); margin-bottom: 20px; letter-spacing: -0.01em; line-height: 1.3; }
         .session-body { font-size: 0.9rem; line-height: 1.85; color: rgba(247,244,237,0.72); margin-bottom: 16px; font-weight: 300; }
@@ -414,9 +416,9 @@ export default function MissionReadyLeadership() {
           .pillars-layout { grid-template-columns: 220px 1fr; }
           .pillars-panel { padding: 32px 0 32px 40px; }
           .sessions { padding: 80px 48px; }
-          .sessions-pair { grid-template-columns: 1fr; gap: 48px; }
-          .session-divider { display: none; }
-          .session-two { padding-top: 0; }
+          .sessions-pair { grid-template-columns: 1fr; gap: 0; }
+          .session { max-width: 100%; }
+          .session-two { padding-top: 40px; justify-self: start; max-width: 100%; }
           .arc { padding: 80px 48px; }
           .arc-track { grid-template-columns: 1fr; border-top: none; }
           .arc-phase { padding: 28px 0 28px 24px; border-right: none; border-top: 1px solid var(--rule); border-left: 2px solid var(--rule); }
@@ -451,7 +453,8 @@ export default function MissionReadyLeadership() {
           .science { padding: 64px 24px; }
           .pillars { padding: 64px 24px; }
           .sessions { padding: 64px 24px; }
-          .session-two { padding-top: 0; }
+          .session { max-width: 100%; }
+          .session-two { padding-top: 32px; justify-self: start; max-width: 100%; }
           .arc { padding: 64px 24px; }
           .confidentiality { padding: 56px 24px; }
           .investment { padding: 64px 24px; }
