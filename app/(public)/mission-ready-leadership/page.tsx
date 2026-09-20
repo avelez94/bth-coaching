@@ -267,13 +267,20 @@ export default function MissionReadyLeadership() {
           letter-spacing: -0.01em;
           max-width: 820px;
         }
-        .sessions-pair { display: grid; grid-template-columns: 1fr 2px 1fr; gap: 0; align-items: start; }
+        .sessions-pair {
+          display: grid;
+          grid-template-columns: 1fr 2px 1fr;
+          gap: 0;
+          align-items: start;
+        }
         .session-divider { background: rgba(247,244,237,0.15); align-self: stretch; margin: 0 40px; }
-        .session-label { font-size: 0.8rem; color: rgba(247,244,237,0.5); margin-bottom: 12px; font-weight: 400; }
+        /* Session two offset downward — the two modes are intentionally different */
+        .session-two { padding-top: 72px; }
+        .session-label { font-size: 0.8rem; color: rgba(247,244,237,0.72); margin-bottom: 12px; font-weight: 500; }
         .session-name { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2vw, 24px); font-weight: 400; color: var(--ivory); margin-bottom: 20px; letter-spacing: -0.01em; line-height: 1.3; }
         .session-body { font-size: 0.9rem; line-height: 1.85; color: rgba(247,244,237,0.72); margin-bottom: 16px; font-weight: 300; }
         .session-body strong { color: rgba(247,244,237,0.9); font-weight: 500; }
-        .sessions-icf { margin-top: 56px; padding-top: 32px; border-top: 1px solid rgba(247,244,237,0.12); font-size: 0.85rem; line-height: 1.78; color: rgba(247,244,237,0.5); max-width: 720px; font-style: italic; }
+        .sessions-icf { margin-top: 72px; padding-top: 32px; border-top: 1px solid rgba(247,244,237,0.12); font-size: 0.85rem; line-height: 1.78; color: rgba(247,244,237,0.5); font-style: italic; }
         .sessions-icf strong { color: rgba(247,244,237,0.7); font-weight: 500; font-style: normal; }
 
         /* ============================================================
@@ -409,6 +416,7 @@ export default function MissionReadyLeadership() {
           .sessions { padding: 80px 48px; }
           .sessions-pair { grid-template-columns: 1fr; gap: 48px; }
           .session-divider { display: none; }
+          .session-two { padding-top: 0; }
           .arc { padding: 80px 48px; }
           .arc-track { grid-template-columns: 1fr; border-top: none; }
           .arc-phase { padding: 28px 0 28px 24px; border-right: none; border-top: 1px solid var(--rule); border-left: 2px solid var(--rule); }
@@ -443,6 +451,7 @@ export default function MissionReadyLeadership() {
           .science { padding: 64px 24px; }
           .pillars { padding: 64px 24px; }
           .sessions { padding: 64px 24px; }
+          .session-two { padding-top: 0; }
           .arc { padding: 64px 24px; }
           .confidentiality { padding: 56px 24px; }
           .investment { padding: 64px 24px; }
@@ -568,7 +577,7 @@ export default function MissionReadyLeadership() {
               <p className="session-body">I bring a structured set of questions built around that month's Pillar — where you stand, what's working, where you want to grow, and what you're willing to commit to. This session is <strong>intentionally more directive than traditional coaching.</strong> It's a deliberate design choice, to assist and cultivate growth — and we name it as exactly that before we start. Every Pillar Session opens with a quick check: is this the right place to spend today's time, or is something else more present for you?</p>
             </div>
             <div className="session-divider" aria-hidden="true" />
-            <div className="session">
+            <div className="session session-two">
               <div className="session-label">Session two</div>
               <div className="session-name">The Traditional Coaching Session</div>
               <p className="session-body">Fully client-led, following International Coaching Federation (ICF) core competencies. Your agenda, your pace, no imposed frame. This is where the insights from the Pillar Session, or something more pressing, gets worked through in whatever way actually serves you.</p>
