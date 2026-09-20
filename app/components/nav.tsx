@@ -39,7 +39,7 @@ export default function Nav() {
         .nav-inner {
           max-width: 1320px;
           margin: 0 auto;
-          padding: 20px 60px;
+          padding: 5px 60px;
           display: flex;
           justify-content: space-between;
           align-items: center;
