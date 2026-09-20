@@ -470,7 +470,7 @@ export default function Home2() {
               #F7F4ED 85%
             );
           }
-          .hero-photo-img { object-position: 80% top; }
+          .hero-photo-img { object-position: 30% top; }
           .difference { padding: 64px 24px; }
           .audiences { padding: 56px 24px; }
           .audiences-inner { grid-template-columns: 1fr; gap: 32px; }
