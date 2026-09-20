@@ -213,7 +213,7 @@ export default async function TransitionCoaching() {
         .work-entry-2 { margin-left: 28%;         max-width: 480px; }
         .work-entry-3 { margin-left: 8%;          max-width: 500px; }
         .work-entry-4 { margin-left: 36%;         max-width: 460px; }
-        .work-entry-5 { margin-left: 48%;         max-width: 440px; padding-bottom: 0; }
+        .work-entry-5 { margin-left: 60%;         max-width: 440px; padding-bottom: 0; }
         /* Thin rule only above entries 2 through 5 */
         .work-entry-2,
         .work-entry-3,
