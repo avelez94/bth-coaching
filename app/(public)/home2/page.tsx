@@ -110,48 +110,20 @@ export default function Home2() {
 
         /* ============================================================
            1. HERO
-           Full-width composition. Photo fills right 58%, fades left
-           into ivory so John/anchor stay sharp, environment dissolves.
-           Text sits on ivory left area with enough clearance.
+           50/50 split. Photo on right, fades left edge into ivory.
+           Text on ivory left. Clean and readable.
         ============================================================ */
         .hero {
           min-height: 100vh;
-          position: relative;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           background: var(--ivory);
-          overflow: hidden;
-          display: flex;
-          align-items: stretch;
+          position: relative;
         }
-        /* Photo layer: fills the full hero, positioned to show John right-center */
-        .hero-photo-wrap {
-          position: absolute; inset: 0; z-index: 1;
-        }
-        .hero-photo-img {
-          position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: cover; object-position: center top; display: block;
-        }
-        /* Fade overlay: ivory from left, transparent by ~55% of width
-           This dissolves the environmental left side of the photo
-           while leaving John and the anchor sharp on the right */
-        .hero-photo-fade {
-          position: absolute; inset: 0; z-index: 2;
-          background: linear-gradient(
-            to right,
-            #F7F4ED 0%,
-            #F7F4ED 30%,
-            rgba(247,244,237,0.9) 40%,
-            rgba(247,244,237,0.4) 50%,
-            rgba(247,244,237,0.05) 62%,
-            rgba(247,244,237,0) 72%
-          );
-        }
-        /* Text content sits above both layers */
+        .hero-divider { display: none; }
         .hero-left {
-          position: relative; z-index: 3;
           display: flex; flex-direction: column; justify-content: center;
-          padding: 140px 72px 80px;
-          width: 52%;
-          min-height: 100vh;
+          padding: 140px 72px 80px; position: relative; z-index: 2;
         }
         .hero-headline {
           font-family: 'DM Serif Display', serif;
@@ -164,10 +136,26 @@ export default function Home2() {
           line-height: 1.7; max-width: 420px; margin-bottom: 40px;
         }
         .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        /* Divider removed — replaced by gradient transition */
-        .hero-divider { display: none; }
-        /* hero-right no longer needed as a layout column */
-        .hero-right { display: none; }
+        .hero-right {
+          position: relative; overflow: hidden;
+        }
+        .hero-photo-wrap {
+          position: absolute; inset: 0;
+        }
+        .hero-photo-img {
+          position: absolute; inset: 0; width: 100%; height: 100%;
+          object-fit: cover; object-position: center top; display: block;
+        }
+        /* Fade the left edge of the photo into ivory */
+        .hero-photo-fade {
+          position: absolute; inset: 0; z-index: 2;
+          background: linear-gradient(
+            to right,
+            #F7F4ED 0%,
+            rgba(247,244,237,0.6) 18%,
+            rgba(247,244,237,0) 42%
+          );
+        }
 
         /* ============================================================
            2. THE DIFFERENCE
@@ -429,18 +417,9 @@ export default function Home2() {
            RESPONSIVE
         ============================================================ */
         @media (max-width: 1024px) {
-          .hero { min-height: 100svh; }
-          .hero-left { width: 60%; padding: 130px 48px 60px; }
-          .hero-photo-fade {
-            background: linear-gradient(
-              to right,
-              #F7F4ED 0%,
-              #F7F4ED 34%,
-              rgba(247,244,237,0.8) 44%,
-              rgba(247,244,237,0.2) 58%,
-              rgba(247,244,237,0) 72%
-            );
-          }
+          .hero { grid-template-columns: 1fr; min-height: unset; }
+          .hero-left { padding: 130px 48px 60px; }
+          .hero-right { min-height: 460px; }
           .difference { padding: 80px 48px; }
           .difference-right { margin-left: 0; max-width: 100%; margin-top: 40px; }
           .audiences { padding: 80px 48px; }
@@ -459,18 +438,9 @@ export default function Home2() {
           .services-mobile { display: flex; flex-direction: column; }
         }
         @media (max-width: 640px) {
-          .hero-left { width: 100%; padding: 120px 24px 56px; }
+          .hero-left { padding: 120px 24px 56px; }
           .hero-headline { font-size: clamp(32px, 9vw, 46px); }
           .hero-btns { flex-direction: column; }
-          .hero-photo-fade {
-            background: linear-gradient(
-              to bottom,
-              rgba(247,244,237,0) 0%,
-              rgba(247,244,237,0.6) 60%,
-              #F7F4ED 85%
-            );
-          }
-          .hero-photo-img { object-position: 30% center; }
           .difference { padding: 64px 24px; }
           .audiences { padding: 56px 24px; }
           .audiences-inner { grid-template-columns: 1fr; gap: 32px; }
@@ -486,18 +456,18 @@ export default function Home2() {
 
       {/* ===== 1. HERO ===== */}
       <section className="hero">
-        {/* Photo layer: sits behind content, fades left into ivory */}
-        <div className="hero-photo-wrap">
-          <img src="/images/john-mccracken-navy-anchor.jpg" alt="" aria-hidden="true" className="hero-photo-img" />
-          <div className="hero-photo-fade" aria-hidden="true" />
-        </div>
-        {/* Text content */}
         <div className="hero-left">
           <h1 className="hero-headline">I help people get through wind and waves to get where and what they want, even if the goals aren't clear yet.</h1>
           <p className="hero-credential">John McCracken, CAPT, USN (Ret.), EMBA, ACC (ICF), DoD Certified Executive Coach. Over 30 years in senior leadership.</p>
           <div className="hero-btns">
             <a href="/contact" className="btn btn-navy">Schedule a Conversation</a>
             <a href="#difference" className="btn btn-outline">Learn More</a>
+          </div>
+        </div>
+        <div className="hero-right">
+          <div className="hero-photo-wrap">
+            <img src="/images/john-mccracken-navy-anchor.jpg" alt="John McCracken" className="hero-photo-img" />
+            <div className="hero-photo-fade" aria-hidden="true" />
           </div>
         </div>
       </section>
