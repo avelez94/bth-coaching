@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import TestimonialSlider from '../components/TestimonialSlider'
+import TestimonialSlider from '../../components/TestimonialSlider'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
