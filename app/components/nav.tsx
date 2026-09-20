@@ -52,7 +52,7 @@ export default function Nav() {
         }
 
         .nav-brand img {
-          height: 58px;
+          height: 70px;
           width: auto;
           display: block;
         }
