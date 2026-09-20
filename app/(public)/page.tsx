@@ -152,6 +152,7 @@ export default function Home() {
         }
         .hero-divider {
           position: absolute;
+          display: none;
           left: 50%;
           top: 0;
           bottom: 0;
