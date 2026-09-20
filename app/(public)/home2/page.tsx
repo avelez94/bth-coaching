@@ -128,7 +128,7 @@ export default function Home2() {
         }
         .hero-photo-img {
           position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: cover; object-position: 70% top; display: block;
+          object-fit: cover; object-position: center top; display: block;
         }
         /* Fade overlay: ivory from left, transparent by ~55% of width
            This dissolves the environmental left side of the photo
@@ -138,10 +138,11 @@ export default function Home2() {
           background: linear-gradient(
             to right,
             #F7F4ED 0%,
-            #F7F4ED 38%,
-            rgba(247,244,237,0.85) 46%,
-            rgba(247,244,237,0.3) 56%,
-            rgba(247,244,237,0) 68%
+            #F7F4ED 30%,
+            rgba(247,244,237,0.9) 40%,
+            rgba(247,244,237,0.4) 50%,
+            rgba(247,244,237,0.05) 62%,
+            rgba(247,244,237,0) 72%
           );
         }
         /* Text content sits above both layers */
