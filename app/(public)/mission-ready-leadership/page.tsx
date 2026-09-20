@@ -274,7 +274,7 @@ export default function MissionReadyLeadership() {
           align-items: start;
         }
         /* Gap column — separation from negative space only */
-        .session-divider { display: none; }
+        .session-divider { visibility: hidden; }
         .session { }
         .session-two { padding-top: 72px; }
         .session-label { font-size: 0.8rem; color: rgba(247,244,237,0.72); margin-bottom: 12px; font-weight: 500; }
@@ -416,6 +416,7 @@ export default function MissionReadyLeadership() {
           .pillars-panel { padding: 32px 0 32px 40px; }
           .sessions { padding: 80px 48px; }
           .sessions-pair { grid-template-columns: 1fr; gap: 0; }
+          .session-divider { display: none; }
           .session-two { padding-top: 40px; }
           .arc { padding: 80px 48px; }
           .arc-track { grid-template-columns: 1fr; border-top: none; }
