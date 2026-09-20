@@ -187,47 +187,50 @@ export default function Home2() {
 
         /* ============================================================
            3. WHO WE WORK WITH
-           Ivory. Four names as a prominent typographic list.
-           Each with a concise supporting line and service link.
-           Names command the canvas — no paragraph blocks.
+           Staggered editorial field. Odd entries left, even entries
+           offset right — uses full canvas without a rigid grid.
         ============================================================ */
         .audiences {
           background: var(--ivory);
           padding: 100px 72px;
           border-top: 1px solid var(--rule);
         }
-        .audiences-inner { max-width: 1100px; margin: 0 auto; }
+        .audiences-inner { max-width: 1320px; margin: 0 auto; }
         .audiences-heading {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(22px, 2.4vw, 30px);
           font-weight: 400; color: var(--text);
-          margin-bottom: 64px; letter-spacing: -0.01em;
+          margin-bottom: 72px; letter-spacing: -0.01em;
         }
+        /* Staggered: each entry positions itself across the canvas */
         .audience-item {
-          display: grid;
-          grid-template-columns: 32px 1fr;
-          gap: 0 24px;
-          padding: 36px 0;
+          display: flex;
+          gap: 20px;
+          padding: 52px 0;
           border-top: 1px solid var(--rule);
           align-items: start;
+          max-width: 580px;
         }
         .audience-item:last-child { border-bottom: 1px solid var(--rule); }
+        /* Even items offset right */
+        .audience-item:nth-child(even) { margin-left: auto; }
         .audience-num {
           font-size: 0.65rem; color: var(--slate-mid);
-          font-weight: 500; letter-spacing: 0.04em; padding-top: 6px;
+          font-weight: 500; letter-spacing: 0.04em;
+          padding-top: 8px; flex-shrink: 0; min-width: 24px;
         }
-        .audience-body { }
+        .audience-body { flex: 1; }
         .audience-name {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(20px, 2.2vw, 28px);
+          font-size: clamp(24px, 2.8vw, 36px);
           font-weight: 400; color: var(--text);
-          letter-spacing: -0.01em; line-height: 1.2;
-          margin-bottom: 10px;
+          letter-spacing: -0.01em; line-height: 1.15;
+          margin-bottom: 12px;
         }
         .audience-line {
-          font-size: 0.9rem; line-height: 1.65;
+          font-size: 0.92rem; line-height: 1.7;
           color: var(--text-muted); font-weight: 300;
-          margin-bottom: 14px;
+          margin-bottom: 16px;
         }
         .audience-link {
           font-size: 0.75rem; color: var(--slate-mid);
@@ -248,7 +251,7 @@ export default function Home2() {
           padding: 100px 72px;
           border-top: 1px solid var(--rule);
         }
-        .services-inner { max-width: 1100px; margin: 0 auto; }
+        .services-inner { max-width: 1320px; margin: 0 auto; }
         .services-heading {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(22px, 2.4vw, 30px);
@@ -257,14 +260,14 @@ export default function Home2() {
         }
         .services-selector {
           display: grid;
-          grid-template-columns: 280px 1fr;
+          grid-template-columns: 340px 1fr;
           gap: 0;
           border-top: 1px solid var(--rule);
         }
         .svc-index { border-right: 1px solid var(--rule); }
         .svc-index-btn {
           display: block; width: 100%; background: none; border: none;
-          border-bottom: none; padding: 32px 28px 32px 20px;
+          border-bottom: none; padding: 36px 32px 36px 24px;
           text-align: left; cursor: pointer; position: relative;
           transition: none;
         }
@@ -284,16 +287,16 @@ export default function Home2() {
         }
         .svc-index-btn.active .svc-index-name { color: var(--text); font-weight: 400; }
         .svc-index-btn:hover:not(.active) .svc-index-name { color: var(--text-mid); }
-        .svc-panel { padding: 48px 0 48px 60px; display: flex; flex-direction: column; justify-content: center; min-height: 280px; }
+        .svc-panel { padding: 64px 0 64px 72px; display: flex; flex-direction: column; justify-content: center; min-height: 340px; }
         .svc-panel-content { transition: opacity 0.2s ease; }
         .svc-panel-content.fading { opacity: 0; }
         .svc-panel-content.visible { opacity: 1; }
         /* Service name scales up in panel — it's the centerpiece */
         .svc-panel-name {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(32px, 4vw, 52px);
+          font-size: clamp(36px, 4.8vw, 64px);
           font-weight: 400; color: var(--text);
-          letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 10px;
+          letter-spacing: -0.02em; line-height: 1.08; margin-bottom: 12px;
         }
         .svc-panel-audience { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 20px; font-weight: 400; }
         .svc-panel-desc { font-size: 0.93rem; line-height: 1.78; color: var(--text-mid); max-width: 480px; font-weight: 300; margin-bottom: 28px; }
@@ -319,7 +322,8 @@ export default function Home2() {
         /* ============================================================
            5. ABOUT JOHN
            7fr/5fr photo-dominant. Single paragraph.
-           More vertical breathing room with reduced copy.
+           Name identifier at top. Body at larger reading size.
+           Credentials as typographic separator.
         ============================================================ */
         .about-strip {
           background: var(--ivory-dark);
@@ -329,10 +333,14 @@ export default function Home2() {
         .about-strip-photo { position: relative; overflow: hidden; background: var(--slate-mid); min-height: 560px; }
         .about-strip-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
         .about-strip-content { padding: 80px 64px 80px 60px; display: flex; flex-direction: column; justify-content: center; }
-        .about-strip-body { font-size: 1rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 28px; font-weight: 300; }
+        .about-strip-name {
+          font-size: 0.78rem; color: var(--text-muted); font-weight: 400;
+          letter-spacing: 0.02em; margin-bottom: 20px;
+        }
+        .about-strip-body { font-size: 1.05rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 0; font-weight: 300; }
         .about-strip-credentials {
           font-size: 0.75rem; color: var(--text-muted); line-height: 1.8;
-          padding: 20px 0; margin: 8px 0 32px;
+          padding: 20px 0; margin: 28px 0 36px;
           border-top: 1px solid var(--rule);
           border-bottom: 1px solid var(--rule);
           font-weight: 400;
@@ -390,8 +398,8 @@ export default function Home2() {
           .difference-right { margin-left: 0; max-width: 100%; margin-top: 40px; }
           .audiences { padding: 80px 48px; }
           .services-section { padding: 80px 48px; }
-          .services-selector { grid-template-columns: 220px 1fr; }
-          .svc-panel { padding: 36px 0 36px 40px; }
+          .services-selector { grid-template-columns: 260px 1fr; }
+          .svc-panel { padding: 48px 0 48px 48px; }
           .about-strip { grid-template-columns: 1fr; }
           .about-strip-photo { min-height: 420px; }
           .about-strip-content { padding: 60px 48px; }
@@ -409,6 +417,8 @@ export default function Home2() {
           .hero-btns { flex-direction: column; }
           .difference { padding: 64px 24px; }
           .audiences { padding: 64px 24px; }
+          .audience-item { max-width: 100%; }
+          .audience-item:nth-child(even) { margin-left: 0; }
           .services-section { padding: 64px 24px; }
           .about-strip-content { padding: 48px 24px; }
           .testimonial-section { padding: 64px 24px; }
@@ -520,6 +530,7 @@ export default function Home2() {
           <img src="/images/john-mccracken-anchor-portrait.jpg" alt="John McCracken" />
         </div>
         <div className="about-strip-content">
+          <div className="about-strip-name">John McCracken</div>
           <p className="about-strip-body">Those decades also taught me how to lead, how to recover, and how to help others. I learned what it costs to try to carry it all, and what becomes possible when you finally stop pretending you have to.</p>
           <div className="about-strip-credentials">CAPT, USN (Ret.) | EMBA | ACC (ICF) | DoD Certified Executive Coach</div>
           <a href="/about" className="btn btn-outline" style={{alignSelf:'flex-start'}}>Read the full story</a>
