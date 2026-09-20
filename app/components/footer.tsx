@@ -5,7 +5,7 @@ export default function Footer() {
         .footer { background: #0D1B2A; padding: 80px 72px 40px; border-top: 1px solid rgba(201,162,58,0.12); }
         .footer-inner { max-width: 1320px; margin: 0 auto; }
         .footer-top { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
-        .footer-brand img { height: 52px; width: auto; display: block; margin-bottom: 20px; }
+        .footer-brand img { height: 100px; width: auto; display: block; margin-bottom: 20px; }
         .footer-desc { font-size: 0.82rem; line-height: 1.75; color: rgba(247,244,237,0.35); max-width: 280px; }
         .footer-col-title { font-size: 0.6rem; color: #C9A23A; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-bottom: 20px; }
         .footer-col a { display: block; font-size: 0.82rem; color: rgba(247,244,237,0.45); text-decoration: none; margin-bottom: 12px; transition: color 0.2s; }
