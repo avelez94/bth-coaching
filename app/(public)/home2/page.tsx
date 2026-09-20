@@ -110,24 +110,47 @@ export default function Home2() {
 
         /* ============================================================
            1. HERO
-           Same split layout. Headline larger — fewer words, more scale.
-           Credential line replaces subhead. CTAs unchanged.
+           Full-width composition. Photo fills right 58%, fades left
+           into ivory so John/anchor stay sharp, environment dissolves.
+           Text sits on ivory left area with enough clearance.
         ============================================================ */
         .hero {
           min-height: 100vh;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          background: var(--ivory);
           position: relative;
+          background: var(--ivory);
+          overflow: hidden;
+          display: flex;
+          align-items: stretch;
         }
-        .hero-divider {
-          position: absolute; left: 50%; top: 0; bottom: 0;
-          width: 2px; background: var(--slate); opacity: 0.2; z-index: 3;
-          transform: translateX(-50%);
+        /* Photo layer: fills the full hero, positioned to show John right-center */
+        .hero-photo-wrap {
+          position: absolute; inset: 0; z-index: 1;
         }
+        .hero-photo-img {
+          position: absolute; inset: 0; width: 100%; height: 100%;
+          object-fit: cover; object-position: 70% top; display: block;
+        }
+        /* Fade overlay: ivory from left, transparent by ~55% of width
+           This dissolves the environmental left side of the photo
+           while leaving John and the anchor sharp on the right */
+        .hero-photo-fade {
+          position: absolute; inset: 0; z-index: 2;
+          background: linear-gradient(
+            to right,
+            #F7F4ED 0%,
+            #F7F4ED 38%,
+            rgba(247,244,237,0.85) 46%,
+            rgba(247,244,237,0.3) 56%,
+            rgba(247,244,237,0) 68%
+          );
+        }
+        /* Text content sits above both layers */
         .hero-left {
+          position: relative; z-index: 3;
           display: flex; flex-direction: column; justify-content: center;
-          padding: 140px 72px 80px; position: relative; z-index: 2;
+          padding: 140px 72px 80px;
+          width: 52%;
+          min-height: 100vh;
         }
         .hero-headline {
           font-family: 'DM Serif Display', serif;
@@ -140,13 +163,10 @@ export default function Home2() {
           line-height: 1.7; max-width: 420px; margin-bottom: 40px;
         }
         .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-        .hero-right {
-          position: relative; background: var(--slate-mid); overflow: hidden;
-        }
-        .hero-photo-img {
-          position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: cover; object-position: center top; display: block;
-        }
+        /* Divider removed — replaced by gradient transition */
+        .hero-divider { display: none; }
+        /* hero-right no longer needed as a layout column */
+        .hero-right { display: none; }
 
         /* ============================================================
            2. THE DIFFERENCE
@@ -187,53 +207,65 @@ export default function Home2() {
 
         /* ============================================================
            3. WHO WE WORK WITH
-           Staggered editorial field. Odd entries left, even entries
-           offset right — uses full canvas without a rigid grid.
+           Left anchor (~28%) + 2x2 editorial matrix (~72%).
+           Compact, full-width, no stagger, no cards.
         ============================================================ */
         .audiences {
           background: var(--slate-pale);
-          padding: 100px 72px;
+          padding: 80px 72px;
           border-top: none;
         }
-        .audiences-inner { max-width: 1320px; margin: 0 auto; }
+        .audiences-inner {
+          max-width: 1320px; margin: 0 auto;
+          display: grid;
+          grid-template-columns: 28fr 72fr;
+          gap: 0 60px;
+          align-items: start;
+        }
+        /* Left anchor: heading stays top-left and acts as visual weight */
         .audiences-heading {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.4vw, 30px);
+          font-size: clamp(20px, 2vw, 26px);
           font-weight: 400; color: var(--text);
-          margin-bottom: 40px; letter-spacing: -0.01em;
+          letter-spacing: -0.01em; line-height: 1.3;
+          padding-top: 4px;
+
         }
-        /* Staggered: each entry positions itself across the canvas */
+        /* 2x2 matrix */
+        .audiences-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0;
+        }
         .audience-item {
-          display: flex;
-          gap: 20px;
-          padding: 36px 0;
+          padding: 28px 32px 28px 0;
           border-top: 1px solid rgba(76,120,160,0.18);
-          align-items: start;
-          max-width: 580px;
         }
-        .audience-item:last-child { border-bottom: 1px solid rgba(76,120,160,0.18); }
-        /* Even items offset right */
-        .audience-item:nth-child(even) { margin-left: auto; }
+        /* Right column items get left padding instead of right */
+        .audience-item:nth-child(even) {
+          padding-left: 32px;
+          padding-right: 0;
+          border-left: 1px solid rgba(76,120,160,0.18);
+        }
         .audience-num {
-          font-size: 0.65rem; color: var(--slate-mid);
-          font-weight: 500; letter-spacing: 0.04em;
-          padding-top: 8px; flex-shrink: 0; min-width: 24px;
+          font-size: 0.63rem; color: var(--slate-mid);
+          font-weight: 500; letter-spacing: 0.05em;
+          margin-bottom: 8px; display: block;
         }
-        .audience-body { flex: 1; }
         .audience-name {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(24px, 2.8vw, 36px);
+          font-size: clamp(18px, 1.8vw, 22px);
           font-weight: 400; color: var(--text);
-          letter-spacing: -0.01em; line-height: 1.15;
-          margin-bottom: 12px;
+          letter-spacing: -0.01em; line-height: 1.2;
+          margin-bottom: 8px;
         }
         .audience-line {
-          font-size: 0.92rem; line-height: 1.7;
+          font-size: 0.87rem; line-height: 1.65;
           color: var(--text-muted); font-weight: 300;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
         .audience-link {
-          font-size: 0.75rem; color: var(--slate-mid);
+          font-size: 0.73rem; color: var(--slate-mid);
           text-decoration: none; font-weight: 500;
           letter-spacing: 0.04em;
           display: inline-flex; align-items: center; gap: 6px;
@@ -396,10 +428,18 @@ export default function Home2() {
            RESPONSIVE
         ============================================================ */
         @media (max-width: 1024px) {
-          .hero { grid-template-columns: 1fr; min-height: unset; }
-          .hero-divider { display: none; }
-          .hero-left { padding: 130px 48px 60px; }
-          .hero-right { min-height: 460px; }
+          .hero { min-height: 100svh; }
+          .hero-left { width: 60%; padding: 130px 48px 60px; }
+          .hero-photo-fade {
+            background: linear-gradient(
+              to right,
+              #F7F4ED 0%,
+              #F7F4ED 34%,
+              rgba(247,244,237,0.8) 44%,
+              rgba(247,244,237,0.2) 58%,
+              rgba(247,244,237,0) 72%
+            );
+          }
           .difference { padding: 80px 48px; }
           .difference-right { margin-left: 0; max-width: 100%; margin-top: 40px; }
           .audiences { padding: 80px 48px; }
@@ -418,13 +458,24 @@ export default function Home2() {
           .services-mobile { display: flex; flex-direction: column; }
         }
         @media (max-width: 640px) {
-          .hero-left { padding: 120px 24px 56px; }
+          .hero-left { width: 100%; padding: 120px 24px 56px; }
           .hero-headline { font-size: clamp(32px, 9vw, 46px); }
           .hero-btns { flex-direction: column; }
+          .hero-photo-fade {
+            background: linear-gradient(
+              to bottom,
+              rgba(247,244,237,0) 0%,
+              rgba(247,244,237,0.6) 60%,
+              #F7F4ED 85%
+            );
+          }
+          .hero-photo-img { object-position: 80% top; }
           .difference { padding: 64px 24px; }
-          .audiences { padding: 64px 24px; }
-          .audience-item { max-width: 100%; }
-          .audience-item:nth-child(even) { margin-left: 0; }
+          .audiences { padding: 56px 24px; }
+          .audiences-inner { grid-template-columns: 1fr; gap: 32px; }
+          .audiences-heading { position: static; }
+          .audiences-grid { grid-template-columns: 1fr; }
+          .audience-item:nth-child(even) { padding-left: 0; border-left: none; }
           .services-section { padding: 64px 24px; }
           .about-strip-content { padding: 48px 24px; }
           .testimonial-section { padding: 64px 24px; }
@@ -434,7 +485,12 @@ export default function Home2() {
 
       {/* ===== 1. HERO ===== */}
       <section className="hero">
-        <div className="hero-divider" />
+        {/* Photo layer: sits behind content, fades left into ivory */}
+        <div className="hero-photo-wrap">
+          <img src="/images/john-mccracken-navy-anchor.jpg" alt="" aria-hidden="true" className="hero-photo-img" />
+          <div className="hero-photo-fade" aria-hidden="true" />
+        </div>
+        {/* Text content */}
         <div className="hero-left">
           <h1 className="hero-headline">I help people get through wind and waves to get where and what they want, even if the goals aren't clear yet.</h1>
           <p className="hero-credential">John McCracken, CAPT, USN (Ret.), EMBA, ACC (ICF), DoD Certified Executive Coach. Over 30 years in senior leadership.</p>
@@ -442,9 +498,6 @@ export default function Home2() {
             <a href="/contact" className="btn btn-navy">Schedule a Conversation</a>
             <a href="#difference" className="btn btn-outline">Learn More</a>
           </div>
-        </div>
-        <div className="hero-right">
-          <img src="/images/john-mccracken-navy-anchor.jpg" alt="John McCracken in Navy dress whites beside the gold anchor" className="hero-photo-img" />
         </div>
       </section>
 
@@ -468,16 +521,16 @@ export default function Home2() {
       <section className="audiences">
         <div className="audiences-inner">
           <h2 className="audiences-heading">Who we work with.</h2>
-          {audiences.map((a, i) => (
-            <div key={i} className="audience-item">
-              <div className="audience-num">{a.num}</div>
-              <div className="audience-body">
+          <div className="audiences-grid">
+            {audiences.map((a, i) => (
+              <div key={i} className="audience-item">
+                <span className="audience-num">{a.num}</span>
                 <div className="audience-name">{a.name}</div>
                 <div className="audience-line">{a.line}</div>
                 <a href={a.href} className="audience-link">Learn more →</a>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
