@@ -214,6 +214,15 @@ export default function Home() {
           object-position: center top;
           display: block;
         }
+        .hero-photo-fade {
+          position: absolute; inset: 0; z-index: 2;
+          background: linear-gradient(
+            to right,
+            #F7F4ED 0%,
+            rgba(247,244,237,0.6) 18%,
+            rgba(247,244,237,0) 42%
+          );
+        }
         /* Scrim removed — photo stands on its own */
 
         /* ============================================================
@@ -757,6 +766,7 @@ export default function Home() {
             alt="John McCracken in Navy dress whites beside the gold anchor"
             className="hero-photo-img"
           />
+          <div className="hero-photo-fade" aria-hidden="true" />
         </div>
       </section>
 
