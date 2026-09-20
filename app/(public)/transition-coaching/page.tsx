@@ -156,6 +156,13 @@ export default async function TransitionCoaching() {
           padding: 140px 72px 100px;
         }
         .personal-story-inner { max-width: 720px; margin: 0 auto; }
+        .story-context-label {
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          margin-bottom: 28px;
+        }
         .body-text {
           font-size: 0.97rem;
           line-height: 1.92;
@@ -198,7 +205,7 @@ export default async function TransitionCoaching() {
         /* Desktop: spatial editorial field */
         .work-field { display: block; }
         .work-entry {
-          padding-bottom: 72px;
+          padding-bottom: 52px;
           position: relative;
         }
         /* Each entry has its own horizontal position and max-width */
@@ -206,7 +213,7 @@ export default async function TransitionCoaching() {
         .work-entry-2 { margin-left: 28%;         max-width: 480px; }
         .work-entry-3 { margin-left: 8%;          max-width: 500px; }
         .work-entry-4 { margin-left: 36%;         max-width: 460px; }
-        .work-entry-5 { margin-left: 16%;         max-width: 500px; padding-bottom: 0; }
+        .work-entry-5 { margin-left: 48%;         max-width: 440px; padding-bottom: 0; }
         /* Thin rule only above entries 2 through 5 */
         .work-entry-2,
         .work-entry-3,
@@ -285,7 +292,6 @@ export default async function TransitionCoaching() {
           color: var(--text-muted);
           letter-spacing: 0.03em;
           font-weight: 500;
-          text-transform: uppercase;
           margin-bottom: 16px;
         }
         .engagement-headline {
@@ -381,6 +387,7 @@ export default async function TransitionCoaching() {
         @media (max-width: 1100px) {
           .work-entry-2 { margin-left: 18%; }
           .work-entry-4 { margin-left: 24%; }
+          .work-entry-5 { margin-left: 36%; max-width: 420px; }
         }
         @media (max-width: 1024px) {
           .hero { padding: 140px 48px 80px; }
@@ -394,7 +401,7 @@ export default async function TransitionCoaching() {
           .work-entry-2 { margin-left: 12%; }
           .work-entry-3 { margin-left: 4%; }
           .work-entry-4 { margin-left: 18%; }
-          .work-entry-5 { margin-left: 8%; }
+          .work-entry-5 { margin-left: 24%; max-width: 420px; }
           .testimonial-section { padding: 80px 48px; }
           .engagement { padding: 80px 48px; }
           .engagement-inner { grid-template-columns: 1fr; gap: 56px; }
@@ -456,6 +463,7 @@ export default async function TransitionCoaching() {
       {/* ===== 4. JOHN'S PERSONAL STORY ===== */}
       <section className="personal-story">
         <div className="personal-story-inner">
+          <p className="story-context-label">John's transition</p>
           <p className="body-text">Despite hearing the stories of how challenging the military-to-civilian transition could be, I expected my transition to be relatively straightforward. Given my extensive shore duty and time in the Pentagon at the end of my career, I expected the transition to essentially mean finding a job and showing up to work in civilian attire instead of a uniform. It ended up being far more impactful than that. The loss of community, defining who I was out of uniform, the loss of working with people I'd built relationships with over years, and the loss of a professional reputation in my field ended up being harder than I expected. Even transitioning into a federal position within the Department of Defense didn't mitigate the challenge the way I expected it would.</p>
           <p className="body-text">Eventually, I regained my footing by reconnecting with the values, methods, and practices that made me successful in the first place, and I learned to apply my extensive skills in a new way, for a different audience, to achieve the outcomes I was familiar with. Having a coach to help guide the process was exceptionally helpful.</p>
           <p className="body-text-resolution">I'd like to pay that experience forward and help you make your transition a rewarding, positive, growth-filled process.</p>
