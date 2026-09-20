@@ -47,24 +47,14 @@ export default function Nav() {
 
         .nav-brand {
           text-decoration: none;
+          display: flex;
+          align-items: center;
         }
 
-        .nav-brand-name {
-          font-family: 'DM Serif Display', serif;
-          font-size: 1rem;
-          font-weight: 400;
-          color: #0D1B2A;
-          letter-spacing: 0.02em;
-          line-height: 1.1;
-        }
-
-        .nav-brand-sub {
-          font-family: 'Inter', sans-serif;
-          font-size: 0.6rem;
-          color: #C9A23A;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          font-weight: 500;
+        .nav-brand img {
+          height: 48px;
+          width: auto;
+          display: block;
         }
 
         .nav-links {
@@ -196,6 +186,15 @@ export default function Nav() {
           display: flex;
         }
 
+        .nav-mobile-logo {
+          margin-bottom: 8px;
+        }
+
+        .nav-mobile-logo img {
+          height: 40px;
+          width: auto;
+        }
+
         .nav-mobile a {
           font-size: 1.15rem;
           color: #0D1B2A;
@@ -238,56 +237,31 @@ export default function Nav() {
         }
 
         @media (max-width: 1100px) {
-          .nav-inner {
-            padding: 16px 40px;
-          }
-
-          .nav-links {
-            gap: 20px;
-          }
-
-          .nav-link,
-          .services-trigger {
-            font-size: 0.65rem;
-          }
+          .nav-inner { padding: 16px 40px; }
+          .nav-links { gap: 20px; }
+          .nav-link, .services-trigger { font-size: 0.65rem; }
         }
 
         @media (max-width: 900px) {
-          .nav-inner {
-            padding: 16px 24px;
-          }
-
-          .nav-links,
-          .nav-cta {
-            display: none;
-          }
-
-          .nav-hamburger {
-            display: flex;
-          }
+          .nav-inner { padding: 16px 24px; }
+          .nav-links, .nav-cta { display: none; }
+          .nav-hamburger { display: flex; }
         }
       `}</style>
 
       <div
         className="nav-wrap"
         style={{
-          background: scrolled
-            ? 'rgba(247,244,237,0.98)'
-            : 'rgba(247,244,237,0.95)',
+          background: scrolled ? 'rgba(247,244,237,0.98)' : 'rgba(247,244,237,0.95)',
         }}
       >
         <div className="nav-inner">
           <a href="/" className="nav-brand">
-            <div className="nav-brand-name">Beyond the Horizon</div>
-            <div className="nav-brand-sub">
-              Executive Coaching and Consulting
-            </div>
+            <img src="/images/bth-logo-nav.png" alt="Beyond the Horizon" />
           </a>
 
           <div className="nav-links">
-            <a href="/about" className="nav-link">
-              About
-            </a>
+            <a href="/about" className="nav-link">About</a>
 
             <div
               className="services-wrap"
@@ -301,89 +275,51 @@ export default function Nav() {
                 aria-haspopup="true"
               >
                 Services
-                <span
-                  className={`services-chevron ${
-                    servicesOpen ? 'open' : ''
-                  }`}
-                >
-                  ▾
-                </span>
+                <span className={`services-chevron ${servicesOpen ? 'open' : ''}`}>▾</span>
               </button>
 
               {servicesOpen && (
                 <div className="services-dropdown">
                   {services.map((service) => (
-                    <a key={service.href} href={service.href}>
-                      {service.label}
-                    </a>
+                    <a key={service.href} href={service.href}>{service.label}</a>
                   ))}
                 </div>
               )}
             </div>
 
-            <a href="/the-framework" className="nav-link">
-              The Framework
-            </a>
-
-            <a href="/contact" className="nav-link">
-              Contact
-            </a>
+            <a href="/the-framework" className="nav-link">The Framework</a>
+            <a href="/contact" className="nav-link">Contact</a>
           </div>
 
-          <a href="/contact" className="nav-cta">
-            Schedule a Conversation
-          </a>
+          <a href="/contact" className="nav-cta">Schedule a Conversation</a>
 
           <button
             className="nav-hamburger"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle menu"
           >
-            <span />
-            <span />
-            <span />
+            <span /><span /><span />
           </button>
         </div>
       </div>
 
       <div className={`nav-mobile ${menuOpen ? 'open' : ''}`}>
-        <button
-          className="nav-close"
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close menu"
-        >
-          ✕
-        </button>
+        <button className="nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
 
-        <a href="/about" onClick={() => setMenuOpen(false)}>
-          About
-        </a>
+        <div className="nav-mobile-logo">
+          <img src="/images/bth-logo-nav.png" alt="Beyond the Horizon" />
+        </div>
 
+        <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
         <div className="mobile-services-label">Services</div>
-
         {services.map((service) => (
-          <a
-            key={service.href}
-            href={service.href}
-            onClick={() => setMenuOpen(false)}
-          >
+          <a key={service.href} href={service.href} onClick={() => setMenuOpen(false)}>
             {service.label}
           </a>
         ))}
-
-        <a href="/the-framework" onClick={() => setMenuOpen(false)}>
-          The Framework
-        </a>
-
-        <a href="/contact" onClick={() => setMenuOpen(false)}>
-          Contact
-        </a>
-
-        <a
-          href="/contact"
-          className="nav-mobile-cta"
-          onClick={() => setMenuOpen(false)}
-        >
+        <a href="/the-framework" onClick={() => setMenuOpen(false)}>The Framework</a>
+        <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
+        <a href="/contact" className="nav-mobile-cta" onClick={() => setMenuOpen(false)}>
           Schedule a Conversation
         </a>
       </div>
