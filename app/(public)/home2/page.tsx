@@ -200,13 +200,13 @@ export default function Home2() {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(22px, 2.4vw, 30px);
           font-weight: 400; color: var(--text);
-          margin-bottom: 72px; letter-spacing: -0.01em;
+          margin-bottom: 40px; letter-spacing: -0.01em;
         }
         /* Staggered: each entry positions itself across the canvas */
         .audience-item {
           display: flex;
           gap: 20px;
-          padding: 52px 0;
+          padding: 36px 0;
           border-top: 1px solid var(--rule);
           align-items: start;
           max-width: 580px;
@@ -260,14 +260,14 @@ export default function Home2() {
         }
         .services-selector {
           display: grid;
-          grid-template-columns: 340px 1fr;
+          grid-template-columns: 380px 1fr;
           gap: 0;
           border-top: 1px solid var(--rule);
         }
         .svc-index { border-right: 1px solid var(--rule); }
         .svc-index-btn {
           display: block; width: 100%; background: none; border: none;
-          border-bottom: none; padding: 36px 32px 36px 24px;
+          border-bottom: none; padding: 40px 36px 40px 28px;
           text-align: left; cursor: pointer; position: relative;
           transition: none;
         }
@@ -281,13 +281,13 @@ export default function Home2() {
         .svc-index-num { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.04em; margin-bottom: 6px; font-weight: 400; display: block; }
         .svc-index-btn.active .svc-index-num { color: var(--slate-mid); }
         .svc-index-name {
-          font-family: 'DM Serif Display', serif; font-size: 1rem;
+          font-family: 'DM Serif Display', serif; font-size: 1.1rem;
           font-weight: 400; color: var(--text-muted); line-height: 1.3;
           letter-spacing: -0.01em; display: block; transition: color 0.15s;
         }
         .svc-index-btn.active .svc-index-name { color: var(--text); font-weight: 400; }
         .svc-index-btn:hover:not(.active) .svc-index-name { color: var(--text-mid); }
-        .svc-panel { padding: 64px 0 64px 72px; display: flex; flex-direction: column; justify-content: center; min-height: 340px; }
+        .svc-panel { padding: 72px 0 72px 80px; display: flex; flex-direction: column; justify-content: center; min-height: 380px; }
         .svc-panel-content { transition: opacity 0.2s ease; }
         .svc-panel-content.fading { opacity: 0; }
         .svc-panel-content.visible { opacity: 1; }
@@ -339,11 +339,12 @@ export default function Home2() {
         }
         .about-strip-body { font-size: 1.05rem; line-height: 1.9; color: var(--text-mid); margin-bottom: 0; font-weight: 300; }
         .about-strip-credentials {
-          font-size: 0.75rem; color: var(--text-muted); line-height: 1.8;
-          padding: 20px 0; margin: 28px 0 36px;
+          font-size: 0.78rem; color: var(--text-muted); line-height: 1.9;
+          padding: 24px 0; margin: 32px 0 40px;
           border-top: 1px solid var(--rule);
           border-bottom: 1px solid var(--rule);
           font-weight: 400;
+          letter-spacing: 0.01em;
         }
 
         /* ============================================================
@@ -362,7 +363,7 @@ export default function Home2() {
         ============================================================ */
         .closing {
           background: var(--ivory-dark);
-          padding: 100px 72px;
+          padding: 72px 72px;
           border-top: 1px solid var(--rule);
         }
         .closing-inner { max-width: 1320px; }
