@@ -166,7 +166,7 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          padding: 140px 72px 80px;
+          padding: 140px 72px 80px 96px;
           position: relative;
           z-index: 2;
         }
