@@ -40,9 +40,21 @@ const processSteps = [
 ]
 
 const caseStudies = [
-  'An underperforming team of Five Primary Directors, 75 total employees, missing key metric goals, and providing insufficient customer service.  We built a custom metric driven dashboard including identifying subordinate high value key functions and outcomes, increased autonomy and communication, and enabled individual performance and decision making.  Within one year, the organization had gone from one of the worst in the country to one of the best and was formally recognized as the region\'s #1 large organization.  More importantly, retention increased, morale improved, and customer service was significantly improved to the point customers became "raving supporters".',
-  'A Headquarters organization undergoing transition.  Eight disparate functions to provide nation-wide structure, human resource policy, and organizational readiness.  We identified key goals, resource constraints, and opportunities, maximized individual autonomy and communication to surface the best ideas, and implemented programs maximizing effectiveness and efficiency.  Recognized as a go-to, responsive, and forward leaning team.',
-  'A team that distrusted one-another, performed admirably in individual functions, but lacked cross-functional support and results.  Developed a program to identify key individual and team values, increase positive communication through celebration of individual and collective wins, broke distrust through building shared experiences and goals, and reinforced positive outcomes serving all.  Result was a cooperative, and successful team where individual and collective wins were celebrated, organizational goals were met or exceeded, retention increased and team morale become a celebrated asset.',
+  {
+    challenge: 'An underperforming team of five primary directors and 75 total employees was missing key metric goals and providing insufficient customer service.',
+    approach: "We built a custom, metrics-driven dashboard, identified each subordinate team's high-value functions and outcomes, and increased autonomy and communication to enable better individual decision-making.",
+    result: "Within one year, the organization went from one of the worst in the country to one of the best, earning formal recognition as the region's #1 large organization. Retention increased, morale improved, and customer service reached the point where customers became \"raving supporters.\"",
+  },
+  {
+    challenge: 'A headquarters organization undergoing transition needed to unify eight disparate functions into one coherent structure for nationwide human resource policy and organizational readiness.',
+    approach: "We identified key goals, resource constraints, and opportunities, then maximized individual autonomy and communication to surface the organization's best ideas, implementing programs that improved both effectiveness and efficiency.",
+    result: 'The organization became recognized as a go-to, responsive, forward-leaning team.',
+  },
+  {
+    challenge: 'A team performed admirably within individual functions but lacked cross-functional trust, support, and results.',
+    approach: 'We identified key individual and team values, increased positive communication by celebrating individual and collective wins, and rebuilt trust through shared experiences and shared goals.',
+    result: 'A cooperative, high-performing team where wins were celebrated together, organizational goals were met or exceeded, retention increased, and team morale became a recognized asset.',
+  },
 ]
 
 export default function LeadershipConsulting() {
@@ -286,12 +298,22 @@ export default function LeadershipConsulting() {
           border-bottom: none;
           padding-bottom: 0;
         }
-        .case-study-body {
-          font-size: 0.95rem;
-          line-height: 1.88;
+        .case-study-label {
+          font-size: 0.65rem;
+          color: rgba(247,244,237,0.45);
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 6px;
+        }
+        .case-study-text {
+          font-size: 0.93rem;
+          line-height: 1.82;
           color: rgba(247,244,237,0.78);
           font-weight: 300;
+          margin-bottom: 20px;
         }
+        .case-study-text:last-child { margin-bottom: 0; }
 
         /* ============================================================
            ENGAGEMENT + CTA
@@ -454,7 +476,12 @@ export default function LeadershipConsulting() {
         <div className="case-studies-inner">
           {caseStudies.map((study, i) => (
             <div key={i} className="case-study">
-              <p className="case-study-body">{study}</p>
+              <div className="case-study-label">The Challenge</div>
+              <p className="case-study-text">{study.challenge}</p>
+              <div className="case-study-label">The Approach</div>
+              <p className="case-study-text">{study.approach}</p>
+              <div className="case-study-label">The Result</div>
+              <p className="case-study-text">{study.result}</p>
             </div>
           ))}
         </div>

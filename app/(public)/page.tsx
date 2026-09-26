@@ -763,7 +763,7 @@ export default function Home() {
         </div>
         <div className="hero-right">
           <img
-            src="/images/john-mccracken-navy-anchor.jpg"
+            src="/images/john-mccracken-blue-tie.jpg"
             alt="John McCracken in Navy dress whites beside the gold anchor"
             className="hero-photo-img"
           />

@@ -557,7 +557,10 @@ export default function ExecutiveCoaching() {
       <section className="client-story">
         <div className="client-story-inner">
           <h2 className="story-heading">A coaching example</h2>
-          <div className="story-text">A client came to me seeking to improve his executive presence and communication. What we found underneath was a true desire to function in a new role that required collaborative communication techniques across the organization and with no clear lines of authority coupled with a desire to be more present with his growing family. What changed was a new perspective that was less outcome and more process, and awareness that leveraged his previous experience, plus a definition of what family presence meant, and a plan to achieve it.</div>
+          <div className="story-text">
+            <p style={{marginBottom:'20px'}}>A client came to me seeking to improve his executive presence and communication. What we found underneath was a role that required collaborative influence across an organization with no clear lines of authority — paired with a quiet desire to be more present with his growing family.</p>
+            <p>What changed wasn't a new title or a new tactic. It was a shift from outcome-focused to process-focused thinking, a clearer definition of what "being present" with his family actually meant to him, and a concrete plan to get there — built on strengths he already had.</p>
+          </div>
         </div>
       </section>
 
@@ -653,6 +656,7 @@ export default function ExecutiveCoaching() {
         <div className="how-inner">
           <h2 className="how-heading">How it works.</h2>
           <p className="how-tagline">Coaching that follows your lead.</p>
+          <p className="how-body-1">And I support your lead. I bring thirty years of senior leadership experience, a structured methodology grounded in research on human flourishing, and the willingness to challenge you directly when something isn't adding up. You set the agenda — I make sure the conversation actually gets you somewhere.</p>
           <p className="how-body-1">You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together. We explore your values, challenge assumptions, and open perspectives you may not have considered from inside the situation. This is results- and outcomes-focused work. You deserve a return on your time and investment as you identify and achieve your greatest goals.</p>
           <p className="how-body-2">And because life doesn't separate neatly into professional and personal, we don't either. We work with all of it — on your terms, for your success.</p>
           <p className="how-body-3">Insight without action is just an interesting conversation — we go beyond that. Every session produces something concrete: a commitment you define, a step you choose, a thing you finally decide to do. You keep pushing forward.</p>
