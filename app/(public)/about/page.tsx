@@ -6,17 +6,19 @@ const credCategories = [
   {
     label: 'Experience',
     entries: [
-      { title: 'Commanding Officer, U.S. Navy', org: '30 years of progressively responsible leadership, command, and strategic development positions' },
-      { title: 'Director, Manpower & Human Capital Strategy', org: 'Department of the Navy' },
-      { title: 'Executive Coach & Director, Policy and Executive Services', org: 'Office of the Secretary of Defense, 7 years' },
+      { title: 'Commanding Officer and progressively senior leadership roles', org: 'U.S. Navy, 30 years' },
+      { title: 'Director, Manpower and Human Capital Strategy', org: 'Department of the Navy' },
+      { title: 'Director, Policy and Executive Services', org: 'Office of the Assistant to the Secretary of Defense for Public Affairs' },
+      { title: 'Senior defense civilian', org: 'Department of the Navy and Office of the Secretary of Defense, 7 years' },
     ],
   },
   {
     label: 'Education',
     entries: [
       { title: 'Executive Master of Business Administration', org: 'Naval Postgraduate School' },
-      { title: 'Master of Arts, National Security & Strategic Studies', org: 'Naval War College' },
-      { title: 'Leadership Coaching & Organizational Performance', org: 'American University / Heidrick & Struggles' },
+      { title: 'Master of Arts, National Security and Strategic Studies', org: 'Naval War College' },
+      { title: 'Bachelor of Science, Geography', org: 'Old Dominion University' },
+      { title: 'Leadership Coaching for Organizational Performance (LCOP) Certificate', org: 'American University / Heidrick & Struggles (ICF Level 2 accredited)' },
     ],
   },
   {
@@ -24,7 +26,6 @@ const credCategories = [
     entries: [
       { title: 'Associate Certified Coach (ACC)', org: 'International Coaching Federation' },
       { title: 'DoD Certified Executive Coach', org: '' },
-      { title: 'LCOP Certificate', org: 'American University' },
     ],
   },
 ]
@@ -50,7 +51,7 @@ export default function About() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@1,400;1,500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
         :root {
           --ivory: #F7F4ED;
@@ -71,11 +72,13 @@ export default function About() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { background: var(--ivory); color: var(--text); font-family: 'Inter', sans-serif; font-weight: 300; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        .btn-primary { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; background: var(--navy); color: var(--ivory); }
-        .btn-primary:hover { background: var(--slate-mid); }
+        .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+        .btn-gold { background: var(--gold); color: var(--navy); }
+        .btn-gold:hover { background: #b8911f; }
 
         /* ============================================================
-           OPENING — unchanged
+           1. OPENING / HERO
+           Ivory. New professional portrait right. Headline + subhead left.
         ============================================================ */
         .opening {
           background: var(--ivory);
@@ -119,144 +122,120 @@ export default function About() {
           line-height: 1.15;
           color: var(--text);
           letter-spacing: -0.02em;
-          margin-bottom: 32px;
+          margin-bottom: 20px;
           max-width: 680px;
         }
-        .opening-body {
+        .opening-subhead {
           font-size: 1rem;
-          line-height: 1.85;
+          line-height: 1.82;
           color: var(--text-mid);
-          margin-bottom: 18px;
-          max-width: 620px;
+          max-width: 580px;
           font-weight: 300;
         }
-        .opening-body:last-child { margin-bottom: 0; }
 
         /* ============================================================
-           THE STORY — unchanged except final sentence treatment
+           2. STORY — four labeled sections in a single column
         ============================================================ */
-        .story { background: var(--ivory-dark); padding: 120px 72px 140px; }
+        .story { background: var(--ivory-dark); padding: 120px 72px 80px; }
         .story-inner { max-width: 680px; margin: 0 auto; }
+
+        .story-section { margin-bottom: 64px; }
+        .story-section:last-child { margin-bottom: 0; }
+
+        .story-section-label {
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          margin-bottom: 20px;
+        }
         .story-body {
           font-size: 0.97rem;
           line-height: 1.92;
           color: var(--text-mid);
-          margin-bottom: 24px;
+          margin-bottom: 20px;
           font-weight: 300;
         }
         .story-body:last-child { margin-bottom: 0; }
-        .story-body-thesis {
-          font-size: 0.97rem;
-          line-height: 1.92;
-          color: var(--text);
-          margin-top: 36px;
-          margin-bottom: 24px;
+
+        /* Award ceremony photo — after "Living the change" section */
+        .story-photo-break { margin: 80px auto 0; max-width: 980px; line-height: 0; }
+        .story-photo-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          max-width: 980px;
+          object-fit: cover;
+          object-position: center top;
+        }
+        .story-photo-caption {
+          font-size: 0.75rem;
+          color: var(--text-muted);
+          font-style: italic;
+          text-align: center;
+          margin-top: 10px;
           font-weight: 300;
         }
-        /* Final sentence — DM Serif Display, editorial conclusion */
-        .story-conclusion {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(18px, 1.8vw, 22px);
-          font-weight: 400;
-          color: var(--navy);
-          line-height: 1.4;
-          letter-spacing: -0.01em;
-          margin-top: 36px;
-        }
-        .story-bridge {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(18px, 1.8vw, 22px);
-          font-weight: 400;
-          font-style: italic;
-          line-height: 1.5;
-          color: var(--text);
-          margin-top: 56px;
-          margin-bottom: 48px;
-          letter-spacing: -0.01em;
-        }
-        .story-photo-break { margin: 72px auto 0; max-width: 980px; line-height: 0; }
-        .story-photo-img { width: 100%; height: auto; display: block; max-width: 980px; }
 
         /* ============================================================
-           APPROACH — unchanged
+           3. BEYOND WORK — personal section
+           Ivory. Two photos: cycling/swim left, beach with wife right.
         ============================================================ */
-        .approach { background: var(--slate); padding: 100px 72px; }
-        .approach-inner {
-          max-width: 1200px;
-          margin: 0 auto;
+        .beyond { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
+        .beyond-inner { max-width: 1100px; margin: 0 auto; }
+        .beyond-section-label {
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          margin-bottom: 48px;
+        }
+        .beyond-layout {
           display: grid;
-          grid-template-columns: 2fr 1fr 3fr;
-          gap: 0;
+          grid-template-columns: 5fr 7fr;
+          gap: 72px;
           align-items: start;
         }
-        .approach-heading {
+        .beyond-photos { display: flex; flex-direction: column; gap: 16px; }
+        .beyond-photo {
+          width: 100%;
+          aspect-ratio: 4 / 3;
+          object-fit: cover;
+          display: block;
+        }
+        .beyond-body {
+          font-size: 0.97rem;
+          line-height: 1.92;
+          color: var(--text-mid);
+          margin-bottom: 20px;
+          font-weight: 300;
+        }
+        .beyond-body:last-child { margin-bottom: 0; }
+
+        /* ============================================================
+           4. PULL QUOTE
+           Slate. Large, bold. Exact v7 wording.
+        ============================================================ */
+        .pull-quote { background: var(--slate); padding: 100px 72px; }
+        .pull-quote-inner { max-width: 820px; margin: 0 auto; }
+        .pull-quote-text {
           font-family: 'DM Serif Display', serif;
-          font-size: clamp(26px, 3vw, 40px);
+          font-size: clamp(22px, 2.8vw, 36px);
           font-weight: 400;
-          line-height: 1.18;
+          line-height: 1.4;
           color: var(--ivory);
           letter-spacing: -0.01em;
-          grid-column: 1;
-        }
-        .approach-gap { grid-column: 2; }
-        .approach-body-col { grid-column: 3; padding-top: 8px; }
-        .approach-body {
-          font-size: 0.97rem;
-          line-height: 1.9;
-          color: rgba(247,244,237,0.75);
-          margin-bottom: 22px;
-          font-weight: 300;
-        }
-        .approach-body:last-child { margin-bottom: 0; }
-
-        /* ============================================================
-           WHAT BECOMES POSSIBLE — tightened spatial relationships
-           Entry upper-left → outcome offset right, closer → close returns left
-        ============================================================ */
-        .possible { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
-        .possible-inner { max-width: 1100px; margin: 0 auto; }
-
-        .possible-entry {
-          font-size: 0.97rem;
-          line-height: 1.85;
-          color: var(--text-muted);
-          max-width: 380px;
-          font-weight: 300;
-        }
-        /* Outcome: offset right but closer — margin-left ~35%, margin-top reduced */
-        .possible-outcome {
-          max-width: 500px;
-          margin-top: 32px;
-          margin-left: 35%;
-        }
-        .possible-outcome-body {
-          font-size: 0.97rem;
-          line-height: 1.9;
-          color: var(--text-mid);
-          font-weight: 300;
-        }
-        /* Conclusion: returns left, reduced top spacing */
-        .possible-close {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.4vw, 30px);
-          font-weight: 400;
-          color: var(--text);
-          margin-top: 36px;
-          max-width: 520px;
-          letter-spacing: -0.01em;
-          line-height: 1.3;
         }
 
         /* ============================================================
-           CREDENTIALS — interactive editorial index
-           Three DM Serif Display category names across the top.
-           Only selected category's entries visible.
-           Typography, spacing, and thin rules — no cards.
+           5. CREDENTIALS
+           Ivory dark. Interactive editorial tab index.
         ============================================================ */
         .credentials { background: var(--ivory-dark); padding: 100px 72px; border-top: 1px solid var(--rule); }
         .credentials-inner { max-width: 1200px; margin: 0 auto; }
 
-        /* Category selector — editorial, not SaaS tabs */
         .cred-selector {
           display: flex;
           gap: 0;
@@ -278,36 +257,22 @@ export default function About() {
           line-height: 1.2;
           transition: color 0.18s;
           margin-bottom: -1px;
-          position: relative;
         }
         .cred-tab:last-child { margin-right: 0; }
         .cred-tab:hover { color: var(--text); }
         .cred-tab:focus-visible { outline: 2px solid var(--slate); outline-offset: 4px; }
-        .cred-tab.active {
-          color: var(--text);
-          border-bottom: 2px solid var(--slate-mid);
-        }
+        .cred-tab.active { color: var(--text); border-bottom: 2px solid var(--slate-mid); }
 
-        /* Credential entries panel */
-        .cred-panel {
-          display: block;
-          transition: opacity 0.175s ease;
-        }
+        .cred-panel { display: block; transition: opacity 0.175s ease; }
         .cred-panel.fading { opacity: 0; }
         .cred-panel.visible { opacity: 1; }
 
-        /* Three-column grid — same for all categories */
         .cred-entries-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 0 48px;
         }
-
-        /* Each entry: generous vertical space, thin rules, clear hierarchy */
-        .cred-entry-block {
-          padding: 32px 0;
-          border-top: 1px solid var(--rule);
-        }
+        .cred-entry-block { padding: 32px 0; border-top: 1px solid var(--rule); }
         .cred-entry-title {
           font-family: 'DM Serif Display', serif;
           font-size: clamp(16px, 1.8vw, 22px);
@@ -324,56 +289,51 @@ export default function About() {
           font-weight: 300;
         }
 
-        /* Mobile: stacked accordion for credentials */
         .cred-selector-desktop { display: flex; }
         .cred-selector-mobile { display: none; }
         .cred-accordion-item { border-bottom: 1px solid var(--rule); }
         .cred-accordion-item:first-child { border-top: 1px solid var(--rule); }
         .cred-accordion-trigger {
-          width: 100%;
-          background: none;
-          border: none;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 18px 0;
-          cursor: pointer;
-          text-align: left;
+          width: 100%; background: none; border: none;
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 18px 0; cursor: pointer; text-align: left;
         }
         .cred-accordion-label {
           font-family: 'DM Serif Display', serif;
-          font-size: 1.2rem;
-          font-weight: 400;
-          color: var(--text);
-          letter-spacing: -0.01em;
+          font-size: 1.2rem; font-weight: 400;
+          color: var(--text); letter-spacing: -0.01em;
         }
-        .cred-accordion-chevron {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-          transition: transform 0.2s;
-        }
+        .cred-accordion-chevron { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.2s; }
         .cred-accordion-chevron.open { transform: rotate(180deg); }
         .cred-accordion-body { padding-bottom: 8px; }
-        .cred-accordion-entry {
-          padding: 20px 0;
-          border-top: 1px solid var(--rule);
-        }
-        .cred-accordion-title {
-          font-size: 0.93rem;
-          color: var(--text);
-          font-weight: 400;
-          margin-bottom: 4px;
-          line-height: 1.45;
-        }
-        .cred-accordion-org {
-          font-size: 0.82rem;
+        .cred-accordion-entry { padding: 20px 0; border-top: 1px solid var(--rule); }
+        .cred-accordion-title { font-size: 0.93rem; color: var(--text); font-weight: 400; margin-bottom: 4px; line-height: 1.45; }
+        .cred-accordion-org { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
+
+        /* ============================================================
+           6. HOW I COACH
+           Ivory. Narrow, left-anchored.
+        ============================================================ */
+        .how-i-coach { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
+        .how-i-coach-inner { max-width: 680px; }
+        .how-i-coach-label {
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
           color: var(--text-muted);
+          margin-bottom: 20px;
+        }
+        .how-i-coach-body {
+          font-size: 0.97rem;
+          line-height: 1.88;
+          color: var(--text-mid);
           font-weight: 300;
-          line-height: 1.5;
         }
 
         /* ============================================================
-           CLOSING — unchanged
+           7. CLOSING
+           Ivory dark. Centered. Closing line + gold CTA.
         ============================================================ */
         .closing { background: var(--ivory-dark); padding: 100px 72px; border-top: 1px solid var(--rule); }
         .closing-inner { max-width: 600px; margin: 0 auto; text-align: center; }
@@ -384,34 +344,25 @@ export default function About() {
           color: var(--text);
           line-height: 1.35;
           letter-spacing: -0.01em;
-          margin-bottom: 20px;
-        }
-        .closing-body {
-          font-size: 0.93rem;
-          line-height: 1.82;
-          color: var(--text-mid);
           margin-bottom: 36px;
-          font-weight: 300;
         }
 
         /* ============================================================
            RESPONSIVE
         ============================================================ */
-        @media (max-width: 1100px) {
-          .approach-inner { grid-template-columns: 1fr 48px 1fr; }
-          .possible-outcome { margin-left: 25%; }
-        }
         @media (max-width: 1024px) {
           .opening { padding: 130px 48px 80px; min-height: unset; }
           .opening-inner { grid-template-columns: 1fr 280px; gap: 0 48px; }
           .opening-portrait-col { padding-top: 48px; }
-          .story { padding: 100px 48px 120px; }
-          .approach { padding: 80px 48px; }
-          .approach-inner { grid-template-columns: 1fr 32px 1fr; }
-          .possible { padding: 80px 48px; }
-          .possible-outcome { margin-left: 20%; margin-top: 28px; }
+          .story { padding: 100px 48px 80px; }
+          .beyond { padding: 80px 48px; }
+          .beyond-layout { grid-template-columns: 1fr; gap: 48px; }
+          .beyond-photos { flex-direction: row; }
+          .beyond-photo { aspect-ratio: 1 / 1; }
+          .pull-quote { padding: 80px 48px; }
           .credentials { padding: 80px 48px; }
           .cred-entries-grid { grid-template-columns: 1fr; }
+          .how-i-coach { padding: 80px 48px; }
           .closing { padding: 80px 48px; }
         }
         @media (max-width: 768px) {
@@ -420,27 +371,23 @@ export default function About() {
           .opening-portrait { max-width: 220px; }
           .opening-name-block { grid-row: 1; }
           .opening-statement { grid-column: 1; grid-row: 3; }
-          .approach-inner { grid-template-columns: 1fr; gap: 32px 0; }
-          .approach-gap { display: none; }
-          .approach-body-col { grid-column: 1; padding-top: 0; }
-          .possible-outcome { margin-left: 0; margin-top: 24px; max-width: 100%; }
-          .possible-close { margin-top: 28px; }
-          /* Credentials: hide desktop selector, show accordion */
+          .beyond-photos { flex-direction: column; }
           .cred-selector-desktop { display: none; }
           .cred-selector-mobile { display: block; }
         }
         @media (max-width: 640px) {
           .opening { padding: 120px 24px 64px; }
-          .story { padding: 80px 24px 100px; }
-          .approach { padding: 64px 24px; }
-          .possible { padding: 64px 24px; }
+          .story { padding: 80px 24px 64px; }
+          .beyond { padding: 64px 24px; }
+          .pull-quote { padding: 64px 24px; }
           .credentials { padding: 64px 24px; }
+          .how-i-coach { padding: 64px 24px; }
           .closing { padding: 64px 24px; }
-          .cred-tab { font-size: clamp(16px, 5vw, 20px); margin-right: 28px; }
         }
       `}</style>
 
-      {/* ===== OPENING ===== */}
+      {/* ===== 1. OPENING / HERO ===== */}
+      {/* Photo: new professional portrait (navy blazer, open collar) */}
       <section className="opening">
         <div className="opening-inner">
           <div className="opening-name-block">
@@ -454,73 +401,102 @@ export default function About() {
             />
           </div>
           <div className="opening-statement">
-            <h1 className="opening-lead">I help people find and get what they want.</h1>
-            <p className="opening-body">You earned your success — and now you're looking to unlock what's next. Professionally, personally, relationally. All of it, together.</p>
-            <p className="opening-body">I bring a lifetime of hard-won insights, alongside genuine curiosity and unwavering support, to help you get clear on what you want — and unlock the potential already in you to achieve it.</p>
+            <h1 className="opening-lead">I help leaders get clear and get results.</h1>
+            <p className="opening-subhead">Thirty-seven years of leadership, the setbacks as well as the successes, and professional coach training, all focused on the results you want.</p>
           </div>
         </div>
       </section>
 
-      {/* ===== THE STORY ===== */}
+      {/* ===== 2. STORY ===== */}
       <section className="story">
         <div className="story-inner">
-          <p className="story-body">I know what it's like to wake up in the middle of the night wondering how to do it all — and do it all well.</p>
-          <p className="story-body">Supporting a family, leading at work, taking care of yourself and your relationships, pursuing goals that matter — the weight of it is real. Most people carry it alone.</p>
-          <p className="story-body">My own shift was both a process and a moment.</p>
-          <p className="story-body">I inherited one of the most underperforming commands in the Naval Reserve — a Reserve Center of 76 personnel responsible for over 3,000 Sailors around the nation and the globe. Morale was broken, performance and customer satisfaction were low. It was an organization that had stopped believing in itself.</p>
-          <p className="story-body">What turned it around wasn't a new strategy or a reorganization. It was learning to lead and care for the whole person in the room — starting with myself. Two years later, that command was recognized as the best large Center in the nation.</p>
-          <p className="story-body">But the award wasn't the point. What mattered was what we built: a culture of people genuinely taking care of themselves and one another — with dignity, with respect, pushing forward, and with a commitment to each other's ongoing growth. That culture outlasted every individual who left.</p>
+
+          <div className="story-section">
+            <div className="story-section-label">Where I started</div>
+            <p className="story-body">I spent 11 of my first 16 years in the Navy at sea, learning, leading, and performing in a demanding but rewarding environment. I went from Division Officer leading a team of 30, to Department Head leading an engineering team of 70, to Executive Officer running the day-to-day operations of a destroyer and her crew of about 350.</p>
+          </div>
+
+          <div className="story-section">
+            <div className="story-section-label">What failure taught me that success couldn't</div>
+            <p className="story-body">Up to that point, almost everything had gone to plan. Then came my greatest career setback: I wasn't selected for command at sea. And that setback wasn't private. Whether you are selected is visible to everyone, in the pins on your uniform or their absence.</p>
+            <p className="story-body">It took me five years to get over it. I internalized it far more than I should have. I went on to have a great career, but it wasn't the career I had wanted.</p>
+            <p className="story-body">If I'd been selected, I likely would have kept leading the way I always had, which wasn't always the kindest or most empowering way to lead. Not being selected forced a change I wouldn't have made on my own. I made more room for people's autonomy. I listened more than I directed. And I stopped holding people to my idea of perfection and started holding them to "good enough, done well."</p>
+            <p className="story-body">While it took me years to get there, I want to help you move through your own version of this faster and more smoothly than I did — whether it's a career-altering setback or the everyday challenge of a hard meeting or a hard relationship.</p>
+          </div>
+
+          <div className="story-section">
+            <div className="story-section-label">Living the change</div>
+            <p className="story-body">I put my renewed perspective and skills to work when I took command of the largest unit of its type in the nation, and one of the most underperforming in the Naval Reserve. Morale was broken, performance was low, and everyone expected more of the same.</p>
+            <p className="story-body">I knew something had to change, and it had to start with me. Not a new program or a reorganization plan — how I showed up. The questions I asked instead of the answers I gave. Honesty about what wasn't working, including my own leadership.</p>
+            <p className="story-body">Within a year, that team was recognized as the region's #1 large Navy Operational Support Center. Not because I had the answers, but because I learned to lead differently.</p>
+          </div>
+
         </div>
 
+        {/* Photo: award ceremony — cropped tight on John and the presenter */}
         <div className="story-photo-break">
           <img
             src="/images/john-mccracken-navy-ceremony.jpg"
             alt=""
             aria-hidden="true"
             className="story-photo-img"
+            style={{ objectPosition: 'center 20%' }}
           />
         </div>
 
-        <div className="story-inner">
-          <p className="story-bridge">That turnaround didn't start with a plan. It started years earlier, with the hardest professional setback of my career.</p>
-          <p className="story-body">My greatest career setback was failing a command selection I'd spent 16 years working toward — 11 of them at sea. In the Navy, that failure isn't private. Whether you selected for command is visible to everyone, simply by looking at the pins on your uniform, or their absence. It reroutes your career and your opportunities, and for me, it landed hard.</p>
-          <p className="story-body">If I'd been selected, I likely would have kept leading the way I always had — which wasn't always the kindest or most empowering way to lead people. Not selecting forced a change I wouldn't have made on my own. I had to step back and look honestly at what was working, and more importantly, what wasn't. I made more room for people's autonomy and empowerment. I made a conscious effort to listen more than I directed. And I stopped holding people to my own idea of perfection, and started holding them to a standard of "good enough, done well."</p>
-          <p className="story-body">It took me years to get there. But I want to help people move through their own version of this — from the career-altering to the everyday challenge of showing up better in a hard meeting or a hard relationship — faster and more effectively than I did. That's part of what I bring to every session.</p>
-          <p className="story-body-thesis">That experience confirmed what most leadership and coaching programs still won't say directly: the immediate challenge is rarely the whole story. When we address the whole person — every dimension of who they are and what they're carrying — something unlocks. Potential they didn't know they had. Clarity they couldn't find alone. An actionable, repeatable path forward that lasts.</p>
-          {/* Final sentence — editorial conclusion treatment */}
-          <p className="story-conclusion">That's what I bring to every client.</p>
-        </div>
-      </section>
-
-      {/* ===== APPROACH ===== */}
-      <section className="approach">
-        <div className="approach-inner">
-          <h2 className="approach-heading">Coaching that follows your lead.</h2>
-          <div className="approach-gap" />
-          <div className="approach-body-col">
-            <p className="approach-body">You bring what's most present in the moment — the decision, the thing you can't stop thinking about — and we work through it together. We explore your values, challenge assumptions, and open perspectives you may not have considered from inside the situation. You lead the way.</p>
-            <p className="approach-body">And because life doesn't separate neatly into professional and personal, we don't either. We work with all of it — on your terms — for your success.</p>
-            <p className="approach-body">Insight without action is just an interesting conversation — we go beyond that. Every session produces something concrete: a commitment you define, a step you choose, a thing you finally decide to do. You keep pushing forward.</p>
+        <div className="story-inner" style={{ marginTop: '80px' }}>
+          <div className="story-section">
+            <div className="story-section-label">After the Navy</div>
+            <p className="story-body">After retiring, I joined a Navy command as a senior civilian, and then the Office of the Assistant to the Secretary of Defense for Public Affairs. I reconciled long-standing manpower problems, built human capital strategy, learned to lead as a civilian, and rebuilt a team the week COVID shut everything down. Along the way, I've spent seven years watching how large organizations develop their leaders, and where they fall short.</p>
+            <p className="story-body">Leaving uniform was harder than I expected. Losing my community, my professional reputation, and my sense of who I was out of uniform was disorienting. I found my footing again by reconnecting with the values and practices that made me successful, and having a coach helped. That experience is part of why I coach. I want to help people grow, build resilience, recover quickly from setbacks, and become the person and the leader they know they can be.</p>
           </div>
         </div>
       </section>
 
-      {/* ===== WHAT BECOMES POSSIBLE ===== */}
-      <section className="possible">
-        <div className="possible-inner">
-          <p className="possible-entry">Clients describe it differently, but the through-line is consistent.</p>
-          <div className="possible-outcome">
-            <p className="possible-outcome-body">Real, lasting change — clarity, confidence, and a renewed sense of what's possible. A perspective you didn't know you had access to, and an action plan to match. Tools and approaches you hadn't considered. A sense that every part of your life is finally pulling in the same direction.</p>
+      {/* ===== 3. BEYOND WORK ===== */}
+      {/* Photos: cycling or open-water swim (left/top), beach photo with wife (right/bottom) */}
+      <section className="beyond">
+        <div className="beyond-inner">
+          <div className="beyond-section-label">Beyond work</div>
+          <div className="beyond-layout">
+            <div className="beyond-photos">
+              <img
+                src="/images/john-mccracken-cycling.jpg"
+                alt=""
+                aria-hidden="true"
+                className="beyond-photo"
+              />
+              <img
+                src="/images/john-mccracken-beach.jpg"
+                alt=""
+                aria-hidden="true"
+                className="beyond-photo"
+              />
+            </div>
+            <div>
+              <p className="beyond-body">I've been married for 36 years. I'm a father and a grandfather. And I'm a lifelong endurance athlete: marathons, Ironman races, years of running, cycling, and swimming. Last year, wear and tear meant I had to give up running. I didn't quit; I adjusted. I'm still competing on the bike and in the water.</p>
+              <p className="beyond-body">That's the same thing I help clients do: when something changes that you didn't choose, find the path that still gets you where you want to go.</p>
+            </div>
           </div>
-          <p className="possible-close">That's the work. And it starts with a single conversation.</p>
         </div>
       </section>
 
-      {/* ===== CREDENTIALS — interactive editorial index ===== */}
+      {/* ===== 4. PULL QUOTE ===== */}
+      <section className="pull-quote">
+        <div className="pull-quote-inner">
+          <p className="pull-quote-text">When we address the whole person — every dimension of who you are and what you're carrying — something unlocks. Potential you didn't know you had. Clarity you couldn't find alone. A transformative path forward that lasts.</p>
+        </div>
+      </section>
+
+      {/* ===== 5. CREDENTIALS ===== */}
       <section className="credentials">
         <div className="credentials-inner">
 
-          {/* Desktop: DM Serif selector across the top */}
+          <div style={{marginBottom: '48px'}}>
+            <div style={{fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 2.8vw, 34px)', fontWeight: 400, color: 'var(--text)', letterSpacing: '-0.01em'}}>Preparation and credentials</div>
+          </div>
+
+          {/* Desktop: tab selector */}
           <div
             className="cred-selector cred-selector-desktop"
             role="tablist"
@@ -570,12 +546,19 @@ export default function About() {
         </div>
       </section>
 
-      {/* ===== CLOSING ===== */}
+      {/* ===== 6. HOW I COACH ===== */}
+      <section className="how-i-coach">
+        <div className="how-i-coach-inner">
+          <div className="how-i-coach-label">How I coach</div>
+          <p className="how-i-coach-body">My coaching follows International Coaching Federation methodology and ethics. It's client-centered and goal-focused, built on questions rather than prescriptions. You bring the situation; I help you see it clearly and decide what to do next.</p>
+        </div>
+      </section>
+
+      {/* ===== 7. CLOSING ===== */}
       <section className="closing">
         <div className="closing-inner">
-          <p className="closing-lead">No pitch. No pressure.</p>
-          <p className="closing-body">Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
-          <a href="/contact" className="btn-primary">Schedule a Conversation</a>
+          <p className="closing-lead">You know what you want, or you have a sense of it. I help you define it, get there, and get back on course faster and better than I did.</p>
+          <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
         </div>
       </section>
     </>
