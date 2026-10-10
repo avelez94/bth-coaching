@@ -1,13 +1,4 @@
-'use client'
-
-import { useState } from 'react'
-
-// PLACEHOLDER: Replace button hrefs with Microsoft Bookings URL when provided
-const BOOKINGS_URL = '#'
-
 export default function Home() {
-  const [scheduleDisabled] = useState(true)
-
   return (
     <>
       <style>{`
@@ -704,7 +695,7 @@ export default function Home() {
             {[
               { main: 'ACC', detail: 'International Coaching Federation' },
               { main: 'DoD Certified Executive Coach', detail: '' },
-              { main: 'LCOP', detail: 'Leadership Coaching and Organizational Performance — American University / Heidrick & Struggles' },
+              { main: 'LCOP Certificate', detail: 'American University / Heidrick & Struggles' },
             ].map((b, i) => (
               <div key={i} className="badge-row">
                 <div className="badge-main">{b.main}</div>
