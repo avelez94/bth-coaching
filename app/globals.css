@@ -1,1 +1,38 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --ivory: #F7F4ED;
+  --ivory-dark: #EDE8DC;
+  --slate: #4C78A0;
+  --slate-mid: #3A607F;
+  --slate-light: #6B9ABF;
+  --navy: #0D1B2A;
+  --gold: #C9A23A;
+  --gold-hover: #b5902f;
+  --text: #1C2B3A;
+  --text-mid: #3D5166;
+  --text-muted: #6B7A8D;
+  --rule: rgba(28,43,58,0.1);
+  --rule-strong: rgba(28,43,58,0.28);
+  --rule-slate: rgba(247,244,237,0.12);
+  --error: #b91c1c;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ivory);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
