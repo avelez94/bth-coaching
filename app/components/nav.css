@@ -156,13 +156,13 @@
   color: var(--navy);
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1380px) {
   .nav-inner { padding: 5px 32px; }
   .nav-links { gap: 14px; }
-  .nav-cta { padding: 10px 16px; }
+  .nav-cta { padding: 10px 14px; }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1180px) {
   .nav-inner { padding: 16px 24px; }
   .nav-links, .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
