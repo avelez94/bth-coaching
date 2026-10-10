@@ -73,7 +73,7 @@ const science = [
 export default function The8Pillars() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
         :root {
@@ -354,7 +354,7 @@ export default function The8Pillars() {
           .coaching { padding: 64px 24px; }
           .cta-section { padding: 64px 24px; }
         }
-      `}</style>
+      ` }} />
 
       {/* ===== 1. HERO ===== */}
       <section className="hero">

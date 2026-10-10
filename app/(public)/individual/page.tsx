@@ -41,7 +41,7 @@ export default async function IndividualCoaching() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap');
         :root{--ivory:#F7F4ED;--ivory-dark:#EDE8DC;--slate:#4C78A0;--slate-dark:#3A607F;--navy:#0D1B2A;--gold:#C9A23A;--gold-light:#D4B563;--white:#FFFFFF;--text-body:#2C3E50;--text-muted:#6B7A8D;}
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -127,7 +127,7 @@ export default async function IndividualCoaching() {
           .hero-btns{flex-direction:column;}
           .intro{padding:60px 24px;} .programs{padding:60px 24px;} .outcomes{padding:60px 24px;} .final-cta{padding:60px 24px;}
         }
-      `}</style>
+      ` }} />
 
       <div className="page-hero">
         <div className="hero-left">

@@ -54,7 +54,7 @@ export default function ExecutiveCoaching() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
         :root {
@@ -393,7 +393,7 @@ export default function ExecutiveCoaching() {
           .possible { padding: 64px 24px; }
           .engagement { padding: 64px 24px; }
         }
-      `}</style>
+      ` }} />
 
       {/* ===== 1. HERO ===== */}
       <section className="hero">

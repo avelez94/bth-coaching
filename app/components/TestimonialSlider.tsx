@@ -27,7 +27,7 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .ts-wrap { position: relative; }
         .ts-quote {
           font-family: 'Lora', serif;
@@ -95,7 +95,7 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
         .ts-counter-current {
           color: rgba(247,244,237,0.65);
         }
-      `}</style>
+      ` }} />
 
       <div className="ts-wrap">
         <div className="ts-quote">{current.quote}</div>

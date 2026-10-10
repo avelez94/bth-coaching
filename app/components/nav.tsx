@@ -24,7 +24,7 @@ export default function Nav() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&display=swap');
 
         .nav-wrap {
@@ -196,7 +196,7 @@ export default function Nav() {
           .nav-links, .nav-cta { display: none; }
           .nav-hamburger { display: flex; }
         }
-      `}</style>
+      ` }} />
 
       <div
         className="nav-wrap"

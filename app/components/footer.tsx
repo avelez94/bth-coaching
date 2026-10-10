@@ -12,7 +12,7 @@ export default function Footer() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .footer {
           background: #0D1B2A;
           padding: 80px 72px 48px;
@@ -134,7 +134,7 @@ export default function Footer() {
           .footer { padding: 60px 24px 40px; }
           .footer-top { grid-template-columns: 1fr; gap: 40px; }
         }
-      `}</style>
+      ` }} />
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-top">

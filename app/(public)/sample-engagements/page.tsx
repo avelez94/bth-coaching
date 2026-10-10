@@ -56,7 +56,7 @@ const commandEngagements = [
 export default function SampleEngagements() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
         :root {
@@ -233,7 +233,7 @@ export default function SampleEngagements() {
           .entry { padding: 28px 0; }
           .entry-light { padding: 28px 0; }
         }
-      `}</style>
+      ` }} />
 
       {/* ===== 1. INTRO / HERO ===== */}
       <section className="hero">

@@ -32,7 +32,7 @@ export default function Contact() {
 
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
 
         :root {
@@ -234,7 +234,7 @@ export default function Contact() {
           .contact-headline { font-size: clamp(32px, 9vw, 48px); }
           .slate-panel { padding: 40px 24px; }
         }
-      `}</style>
+      ` }} />
 
       <div className="contact-page">
         <div className="contact-canvas">
