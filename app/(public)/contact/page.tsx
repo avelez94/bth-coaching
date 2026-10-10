@@ -41,6 +41,8 @@ export default function Contact() {
           --slate: #4C78A0;
           --slate-mid: #3A607F;
           --navy: #0D1B2A;
+          --gold: #C4933F;
+          --gold-hover: #b0832f;
           --text: #1C2B3A;
           --text-mid: #3D5166;
           --text-muted: #6B7A8D;
@@ -87,24 +89,42 @@ export default function Contact() {
           margin-bottom: 32px;
           font-weight: 300;
         }
-        .btn-schedule {
+
+        /* PLACEHOLDER: Replace with Microsoft Bookings URL when provided */
+        .btn-schedule-placeholder {
           display: inline-flex;
           align-items: center;
           gap: 10px;
           padding: 15px 32px;
-          background: var(--navy);
+          background: var(--gold);
           color: var(--ivory);
           font-family: 'Inter', sans-serif;
           font-size: 0.72rem;
           letter-spacing: 0.07em;
           text-transform: uppercase;
           font-weight: 500;
-          text-decoration: none;
-          transition: background 0.22s;
-          cursor: pointer;
           border: none;
+          cursor: not-allowed;
+          opacity: 0.72;
         }
-        .btn-schedule:hover { background: var(--slate-mid); }
+
+        /* Org path */
+        .org-path {
+          margin-top: 20px;
+          font-size: 0.82rem;
+          color: var(--text-muted);
+          font-weight: 300;
+        }
+        .org-path a {
+          color: var(--text-mid);
+          text-decoration: none;
+          border-bottom: 1px solid var(--rule-strong);
+          transition: color 0.2s, border-color 0.2s;
+        }
+        .org-path a:hover {
+          color: var(--gold);
+          border-bottom-color: var(--gold);
+        }
 
         /* Zone 3 — form + slate panel */
         .contact-lower {
@@ -198,14 +218,6 @@ export default function Contact() {
           transition: color 0.2s;
         }
         .details-item a:hover { color: rgba(247,244,237,0.88); }
-        .contact-closing {
-          font-family: 'DM Serif Display', serif;
-          font-size: clamp(22px, 2.4vw, 32px);
-          font-weight: 400;
-          color: rgba(247,244,237,0.92);
-          letter-spacing: -0.01em;
-          line-height: 1.25;
-        }
 
         @media (max-width: 1100px) {
           .contact-lower { grid-template-columns: 480px 1fr 280px; }
@@ -216,7 +228,6 @@ export default function Contact() {
           .contact-lower { grid-template-columns: 1fr; padding-top: 48px; }
           .contact-lower > .gap-col { display: none; }
           .slate-panel { padding: 48px 40px; }
-          .contact-closing { font-size: clamp(22px, 5vw, 28px); }
         }
         @media (max-width: 640px) {
           .contact-page { padding: 120px 24px 80px; }
@@ -231,10 +242,21 @@ export default function Contact() {
           <h1 className="contact-headline">It starts with a single conversation.</h1>
 
           <div className="contact-primary">
-            <p className="contact-body">Schedule a free 15-minute intro call. No pitch. No pressure. Just a direct conversation about where you are, what you'd like the future to hold — and whether this is the right fit for getting there.</p>
-            <a className="btn-schedule" role="button">
-              Schedule Your Free Intro Call
-            </a>
+            <p className="contact-body">A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there.</p>
+
+            {/* PLACEHOLDER: Replace with Microsoft Bookings URL when provided */}
+            <button
+              className="btn-schedule-placeholder"
+              disabled
+              aria-disabled="true"
+            >
+              Schedule a Free 15-Minute Call
+            </button>
+
+            <p className="org-path">
+              Prefer to start with a consultation?{' '}
+              <a href="/for-organizations">Schedule an Organizational Consultation</a>
+            </p>
           </div>
 
           <div className="contact-lower">
@@ -290,7 +312,7 @@ export default function Contact() {
 
             <div className="slate-panel">
               <div>
-                <div className="details-name">John McCracken, EMBA, ACC (ICF)</div>
+                <div className="details-name">John McCracken, CAPT, USN (Ret.), ACC</div>
                 <div className="details-item">
                   <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
                 </div>
@@ -299,7 +321,6 @@ export default function Contact() {
                 </div>
                 <div className="details-item">Washington, DC area | Virtual worldwide</div>
               </div>
-              <div className="contact-closing">Together we get Beyond your Horizon.</div>
             </div>
 
           </div>
