@@ -30,9 +30,12 @@
   display: block;
 }
 
+/* ============================================================
+   DESKTOP LINKS
+============================================================ */
 .nav-links {
   display: flex;
-  gap: 20px;
+  gap: 32px;
   align-items: center;
 }
 
@@ -52,12 +55,110 @@
   color: var(--navy);
 }
 
+/* ============================================================
+   SERVICES DROPDOWN
+============================================================ */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s;
+}
+
+.nav-dropdown-trigger:hover,
+.nav-dropdown:hover .nav-dropdown-trigger {
+  color: var(--navy);
+}
+
+.nav-dropdown-chevron {
+  display: inline-block;
+  width: 8px;
+  height: 5px;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.nav-dropdown-chevron::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.nav-dropdown:hover .nav-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  min-width: 220px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(13,27,42,0.08);
+}
+
+.nav-dropdown:hover .nav-dropdown-menu {
+  display: flex;
+}
+
+.nav-dropdown-item {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+  transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.nav-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.nav-dropdown-item:hover {
+  color: var(--navy);
+  background: var(--ivory-dark);
+}
+
+/* ============================================================
+   GOLD CTA
+============================================================ */
+
 /* PLACEHOLDER: Replace disabled button with <a> once Microsoft Bookings URL is provided */
 .nav-cta {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 12px 24px;
+  padding: 12px 22px;
   background: var(--gold);
   color: var(--navy);
   font-family: 'Inter', sans-serif;
@@ -71,6 +172,9 @@
   opacity: 0.72;
 }
 
+/* ============================================================
+   HAMBURGER
+============================================================ */
 .nav-hamburger {
   display: none;
   flex-direction: column;
@@ -88,6 +192,9 @@
   background: var(--navy);
 }
 
+/* ============================================================
+   MOBILE OVERLAY
+============================================================ */
 .nav-mobile {
   display: none;
   position: fixed;
@@ -156,7 +263,14 @@
   color: var(--navy);
 }
 
-@media (max-width: 1600px) {
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1024px) {
+  .nav-inner { padding: 5px 40px; }
+}
+
+@media (max-width: 860px) {
   .nav-inner { padding: 16px 24px; }
   .nav-links, .nav-cta { display: none; }
   .nav-hamburger { display: flex; }

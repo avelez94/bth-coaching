@@ -13,7 +13,8 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const links = [
+  // Mobile menu keeps all individual links (no nested dropdown)
+  const mobileLinks = [
     { label: 'Home', href: '/' },
     { label: 'Executive Coaching', href: '/executive-coaching' },
     { label: 'Leader Development', href: '/leader-development' },
@@ -21,6 +22,13 @@ export default function Nav() {
     { label: 'Sample Engagements', href: '/sample-engagements' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
+  ]
+
+  const serviceLinks = [
+    { label: 'Executive Coaching', href: '/executive-coaching' },
+    { label: 'Leader Development', href: '/leader-development' },
+    { label: 'For Organizations', href: '/for-organizations' },
+    { label: 'Sample Engagements', href: '/sample-engagements' },
   ]
 
   return (
@@ -37,9 +45,25 @@ export default function Nav() {
           </a>
 
           <div className="nav-links">
-            {links.map((link) => (
-              <a key={link.href} href={link.href} className="nav-link">{link.label}</a>
-            ))}
+            <a href="/" className="nav-link">Home</a>
+
+            {/* Services dropdown */}
+            <div className="nav-dropdown">
+              <button className="nav-dropdown-trigger" aria-haspopup="true">
+                Services
+                <span className="nav-dropdown-chevron" aria-hidden="true" />
+              </button>
+              <div className="nav-dropdown-menu" role="menu">
+                {serviceLinks.map((link) => (
+                  <a key={link.href} href={link.href} className="nav-dropdown-item" role="menuitem">
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <a href="/about" className="nav-link">About</a>
+            <a href="/contact" className="nav-link">Contact</a>
           </div>
 
           {/* PLACEHOLDER: Replace with <a href="{bookingsUrl}" target="_blank"> once Microsoft Bookings URL is provided */}
@@ -64,7 +88,7 @@ export default function Nav() {
           <img src="/images/bth-logo-nav.png" alt="Beyond the Horizon" />
         </div>
 
-        {links.map((link) => (
+        {mobileLinks.map((link) => (
           <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
 
