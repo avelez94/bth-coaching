@@ -41,8 +41,8 @@ export default function Contact() {
           --slate: #4C78A0;
           --slate-mid: #3A607F;
           --navy: #0D1B2A;
-          --gold: #C4933F;
-          --gold-hover: #b0832f;
+          --gold: #C9A23A;
+          --gold-hover: #b5902f;
           --text: #1C2B3A;
           --text-mid: #3D5166;
           --text-muted: #6B7A8D;
@@ -175,8 +175,8 @@ export default function Contact() {
           align-items: center;
           gap: 9px;
           padding: 13px 28px;
-          background: var(--navy);
-          color: var(--ivory);
+          background: var(--gold);
+          color: var(--navy);
           font-family: 'Inter', sans-serif;
           font-size: 0.72rem;
           letter-spacing: 0.07em;
@@ -186,7 +186,7 @@ export default function Contact() {
           cursor: pointer;
           transition: background 0.22s;
         }
-        .btn-send:hover:not(:disabled) { background: var(--slate-mid); }
+        .btn-send:hover:not(:disabled) { background: var(--gold-hover); }
         .btn-send:disabled { opacity: 0.55; cursor: not-allowed; }
 
         /* Slate panel */
