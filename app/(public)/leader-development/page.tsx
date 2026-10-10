@@ -1,3 +1,5 @@
+'use client'
+
 const stages = [
   { num: '01', label: 'Month 1 — Start with clarity.', body: 'An intake assessment and a one- to two-day kickoff. You define what success looks like for you and where you want to grow.' },
   { num: '02', label: 'Months 2–9 — One pillar at a time.', body: 'Each month focuses on one pillar, with two sessions: a structured session that uses a focused set of questions to assess where you are and where you want to be, and a coaching session where you set the agenda and work on whatever matters most right now.' },

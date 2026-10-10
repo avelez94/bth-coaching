@@ -1,3 +1,5 @@
+'use client'
+
 const ways = [
   {
     title: 'Support a leader who\'s struggling.',

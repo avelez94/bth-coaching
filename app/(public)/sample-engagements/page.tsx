@@ -1,3 +1,5 @@
+'use client'
+
 // PLACEHOLDER NOTE:
 // "Executive Development" entry (Heidrick & Struggles) is commented out below the
 // coachingEngagements array. Enable only after approval is confirmed.
