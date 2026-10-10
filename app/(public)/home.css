@@ -2,7 +2,7 @@
    1. HERO
 ============================================================ */
 .hero {
-  min-height: 100vh;
+  min-height: 88vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   background: var(--ivory);
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 140px 72px 80px 96px;
+  padding: 120px 72px 72px 96px;
   position: relative;
   z-index: 2;
 }
@@ -496,7 +496,7 @@
 ============================================================ */
 @media (max-width: 1024px) {
   .hero { grid-template-columns: 1fr; min-height: unset; }
-  .hero-left { padding: 130px 48px 60px; }
+  .hero-left { padding: 120px 48px 56px; }
   .hero-right { min-height: 460px; }
   .doors { padding: 80px 48px; }
   .doors-grid { grid-template-columns: 1fr; }
