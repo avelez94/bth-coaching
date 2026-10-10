@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 
 export default function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [servicesOpen, setServicesOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -13,11 +12,14 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const services = [
+  const links = [
+    { label: 'Home', href: '/' },
     { label: 'Executive Coaching', href: '/executive-coaching' },
-    { label: 'Transition Coaching', href: '/transition-coaching' },
-    { label: 'Mission-Ready Leadership', href: '/mission-ready-leadership' },
-    { label: 'Leadership Consulting', href: '/leadership-consulting' },
+    { label: 'Leader Development', href: '/leader-development' },
+    { label: 'For Organizations', href: '/for-organizations' },
+    { label: 'Sample Engagements', href: '/sample-engagements' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -59,14 +61,13 @@ export default function Nav() {
 
         .nav-links {
           display: flex;
-          gap: 28px;
+          gap: 24px;
           align-items: center;
         }
 
-        .nav-link,
-        .services-trigger {
+        .nav-link {
           font-family: 'Inter', sans-serif;
-          font-size: 0.72rem;
+          font-size: 0.68rem;
           color: #6B7A8D;
           text-decoration: none;
           letter-spacing: 0.06em;
@@ -76,79 +77,27 @@ export default function Nav() {
           white-space: nowrap;
         }
 
-        .nav-link:hover,
-        .services-trigger:hover {
+        .nav-link:hover {
           color: #0D1B2A;
         }
 
-        .services-wrap {
-          position: relative;
-        }
-
-        .services-trigger {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 12px 0;
-        }
-
-        .services-chevron {
-          font-size: 0.65rem;
-          transition: transform 0.2s ease;
-        }
-
-        .services-chevron.open {
-          transform: rotate(180deg);
-        }
-
-        .services-dropdown {
-          position: absolute;
-          top: calc(100% + 4px);
-          left: 50%;
-          transform: translateX(-50%);
-          width: 250px;
-          padding: 10px 0;
-          background: #F7F4ED;
-          border: 1px solid rgba(13,27,42,0.1);
-          box-shadow: 0 14px 40px rgba(13,27,42,0.1);
-        }
-
-        .services-dropdown a {
-          display: block;
-          padding: 12px 20px;
-          font-family: 'Inter', sans-serif;
-          font-size: 0.72rem;
-          color: #3D5166;
-          text-decoration: none;
-          letter-spacing: 0.03em;
-          transition: background 0.2s, color 0.2s;
-        }
-
-        .services-dropdown a:hover {
-          background: #EDE8DC;
-          color: #0D1B2A;
-        }
-
+        /* PLACEHOLDER: Replace disabled button with <a> once Microsoft Bookings URL is provided */
         .nav-cta {
-          background: #0D1B2A;
-          color: #F7F4ED;
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
           padding: 12px 24px;
+          background: #C9A23A;
+          color: #0D1B2A;
           font-family: 'Inter', sans-serif;
           font-size: 0.68rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          text-decoration: none;
-          transition: all 0.3s;
           font-weight: 500;
+          border: none;
           white-space: nowrap;
-        }
-
-        .nav-cta:hover {
-          background: #C9A23A;
-          color: #0D1B2A;
+          cursor: not-allowed;
+          opacity: 0.72;
         }
 
         .nav-hamburger {
@@ -204,25 +153,25 @@ export default function Nav() {
           text-align: center;
         }
 
-        .mobile-services-label {
-          margin-top: 6px;
-          font-family: 'Inter', sans-serif;
-          font-size: 0.65rem;
-          color: #6B7A8D;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-
+        /* PLACEHOLDER: Replace disabled button with <a> once Microsoft Bookings URL is provided */
         .nav-mobile-cta {
           margin-top: 10px;
-          background: #0D1B2A;
-          color: #F7F4ED !important;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           padding: 16px 40px;
-          font-size: 0.78rem !important;
-          font-family: 'Inter', sans-serif !important;
+          background: #C9A23A;
+          color: #0D1B2A;
+          font-family: 'Inter', sans-serif;
+          font-size: 0.78rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          font-weight: 500 !important;
+          font-weight: 500;
+          border: none;
+          cursor: not-allowed;
+          opacity: 0.72;
+          width: 100%;
+          max-width: 320px;
         }
 
         .nav-close {
@@ -236,13 +185,13 @@ export default function Nav() {
           color: #0D1B2A;
         }
 
-        @media (max-width: 1100px) {
-          .nav-inner { padding: 16px 40px; }
-          .nav-links { gap: 20px; }
-          .nav-link, .services-trigger { font-size: 0.65rem; }
+        @media (max-width: 1200px) {
+          .nav-inner { padding: 5px 40px; }
+          .nav-links { gap: 16px; }
+          .nav-link { font-size: 0.62rem; }
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
           .nav-inner { padding: 16px 24px; }
           .nav-links, .nav-cta { display: none; }
           .nav-hamburger { display: flex; }
@@ -261,37 +210,15 @@ export default function Nav() {
           </a>
 
           <div className="nav-links">
-            <a href="/about" className="nav-link">About</a>
-
-            <div
-              className="services-wrap"
-              onMouseEnter={() => setServicesOpen(true)}
-              onMouseLeave={() => setServicesOpen(false)}
-            >
-              <button
-                className="services-trigger"
-                onClick={() => setServicesOpen(!servicesOpen)}
-                aria-expanded={servicesOpen}
-                aria-haspopup="true"
-              >
-                Services
-                <span className={`services-chevron ${servicesOpen ? 'open' : ''}`}>▾</span>
-              </button>
-
-              {servicesOpen && (
-                <div className="services-dropdown">
-                  {services.map((service) => (
-                    <a key={service.href} href={service.href}>{service.label}</a>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <a href="/the-framework" className="nav-link">The Framework</a>
-            <a href="/contact" className="nav-link">Contact</a>
+            {links.map((link) => (
+              <a key={link.href} href={link.href} className="nav-link">{link.label}</a>
+            ))}
           </div>
 
-          <a href="/contact" className="nav-cta">Schedule a Conversation</a>
+          {/* PLACEHOLDER: Replace with <a href="{bookingsUrl}" target="_blank"> once Microsoft Bookings URL is provided */}
+          <button className="nav-cta" disabled aria-disabled="true">
+            Schedule a Free 15-Minute Call
+          </button>
 
           <button
             className="nav-hamburger"
@@ -310,18 +237,14 @@ export default function Nav() {
           <img src="/images/bth-logo-nav.png" alt="Beyond the Horizon" />
         </div>
 
-        <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
-        <div className="mobile-services-label">Services</div>
-        {services.map((service) => (
-          <a key={service.href} href={service.href} onClick={() => setMenuOpen(false)}>
-            {service.label}
-          </a>
+        {links.map((link) => (
+          <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
-        <a href="/the-framework" onClick={() => setMenuOpen(false)}>The Framework</a>
-        <a href="/contact" onClick={() => setMenuOpen(false)}>Contact</a>
-        <a href="/contact" className="nav-mobile-cta" onClick={() => setMenuOpen(false)}>
-          Schedule a Conversation
-        </a>
+
+        {/* PLACEHOLDER: Replace with <a href="{bookingsUrl}" target="_blank"> once Microsoft Bookings URL is provided */}
+        <button className="nav-mobile-cta" disabled aria-disabled="true">
+          Schedule a Free 15-Minute Call
+        </button>
       </div>
     </>
   )
