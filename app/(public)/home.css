@@ -225,7 +225,7 @@
 ============================================================ */
 .whats-possible {
   background: var(--ivory-dark);
-  padding: 80px 72px;
+  padding: 56px 72px;
   border-top: 1px solid var(--rule);
 }
 .whats-possible-inner {
@@ -252,7 +252,7 @@
   max-width: 1100px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 5fr 7fr;
+  grid-template-columns: 6fr 6fr;
   gap: 80px;
   align-items: start;
 }
@@ -292,11 +292,11 @@
 ============================================================ */
 .testimonial-section {
   background: var(--ivory-dark);
-  padding: 100px 72px;
+  padding: 72px 72px;
   border-top: 1px solid var(--rule);
 }
 .testimonial-inner {
-  max-width: 860px;
+  max-width: 940px;
   margin: 0 auto;
 }
 .testimonial-label {
@@ -432,7 +432,7 @@
 .credibility-body {
   font-size: 0.93rem;
   line-height: 1.85;
-  color: var(--text-mid);
+  color: var(--text);
   font-weight: 300;
 }
 .badges-list {
@@ -455,7 +455,7 @@
 }
 .badge-detail {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: var(--text-mid);
   line-height: 1.5;
   font-weight: 300;
 }
@@ -502,7 +502,7 @@
   .doors-grid { grid-template-columns: 1fr; }
   .how-it-works { padding: 80px 48px; }
   .how-it-works-inner { grid-template-columns: 1fr; gap: 40px; }
-  .whats-possible { padding: 64px 48px; }
+  .whats-possible { padding: 48px 48px; }
   .philosophy { padding: 80px 48px; }
   .philosophy-inner { grid-template-columns: 1fr; gap: 40px; }
   .testimonial-section { padding: 80px 48px; }
@@ -521,7 +521,7 @@
   .doors { padding: 64px 24px; }
   .door-card { padding: 32px 24px 36px; }
   .how-it-works { padding: 64px 24px; }
-  .whats-possible { padding: 56px 24px; }
+  .whats-possible { padding: 44px 24px; }
   .philosophy { padding: 64px 24px; }
   .testimonial-section { padding: 64px 24px; }
   .about-strip-content { padding: 48px 24px; }
