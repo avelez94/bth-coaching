@@ -133,6 +133,24 @@
 .btn-send:hover:not(:disabled) { background: var(--gold-hover); }
 .btn-send:disabled { opacity: 0.55; cursor: not-allowed; }
 
+/* Contact photo column */
+.contact-photo-col {
+  overflow: hidden;
+  position: relative;
+}
+.contact-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  min-height: 300px;
+}
+
+@media (max-width: 900px) {
+  .contact-photo-col { display: none; }
+}
+
 /* Slate panel */
 .slate-panel {
   background: var(--slate);

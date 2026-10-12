@@ -20,9 +20,8 @@ export default function Home() {
           </div>
         </div>
         <div className="hero-right">
-          {/* PLACEHOLDER: Replace with new navy blazer open collar portrait when John provides photos */}
           <img
-            src="/images/john-mccracken-blue-tie.jpg"
+            src="/images/2Backupheroshot.jpeg"
             alt="John McCracken"
             className="hero-photo-img"
           />
@@ -119,8 +118,7 @@ export default function Home() {
       {/* ===== 7. ABOUT STRIP ===== */}
       <section className="about-strip">
         <div className="about-strip-photo">
-          {/* PLACEHOLDER: Replace with new portrait when John provides photos */}
-          <img src="/images/john-mccracken-anchor-portrait.jpg" alt="John McCracken" />
+          <img src="/images/3AboutStrip.jpeg" alt="John McCracken" />
         </div>
         <div className="about-strip-content">
           <div className="about-strip-label">Your guide</div>

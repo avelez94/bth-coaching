@@ -84,22 +84,37 @@
 }
 .story-body:last-child { margin-bottom: 0; }
 
-.story-photo-break { margin: 80px auto 0; max-width: 980px; line-height: 0; }
-.story-photo-img {
+/* Contained portrait break — Living the Change */
+.story-portrait-break {
+  margin: 80px auto 0;
+  max-width: 400px;
+  line-height: 0;
+}
+.story-portrait-img {
   width: 100%;
-  height: auto;
-  display: block;
-  max-width: 980px;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   object-position: center top;
+  display: block;
 }
-.story-photo-caption {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-style: italic;
-  text-align: center;
-  margin-top: 10px;
-  font-weight: 300;
+
+/* Square break — After the Navy */
+.story-square-break {
+  margin: 80px auto 0;
+  max-width: 480px;
+  line-height: 0;
+}
+.story-square-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .story-portrait-break { max-width: 280px; }
+  .story-square-break { max-width: 320px; }
 }
 
 /* ============================================================
@@ -126,6 +141,32 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  display: block;
+}
+.beyond-photo-landscape {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+.beyond-photos-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.beyond-photo-portrait {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+.beyond-photo-landscape-sm {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  object-position: center center;
   display: block;
 }
 .beyond-body {
@@ -276,8 +317,7 @@
   .story { padding: 100px 48px 80px; }
   .beyond { padding: 80px 48px; }
   .beyond-layout { grid-template-columns: 1fr; gap: 48px; }
-  .beyond-photos { flex-direction: row; }
-  .beyond-photo { aspect-ratio: 1 / 1; }
+  .beyond-photo-landscape { aspect-ratio: 1 / 1; }
   .pull-quote { padding: 80px 48px; }
   .credentials { padding: 80px 48px; }
   .cred-entries-grid { grid-template-columns: 1fr; }
@@ -290,7 +330,7 @@
   .opening-portrait { max-width: 220px; }
   .opening-name-block { grid-row: 1; }
   .opening-statement { grid-column: 1; grid-row: 3; }
-  .beyond-photos { flex-direction: column; }
+  .beyond-photo-landscape { aspect-ratio: 4 / 3; }
   .cred-selector-desktop { display: none; }
   .cred-selector-mobile { display: block; }
 }

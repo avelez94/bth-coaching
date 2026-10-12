@@ -80,6 +80,15 @@ export default function ExecutiveCoaching() {
         </div>
       </section>
 
+      {/* ===== IMAGE BREAK ===== */}
+      <div className="ec-photo-banner">
+        <img
+          src="/images/5Hero.jpeg"
+          alt="John McCracken"
+          className="ec-photo-banner-img"
+        />
+      </div>
+
       {/* ===== 3. WHAT THIS LOOKS LIKE IN PRACTICE ===== */}
       {/* PLACEHOLDER: Confirm executive-presence client is comfortable
           with this anonymized story before page goes live. Copy is from v7 exactly. */}

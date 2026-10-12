@@ -35,6 +35,15 @@ export default function LeaderDevelopment() {
         </div>
       </section>
 
+      {/* ===== IMAGE ===== */}
+      <div className="ld-photo-banner">
+        <img
+          src="/images/6Hero.jpeg"
+          alt="John McCracken"
+          className="ld-photo-banner-img"
+        />
+      </div>
+
       {/* ===== 3. THE 8 PILLARS PROGRAM ===== */}
       <section className="pillars">
         <div className="pillars-inner">

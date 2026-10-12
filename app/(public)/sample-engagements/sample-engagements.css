@@ -3,6 +3,27 @@
 .btn-gold:hover { background: var(--gold-hover); }
 
 /* ============================================================
+   IMAGE BANNER
+============================================================ */
+.se-photo-banner {
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  position: relative;
+}
+.se-photo-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .se-photo-banner { height: 260px; }
+}
+
+/* ============================================================
    1. INTRO / HERO
    Ivory. Narrow measure. Page headline + framing statement.
 ============================================================ */

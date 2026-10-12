@@ -51,6 +51,15 @@ export default function ForOrganizations() {
         </div>
       </section>
 
+      {/* ===== IMAGE ===== */}
+      <div className="fo-photo-banner">
+        <img
+          src="/images/7fororganizations10too.jpeg"
+          alt="John McCracken"
+          className="fo-photo-banner-img"
+        />
+      </div>
+
       {/* ===== 3. THREE WAYS ===== */}
       <section className="ways">
         <div className="ways-inner">

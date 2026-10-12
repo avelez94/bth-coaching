@@ -9,6 +9,27 @@
 .btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
 
 /* ============================================================
+   IMAGE BANNER
+============================================================ */
+.ld-photo-banner {
+  width: 100%;
+  height: 560px;
+  overflow: hidden;
+  position: relative;
+}
+.ld-photo-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .ld-photo-banner { height: 340px; }
+}
+
+/* ============================================================
    1. HERO
 ============================================================ */
 .hero { background: var(--slate); padding: 160px 72px 100px; }

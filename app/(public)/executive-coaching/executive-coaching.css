@@ -64,6 +64,27 @@
 .familiar-body:last-child { margin-bottom: 0; }
 
 /* ============================================================
+   IMAGE BREAK
+============================================================ */
+.ec-photo-banner {
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  position: relative;
+}
+.ec-photo-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .ec-photo-banner { height: 300px; }
+}
+
+/* ============================================================
    3. WHAT THIS LOOKS LIKE IN PRACTICE
 ============================================================ */
 .client-story { background: var(--ivory-dark); padding: 80px 72px; }

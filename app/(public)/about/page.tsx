@@ -59,11 +59,14 @@ export default function About() {
             <div className="opening-name">John McCracken</div>
           </div>
           <div className="opening-portrait-col">
-            <img
-              src="/images/john-mccracken-blue-tie.jpg"
-              alt="John McCracken"
-              className="opening-portrait"
-            />
+            <picture>
+              <source media="(max-width: 860px)" srcSet="/images/11Heromobile.jpeg" />
+              <img
+                src="/images/1Heroshot.jpeg"
+                alt="John McCracken"
+                className="opening-portrait"
+              />
+            </picture>
           </div>
           <div className="opening-statement">
             <h1 className="opening-lead">I help leaders get clear and get results.</h1>
@@ -98,14 +101,13 @@ export default function About() {
 
         </div>
 
-        {/* Photo: award ceremony — cropped tight on John and the presenter */}
-        <div className="story-photo-break">
+        {/* Photo: Living the Change ceremony */}
+        <div className="story-portrait-break">
           <img
-            src="/images/john-mccracken-navy-ceremony.jpg"
+            src="/images/12Livingthechange.jpeg"
             alt=""
             aria-hidden="true"
-            className="story-photo-img"
-            style={{ objectPosition: 'center 20%' }}
+            className="story-portrait-img"
           />
         </div>
 
@@ -115,6 +117,16 @@ export default function About() {
             <p className="story-body">After retiring, I joined a Navy command as a senior civilian, and then the Office of the Assistant to the Secretary of Defense for Public Affairs. I reconciled long-standing manpower problems, built human capital strategy, learned to lead as a civilian, and rebuilt a team the week COVID shut everything down. Along the way, I've spent seven years watching how large organizations develop their leaders, and where they fall short.</p>
             <p className="story-body">Leaving uniform was harder than I expected. Losing my community, my professional reputation, and my sense of who I was out of uniform was disorienting. I found my footing again by reconnecting with the values and practices that made me successful, and having a coach helped. That experience is part of why I coach. I want to help people grow, build resilience, recover quickly from setbacks, and become the person and the leader they know they can be.</p>
           </div>
+        </div>
+
+        {/* Photo: After the Navy — square container, preserves Fair Winds sign */}
+        <div className="story-square-break">
+          <img
+            src="/images/13AftertheNavy.jpeg"
+            alt=""
+            aria-hidden="true"
+            className="story-square-img"
+          />
         </div>
       </section>
 
@@ -126,17 +138,25 @@ export default function About() {
           <div className="beyond-layout">
             <div className="beyond-photos">
               <img
-                src="/images/john-mccracken-cycling.jpg"
+                src="/images/14Beyondthework.jpeg"
                 alt=""
                 aria-hidden="true"
-                className="beyond-photo"
+                className="beyond-photo beyond-photo-landscape"
               />
-              <img
-                src="/images/john-mccracken-beach.jpg"
-                alt=""
-                aria-hidden="true"
-                className="beyond-photo"
-              />
+              <div className="beyond-photos-row">
+                <img
+                  src="/images/15Beyndthework.jpeg"
+                  alt=""
+                  aria-hidden="true"
+                  className="beyond-photo-portrait"
+                />
+                <img
+                  src="/images/17Beyondthework.jpeg"
+                  alt=""
+                  aria-hidden="true"
+                  className="beyond-photo-landscape-sm"
+                />
+              </div>
             </div>
             <div>
               <p className="beyond-body">I've been married for 36 years. I'm a father and a grandfather. And I'm a lifelong endurance athlete: marathons, Ironman races, years of running, cycling, and swimming. Last year, wear and tear meant I had to give up running. I didn't quit; I adjusted. I'm still competing on the bike and in the water.</p>

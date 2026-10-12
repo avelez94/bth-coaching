@@ -67,6 +67,15 @@ export default function SampleEngagements() {
         </div>
       </section>
 
+      {/* ===== IMAGE ===== */}
+      <div className="se-photo-banner">
+        <img
+          src="/images/8SampleEngagements.jpeg"
+          alt="Naval memorial stone carving"
+          className="se-photo-banner-img"
+        />
+      </div>
+
       {/* ===== 2. COACHING ENGAGEMENTS ===== */}
       <section className="section-coaching">
         <div style={{maxWidth: '1100px', margin: '0 auto'}}>

@@ -71,6 +71,29 @@
 .miss-quote-attr { font-size: 0.78rem; color: var(--text-muted); font-weight: 400; }
 
 /* ============================================================
+   COMPASS IMAGE BLOCK
+   Contained square, centered, ivory-dark background.
+============================================================ */
+.pillars-compass-block {
+  background: var(--ivory-dark);
+  padding: 80px 72px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid var(--rule);
+}
+.pillars-compass-img {
+  width: 460px;
+  height: 460px;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .pillars-compass-block { padding: 56px 24px; }
+  .pillars-compass-img { width: 280px; height: 280px; }
+}
+
+/* ============================================================
    3. WHERE THE FRAMEWORK COMES FROM
    Slate pale (#E8EFF5). 2x2 typographic grid.
 ============================================================ */

@@ -104,7 +104,13 @@ export default function Contact() {
             )}
           </div>
 
-          <div className="gap-col" />
+          <div className="contact-photo-col">
+            <img
+              src="/images/10Contact.jpeg"
+              alt="John McCracken"
+              className="contact-photo-img"
+            />
+          </div>
 
           <div className="slate-panel">
             <div>

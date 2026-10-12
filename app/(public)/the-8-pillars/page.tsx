@@ -98,6 +98,15 @@ export default function The8Pillars() {
         </div>
       </section>
 
+      {/* ===== COMPASS IMAGE ===== */}
+      <div className="pillars-compass-block">
+        <img
+          src="/images/9Framework.jpeg"
+          alt="Compass"
+          className="pillars-compass-img"
+        />
+      </div>
+
       {/* ===== 3. WHERE THE FRAMEWORK COMES FROM ===== */}
       <section className="science">
         <div className="science-inner">
