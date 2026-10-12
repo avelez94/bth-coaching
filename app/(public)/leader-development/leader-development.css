@@ -16,20 +16,20 @@
   grid-template-columns: 1fr 1fr;
   border-top: 1px solid var(--rule);
   align-items: stretch;
+  min-height: 560px;
 }
 .ld-split-photo-col {
-  background: var(--ivory-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 40px 48px 72px;
+  position: relative;
+  overflow: hidden;
 }
 .ld-split-img {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 3 / 2;
+  height: 100%;
   object-fit: cover;
-  object-position: center center;
+  object-position: center 30%;
+  display: block;
 }
 .ld-split-content-col {
   border-left: 1px solid var(--rule);
@@ -278,8 +278,8 @@
   .hero-subhead { margin-left: 0; max-width: 100%; }
   .hero-cta { margin-left: 0; }
   .familiar { padding: 80px 48px; }
-  .ld-split { grid-template-columns: 1fr; }
-  .ld-split-photo-col { padding: 0; }
+  .ld-split { grid-template-columns: 1fr; min-height: unset; }
+  .ld-split-photo-col { min-height: 380px; }
   .ld-split-content-col { border-left: none; border-top: 1px solid var(--rule); }
   .pillars { padding: 80px 48px; }
   .how { padding: 80px 48px; }
@@ -300,7 +300,7 @@
 @media (max-width: 640px) {
   .hero { padding: 120px 24px 64px; }
   .familiar { padding: 64px 24px; }
-  .ld-split-photo-col { padding: 32px 24px; }
+  .ld-split-photo-col { min-height: 280px; }
   .pillars { padding: 64px 24px; }
   .how { padding: 64px 24px; }
   .outcomes { padding: 64px 24px; }
