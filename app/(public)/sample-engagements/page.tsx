@@ -70,8 +70,8 @@ export default function SampleEngagements() {
       {/* ===== IMAGE ===== */}
       <div className="se-photo-banner">
         <img
-          src="/images/8SampleEngagements.jpeg"
-          alt="Naval memorial stone carving"
+          src="/images/18Sitewide.jpeg"
+          alt="Cherry blossom canopy"
           className="se-photo-banner-img"
         />
       </div>

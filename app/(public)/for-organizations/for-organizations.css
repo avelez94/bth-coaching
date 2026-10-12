@@ -21,13 +21,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 22%;
+  object-position: center center;
   display: block;
 }
 
-@media (max-width: 1024px) {
-  .fo-photo-banner { height: 360px; }
-}
 @media (max-width: 640px) {
   .fo-photo-banner { height: 260px; }
 }
