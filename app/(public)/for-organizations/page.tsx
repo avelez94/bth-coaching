@@ -54,8 +54,8 @@ export default function ForOrganizations() {
       {/* ===== IMAGE ===== */}
       <div className="fo-photo-banner">
         <img
-          src="/images/8SampleEngagements.jpeg"
-          alt="Naval memorial stone carving"
+          src="/images/dc-cherry-blossoms-sunset.jpg"
+          alt="Cherry blossoms in Washington DC"
           className="fo-photo-banner-img"
         />
       </div>
