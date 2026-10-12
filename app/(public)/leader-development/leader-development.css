@@ -9,29 +9,31 @@
 .btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
 
 /* ============================================================
-   IMAGE BANNER
+   PHOTO + PILLARS SPLIT
 ============================================================ */
-.ld-photo-banner {
-  background: var(--ivory-dark);
-  padding: 0 72px;
+.ld-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  align-items: center;
 }
-.ld-photo-banner-img {
+.ld-split-photo-col {
+  background: var(--ivory-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 48px 64px 72px;
+}
+.ld-split-img {
   display: block;
   width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: 560px;
   aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center center;
 }
-
-@media (max-width: 1024px) {
-  .ld-photo-banner { padding: 0 48px; }
-}
-@media (max-width: 640px) {
-  .ld-photo-banner { padding: 0 24px; }
+.ld-split-content-col {
+  border-left: 1px solid var(--rule);
 }
 
 /* ============================================================
@@ -95,7 +97,8 @@
 /* ============================================================
    3. THE 8 PILLARS PROGRAM
 ============================================================ */
-.pillars { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
+.pillars { background: var(--ivory); padding: 100px 72px; }
+.ld-split-content-col.pillars { border-top: none; }
 .pillars-inner { max-width: 1100px; margin: 0 auto; }
 .pillars-intro { max-width: 860px; margin-bottom: 40px; }
 .pillars-intro-head {
@@ -276,6 +279,10 @@
   .hero-subhead { margin-left: 0; max-width: 100%; }
   .hero-cta { margin-left: 0; }
   .familiar { padding: 80px 48px; }
+  .ld-split { grid-template-columns: 1fr; }
+  .ld-split-photo-col { padding: 48px 48px; }
+  .ld-split-img { max-width: 100%; }
+  .ld-split-content-col { border-left: none; border-top: 1px solid var(--rule); }
   .pillars { padding: 80px 48px; }
   .how { padding: 80px 48px; }
   .how-timeline { grid-template-columns: 1fr 1fr; gap: 48px 40px; }
@@ -295,6 +302,7 @@
 @media (max-width: 640px) {
   .hero { padding: 120px 24px 64px; }
   .familiar { padding: 64px 24px; }
+  .ld-split-photo-col { padding: 32px 24px; }
   .pillars { padding: 64px 24px; }
   .how { padding: 64px 24px; }
   .outcomes { padding: 64px 24px; }

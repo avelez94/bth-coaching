@@ -35,28 +35,28 @@ export default function LeaderDevelopment() {
         </div>
       </section>
 
-      {/* ===== IMAGE ===== */}
-      <div className="ld-photo-banner">
-        <img
-          src="/images/6Hero.jpeg"
-          alt="John McCracken"
-          className="ld-photo-banner-img"
-        />
-      </div>
+      {/* ===== 3. PHOTO + THE 8 PILLARS PROGRAM (split editorial) ===== */}
+      <section className="ld-split">
+        <div className="ld-split-photo-col">
+          <img
+            src="/images/6Hero.jpeg"
+            alt="John McCracken"
+            className="ld-split-img"
+          />
+        </div>
+        <div className="ld-split-content-col pillars">
+          <div className="pillars-inner">
+            <div className="pillars-intro">
+              <h2 className="pillars-intro-head">The 8 Pillars Leadership Program</h2>
+              <p className="pillars-intro-label">Leadership, Personal Development &amp; Coaching</p>
+              <p className="pillars-subhead">This program develops the whole leader, not just leadership behaviors. It's built on the 8 Pillars, the areas of life that shape how well you lead:</p>
+              <p className="pillars-names">Values · Professional Excellence · Physical Health · Financial Stewardship · Cognitive Fortitude · Emotional Equanimity · Relational Harmony · Environmental Harmony</p>
+              <p className="pillars-subhead" style={{marginTop: '12px'}}>A weakness in one area shows up everywhere else. Strength in one area reinforces the others.</p>
+            </div>
 
-      {/* ===== 3. THE 8 PILLARS PROGRAM ===== */}
-      <section className="pillars">
-        <div className="pillars-inner">
-          <div className="pillars-intro">
-            <h2 className="pillars-intro-head">The 8 Pillars Leadership Program</h2>
-            <p className="pillars-intro-label">Leadership, Personal Development &amp; Coaching</p>
-            <p className="pillars-subhead">This program develops the whole leader, not just leadership behaviors. It's built on the 8 Pillars, the areas of life that shape how well you lead:</p>
-            <p className="pillars-names">Values · Professional Excellence · Physical Health · Financial Stewardship · Cognitive Fortitude · Emotional Equanimity · Relational Harmony · Environmental Harmony</p>
-            <p className="pillars-subhead" style={{marginTop: '12px'}}>A weakness in one area shows up everywhere else. Strength in one area reinforces the others.</p>
-          </div>
-
-          <div className="pillars-framework-link">
-            <a href="/the-8-pillars" className="framework-link">Explore the 8 Pillars →</a>
+            <div className="pillars-framework-link">
+              <a href="/the-8-pillars" className="framework-link">Explore the 8 Pillars →</a>
+            </div>
           </div>
         </div>
       </section>
