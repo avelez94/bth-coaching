@@ -106,7 +106,7 @@ export default function Contact() {
 
           <div className="contact-photo-col">
             <img
-              src="/images/10Contact.jpeg"
+              src="/images/9Contact.jpeg"
               alt="John McCracken"
               className="contact-photo-img"
             />
