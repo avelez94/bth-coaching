@@ -150,7 +150,7 @@
 ============================================================ */
 .cta {
   background: var(--ivory-dark);
-  padding: 100px 72px;
+  padding: 56px 72px;
   border-top: 1px solid var(--rule);
   text-align: center;
 }
@@ -162,14 +162,14 @@
   .hero { padding: 140px 48px 80px; }
   .section-coaching { padding: 80px 48px; }
   .section-command { padding: 80px 48px; }
-  .cta { padding: 80px 48px; }
+  .cta { padding: 56px 48px; }
 }
 
 @media (max-width: 640px) {
   .hero { padding: 120px 24px 64px; }
   .section-coaching { padding: 64px 24px; }
   .section-command { padding: 64px 24px; }
-  .cta { padding: 64px 24px; }
+  .cta { padding: 42px 24px; }
   .entry { padding: 28px 0; }
   .entry-light { padding: 28px 0; }
 }
