@@ -88,13 +88,7 @@
   display: block;
 }
 .hero-photo-fade {
-  position: absolute; inset: 0; z-index: 2;
-  background: linear-gradient(
-    to right,
-    #F7F4ED 0%,
-    rgba(247,244,237,0.6) 18%,
-    rgba(247,244,237,0) 42%
-  );
+  display: none;
 }
 
 /* ============================================================

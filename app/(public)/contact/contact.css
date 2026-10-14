@@ -70,6 +70,25 @@
   border-bottom-color: var(--gold);
 }
 
+/* Personal statement */
+.contact-personal-statement {
+  font-size: 0.97rem;
+  line-height: 1.82;
+  color: var(--text-mid);
+  font-style: italic;
+  font-weight: 300;
+  max-width: 520px;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+.contact-personal-attribution {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  margin-bottom: 28px;
+}
+
 /* Zone 3 — form + slate panel */
 .contact-lower {
   margin-top: 80px;

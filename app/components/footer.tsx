@@ -38,15 +38,14 @@ export default function Footer() {
               <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
               <a href="tel:7037052225">703-705-2225</a>
               <a href="/contact">Schedule a Free 15-Minute Call →</a>
-              {/* PLACEHOLDER: Replace with actual LinkedIn URLs when provided */}
-              <span className="footer-linkedin-pending">LinkedIn: Beyond the Horizon (pending)</span>
-              <span className="footer-linkedin-pending">LinkedIn: John McCracken (pending)</span>
+              <a href="https://www.linkedin.com/company/beyond-the-horizon-executive-coaching-and-consulting/" target="_blank" rel="noopener noreferrer">LinkedIn: Beyond the Horizon</a>
+              <a href="https://www.linkedin.com/in/johnmccracken3/" target="_blank" rel="noopener noreferrer">LinkedIn: John McCracken</a>
             </div>
 
           </div>
 
           <div className="footer-bottom">
-            <div className="footer-tagline">Together we get Beyond your Horizon.</div>
+            <div className="footer-tagline">Together, we get beyond your horizon.</div>
             <div className="footer-copy">© 2026 Beyond the Horizon Executive Coaching &amp; Consulting LLC. All rights reserved.</div>
           </div>
         </div>

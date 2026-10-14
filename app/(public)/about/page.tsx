@@ -52,7 +52,8 @@ export default function About() {
   return (
     <>
       {/* ===== 1. OPENING / HERO ===== */}
-      {/* Photo: new professional portrait (navy blazer, open collar) */}
+      {/* PLACEHOLDER: Replace with John's new full-resolution About hero image when received. */}
+      {/* Alt text for future swap: "John McCracken in a navy blazer in front of the Navy Memorial wave sculpture" */}
       <section className="opening">
         <div className="opening-inner">
           <div className="opening-name-block">
@@ -94,7 +95,7 @@ export default function About() {
 
           <div className="story-section">
             <div className="story-section-label">Living the change</div>
-            <p className="story-body">I put my renewed perspective and skills to work when I took command of the largest unit of its type in the nation, and one of the most underperforming in the Naval Reserve. Morale was broken, performance was low, and everyone expected more of the same.</p>
+            <p className="story-body">I put my renewed perspective and skills to work when I took command ashore of the largest unit of its type in the nation, and one of the most underperforming in the Naval Reserve. Morale was broken, performance was low, and everyone expected more of the same.</p>
             <p className="story-body">I knew something had to change, and it had to start with me. Not a new program or a reorganization plan — how I showed up. The questions I asked instead of the answers I gave. Honesty about what wasn't working, including my own leadership.</p>
             <p className="story-body">Within a year, that team was recognized as the region's #1 large Navy Operational Support Center. Not because I had the answers, but because I learned to lead differently.</p>
           </div>
@@ -105,8 +106,7 @@ export default function About() {
         <div className="story-portrait-break">
           <img
             src="/images/12Livingthechange.jpeg"
-            alt=""
-            aria-hidden="true"
+            alt="John McCracken in uniform presenting a reenlistment certificate to a Navy chief petty officer"
             className="story-portrait-img"
           />
         </div>
@@ -123,8 +123,7 @@ export default function About() {
         <div className="story-square-break">
           <img
             src="/images/13AftertheNavy.jpeg"
-            alt=""
-            aria-hidden="true"
+            alt="John McCracken celebrating his Navy retirement under a Fair Winds and Following Seas sign"
             className="story-square-img"
           />
         </div>
@@ -139,21 +138,18 @@ export default function About() {
             <div className="beyond-photos">
               <img
                 src="/images/14Beyondthework.jpeg"
-                alt=""
-                aria-hidden="true"
+                alt="John McCracken on a morning bike ride on a coastal road"
                 className="beyond-photo beyond-photo-landscape"
               />
               <div className="beyond-photos-row">
                 <img
                   src="/images/15Beyndthework.jpeg"
-                  alt=""
-                  aria-hidden="true"
+                  alt="John McCracken racing on an indoor cycling course"
                   className="beyond-photo-portrait"
                 />
                 <img
                   src="/images/17Beyondthework.jpeg"
-                  alt=""
-                  aria-hidden="true"
+                  alt="John McCracken and his wife under the cherry blossoms with the Washington Monument behind them"
                   className="beyond-photo-landscape-sm"
                 />
               </div>
@@ -242,8 +238,11 @@ export default function About() {
       {/* ===== 7. CLOSING ===== */}
       <section className="closing">
         <div className="closing-inner">
-          <p className="closing-lead">You know what you want, or you have a sense of it. I help you define it, get there, and get back on course faster and better than I did.</p>
-          <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+          <p className="closing-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
+          <p className="closing-attribution">— John McCracken</p>
+          {/* PLACEHOLDER: Replace with John's handwritten signature image when received. */}
+          {/* Expected path: /images/john-signature.png (or similar) */}
+          <a href="/contact" className="btn btn-gold" style={{marginTop: '32px'}}>Schedule a Free 15-Minute Call</a>
         </div>
       </section>
     </>
