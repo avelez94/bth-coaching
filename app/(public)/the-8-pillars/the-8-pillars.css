@@ -76,10 +76,11 @@
 ============================================================ */
 .pillars-compass-block {
   background: var(--ivory-dark);
-  padding: 80px 72px;
+  padding: 48px 72px;
   display: flex;
   justify-content: center;
   border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 .pillars-compass-img {
   width: 460px;
@@ -89,7 +90,7 @@
 }
 
 @media (max-width: 640px) {
-  .pillars-compass-block { padding: 56px 24px; }
+  .pillars-compass-block { padding: 40px 24px; }
   .pillars-compass-img { width: 280px; height: 280px; }
 }
 
@@ -246,7 +247,7 @@
    7. GOLD CTA
    Ivory. Centered.
 ============================================================ */
-.cta-section { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); text-align: center; }
+.cta-section { background: var(--ivory); padding: 56px 72px; border-top: 1px solid var(--rule); text-align: center; }
 
 /* ============================================================
    RESPONSIVE
@@ -262,7 +263,7 @@
   .pillars { padding: 80px 48px; }
   .pillar-grid { grid-template-columns: repeat(2, 1fr); }
   .coaching { padding: 80px 48px; }
-  .cta-section { padding: 80px 48px; }
+  .cta-section { padding: 56px 48px; }
 }
 
 @media (max-width: 768px) {
@@ -277,5 +278,5 @@
   .science { padding: 64px 24px; }
   .pillars { padding: 64px 24px; }
   .coaching { padding: 64px 24px; }
-  .cta-section { padding: 64px 24px; }
+  .cta-section { padding: 42px 24px; }
 }
