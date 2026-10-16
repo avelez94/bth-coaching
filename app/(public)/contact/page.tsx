@@ -41,7 +41,6 @@ export default function Contact() {
           <p className="contact-body">A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there.</p>
 
           <p className="contact-personal-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
-          <p className="contact-personal-attribution">— John McCracken</p>
           <img
             src="/images/john-mccracken-signature.png"
             alt="John McCracken signature"
