@@ -324,6 +324,15 @@
   letter-spacing: 0.01em;
   margin-bottom: 8px;
 }
+.closing-signature {
+  display: block;
+  width: 170px;
+  height: auto;
+  margin: 8px auto 0;
+}
+@media (max-width: 640px) {
+  .closing-signature { width: 130px; }
+}
 
 /* ============================================================
    RESPONSIVE

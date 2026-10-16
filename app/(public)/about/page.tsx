@@ -240,8 +240,12 @@ export default function About() {
         <div className="closing-inner">
           <p className="closing-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
           <p className="closing-attribution">— John McCracken</p>
-          {/* PLACEHOLDER: Replace with John's handwritten signature image when received. */}
-          {/* Expected path: /images/john-signature.png (or similar) */}
+          <img
+            src="/images/john-mccracken-signature.png"
+            alt="John McCracken signature"
+            className="closing-signature"
+            aria-hidden="true"
+          />
           <a href="/contact" className="btn btn-gold" style={{marginTop: '32px'}}>Schedule a Free 15-Minute Call</a>
         </div>
       </section>

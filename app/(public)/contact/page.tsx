@@ -42,8 +42,12 @@ export default function Contact() {
 
           <p className="contact-personal-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
           <p className="contact-personal-attribution">— John McCracken</p>
-          {/* PLACEHOLDER: Add John's handwritten signature image here when received. */}
-          {/* Expected path: /images/john-signature.png (or similar) */}
+          <img
+            src="/images/john-mccracken-signature.png"
+            alt="John McCracken signature"
+            className="contact-signature"
+            aria-hidden="true"
+          />
 
           {/* PLACEHOLDER: Replace with Microsoft Bookings URL when provided */}
           <button
