@@ -36,7 +36,10 @@ export default function ForOrganizations() {
           <h1 className="hero-headline">You need your leaders to lead.</h1>
           <p className="hero-subhead">When someone isn't there yet, you can replace them or invest in them. I help you invest well.</p>
           <div className="hero-cta">
-            <a href="/contact" className="btn btn-gold">Schedule an Organizational Consultation</a>
+            {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
+            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              Schedule an Organizational Consultation
+            </button>
           </div>
         </div>
       </section>
@@ -120,7 +123,10 @@ export default function ForOrganizations() {
             <p className="why-body">Including turning around one of the lowest-performing commands in the Naval Reserve. I've led people through consolidations, culture problems, and high-stakes transitions, and I've coached leaders through the same.</p>
             <a href="/sample-engagements" className="why-link">See Sample Engagements →</a>
             <div style={{marginTop: '32px'}}>
-              <a href="/contact" className="btn btn-gold">Schedule an Organizational Consultation</a>
+              {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
+              <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+                Schedule an Organizational Consultation
+              </button>
             </div>
           </div>
         </div>

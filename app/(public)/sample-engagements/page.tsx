@@ -110,7 +110,10 @@ export default function SampleEngagements() {
 
       {/* ===== 4. CTA ===== */}
       <section className="cta">
-        <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+        {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
+        <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+          Schedule an Organizational Consultation
+        </button>
       </section>
     </>
   )

@@ -37,7 +37,10 @@ export default function Footer() {
             <div className="footer-contact">
               <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
               <a href="tel:7037052225">703-705-2225</a>
-              <a href="/contact">Schedule a Free 15-Minute Call →</a>
+              {/* PENDING MICROSOFT BOOKINGS URL */}
+              <button className="footer-schedule-placeholder" disabled aria-disabled="true">
+                Schedule a Free 15-Minute Call →
+              </button>
               <a href="https://www.linkedin.com/company/beyond-the-horizon-executive-coaching-and-consulting/" target="_blank" rel="noopener noreferrer">LinkedIn: Beyond the Horizon</a>
               <a href="https://www.linkedin.com/in/johnmccracken3/" target="_blank" rel="noopener noreferrer">LinkedIn: John McCracken</a>
             </div>

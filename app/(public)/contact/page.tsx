@@ -59,7 +59,10 @@ export default function Contact() {
 
           <p className="org-path">
             Prefer to start with a consultation?{' '}
-            <a href="/for-organizations">Schedule an Organizational Consultation</a>
+            {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
+            <button className="org-path-placeholder" disabled aria-disabled="true">
+              Schedule an Organizational Consultation
+            </button>
           </p>
         </div>
 
