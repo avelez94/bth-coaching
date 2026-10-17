@@ -20,7 +20,10 @@ export default function LeaderDevelopment() {
           <h1 className="hero-headline">You're leading people, and it's harder than you expected.</h1>
           <p className="hero-subhead">A ten-month development and coaching program for new leaders, stretched leaders, and anyone ready to become the leader they want to be, and the one their team needs.</p>
           <div className="hero-cta">
-            <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+            {/* PENDING MICROSOFT BOOKINGS URL */}
+            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              Schedule a Free 15-Minute Call
+            </button>
           </div>
         </div>
       </section>
@@ -105,7 +108,10 @@ export default function LeaderDevelopment() {
           <div>
             <p className="engagement-context">The engagement</p>
             <h2 className="engagement-headline">About 10 months, 16 or more sessions plus a kickoff.</h2>
-            <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+            {/* PENDING MICROSOFT BOOKINGS URL */}
+            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              Schedule a Free 15-Minute Call
+            </button>
           </div>
           <div>
             <div className="engagement-details">

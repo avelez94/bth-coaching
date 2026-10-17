@@ -245,7 +245,10 @@ export default function About() {
             className="closing-signature"
             aria-hidden="true"
           />
-          <a href="/contact" className="btn btn-gold" style={{marginTop: '32px'}}>Schedule a Free 15-Minute Call</a>
+          {/* PENDING MICROSOFT BOOKINGS URL */}
+          <button className="btn btn-gold" disabled aria-disabled="true" style={{marginTop: '32px', opacity: 0.72, cursor: 'not-allowed'}}>
+            Schedule a Free 15-Minute Call
+          </button>
         </div>
       </section>
     </>

@@ -180,7 +180,10 @@ export default function The8Pillars() {
 
       {/* ===== 7. GOLD CTA ===== */}
       <section className="cta-section">
-        <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+        {/* PENDING MICROSOFT BOOKINGS URL */}
+        <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+          Schedule a Free 15-Minute Call
+        </button>
       </section>
     </>
   )

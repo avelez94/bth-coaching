@@ -65,7 +65,10 @@ export default function ExecutiveCoaching() {
           <h1 className="hero-headline">When the challenges are outpacing the solutions.</h1>
           <p className="hero-subhead">You're not getting the results you want from yourself or your team, and working harder isn't closing the gap.</p>
           <div className="hero-cta">
-            <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+            {/* PENDING MICROSOFT BOOKINGS URL */}
+            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              Schedule a Free 15-Minute Call
+            </button>
           </div>
         </div>
       </section>
@@ -181,7 +184,10 @@ export default function ExecutiveCoaching() {
           <div>
             <p className="engagement-context">The engagement</p>
             <h2 className="engagement-headline">Six months. Twelve sessions. Your agenda.</h2>
-            <a href="/contact" className="btn btn-gold">Schedule a Free 15-Minute Call</a>
+            {/* PENDING MICROSOFT BOOKINGS URL */}
+            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              Schedule a Free 15-Minute Call
+            </button>
           </div>
           <div>
             <div className="engagement-details">
