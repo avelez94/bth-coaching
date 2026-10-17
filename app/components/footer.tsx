@@ -50,6 +50,7 @@ export default function Footer() {
           <div className="footer-bottom">
             <div className="footer-tagline">Together, we get beyond your horizon.</div>
             <div className="footer-copy">© 2026 Beyond the Horizon Executive Coaching &amp; Consulting LLC. All rights reserved.</div>
+            <div className="footer-credit">Made with <span className="footer-credit-heart">♥</span> by <a href="https://alantevelez.com" target="_blank" rel="noopener noreferrer">Alante Velez</a></div>
           </div>
         </div>
       </footer>

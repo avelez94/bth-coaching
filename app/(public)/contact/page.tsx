@@ -37,7 +37,7 @@ export default function Contact() {
       <div className="contact-page">
         <div className="contact-canvas">
 
-          <h1 className="contact-headline">It starts with a single conversation.</h1>
+          <h1 className="contact-headline">A better path starts with a conversation.</h1>
 
           <div className="contact-primary">
             <p className="contact-body">A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there.</p>
