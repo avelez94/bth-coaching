@@ -123,6 +123,23 @@
   font-size: 0.72rem;
   color: rgba(247,244,237,0.2);
 }
+.footer-credit {
+  font-size: 0.72rem;
+  color: rgba(247,244,237,0.18);
+  margin-top: 4px;
+}
+.footer-credit-heart {
+  color: #C9A23A;
+  opacity: 0.7;
+}
+.footer-credit a {
+  color: rgba(247,244,237,0.18);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-credit a:hover {
+  color: rgba(247,244,237,0.45);
+}
 
 @media (max-width: 1024px) {
   .footer { padding: 60px 40px 40px; }
