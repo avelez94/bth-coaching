@@ -114,7 +114,7 @@
 .field label {
   display: block;
   font-size: 0.72rem;
-  color: var(--text-mid);
+  color: var(--text);
   letter-spacing: 0.04em;
   margin-bottom: 8px;
   font-weight: 500;
@@ -124,7 +124,7 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--rule-strong);
+  border-bottom: 1px solid rgba(28,43,58,0.35);
   border-radius: 0;
   color: var(--text);
   font-family: 'Inter', sans-serif;
@@ -138,7 +138,7 @@
 .field input:focus,
 .field textarea:focus { border-bottom-color: var(--slate); }
 .field input::placeholder,
-.field textarea::placeholder { color: rgba(107,122,141,0.4); font-weight: 300; }
+.field textarea::placeholder { color: rgba(107,122,141,0.6); font-weight: 300; }
 .field textarea { resize: none; height: 120px; line-height: 1.7; }
 .form-error { font-size: 0.82rem; color: var(--error); margin-bottom: 20px; line-height: 1.5; }
 .form-success { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.7; }
@@ -198,16 +198,16 @@
 }
 .details-item {
   font-size: 0.88rem;
-  color: rgba(247,244,237,0.55);
+  color: rgba(247,244,237,0.78);
   line-height: 2;
   font-weight: 300;
 }
 .details-item a {
-  color: rgba(247,244,237,0.55);
+  color: rgba(247,244,237,0.78);
   text-decoration: none;
   transition: color 0.2s;
 }
-.details-item a:hover { color: rgba(247,244,237,0.88); }
+.details-item a:hover { color: rgba(247,244,237,0.95); }
 
 @media (max-width: 1100px) {
   .contact-lower { grid-template-columns: 480px 1fr 280px; }
