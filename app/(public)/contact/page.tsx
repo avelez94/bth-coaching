@@ -112,16 +112,15 @@ export default function Contact() {
             )}
           </div>
 
-          <div className="contact-photo-col">
-            <img
-              src="/images/9Contact.jpeg"
-              alt="John McCracken"
-              className="contact-photo-img"
-            />
-          </div>
-
-          <div className="slate-panel">
-            <div>
+          <div className="contact-right-col">
+            <div className="contact-photo-col">
+              <img
+                src="/images/9Contact.jpeg"
+                alt="John McCracken"
+                className="contact-photo-img"
+              />
+            </div>
+            <div className="slate-panel">
               <div className="details-name">John McCracken, CAPT, USN (Ret.), ACC</div>
               <div className="details-item">
                 <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
