@@ -104,13 +104,14 @@
   border-top: 1px solid var(--rule);
   padding-top: 64px;
   display: grid;
-  grid-template-columns: 560px 1fr 340px;
+  grid-template-columns: 5fr 3fr 2fr;
   align-items: stretch;
 }
 
 /* Form */
 .form-zone {}
 .field { margin-bottom: 28px; }
+.field:last-of-type { margin-bottom: 16px; }
 .field label {
   display: block;
   font-size: 0.72rem;
@@ -139,7 +140,7 @@
 .field textarea:focus { border-bottom-color: var(--slate); }
 .field input::placeholder,
 .field textarea::placeholder { color: rgba(107,122,141,0.6); font-weight: 300; }
-.field textarea { resize: none; height: 120px; line-height: 1.7; }
+.field textarea { resize: none; height: 80px; line-height: 1.7; }
 .form-error { font-size: 0.82rem; color: var(--error); margin-bottom: 20px; line-height: 1.5; }
 .form-success { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.7; }
 .btn-send {
