@@ -54,8 +54,14 @@ export default function About() {
       {/* ===== 1. OPENING / HERO ===== */}
       <section className="opening">
         <div className="opening-inner">
-          <div className="opening-name-block">
-            <div className="opening-name">John McCracken</div>
+          <div className="opening-text-col">
+            <div className="opening-name-block">
+              <div className="opening-name">John McCracken</div>
+            </div>
+            <div className="opening-statement">
+              <h1 className="opening-lead">I help leaders get clear and get results.</h1>
+              <p className="opening-subhead">Thirty-seven years of leadership, the setbacks as well as the successes, and professional coach training, all focused on the results you want.</p>
+            </div>
           </div>
           <div className="opening-portrait-col">
             <img
@@ -63,10 +69,6 @@ export default function About() {
               alt="John McCracken in a navy blazer in front of the Navy Memorial wave sculpture"
               className="opening-portrait"
             />
-          </div>
-          <div className="opening-statement">
-            <h1 className="opening-lead">I help leaders get clear and get results.</h1>
-            <p className="opening-subhead">Thirty-seven years of leadership, the setbacks as well as the successes, and professional coach training, all focused on the results you want.</p>
           </div>
         </div>
       </section>
