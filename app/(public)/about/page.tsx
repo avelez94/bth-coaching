@@ -52,22 +52,17 @@ export default function About() {
   return (
     <>
       {/* ===== 1. OPENING / HERO ===== */}
-      {/* PLACEHOLDER: Replace with John's new full-resolution About hero image when received. */}
-      {/* Alt text for future swap: "John McCracken in a navy blazer in front of the Navy Memorial wave sculpture" */}
       <section className="opening">
         <div className="opening-inner">
           <div className="opening-name-block">
             <div className="opening-name">John McCracken</div>
           </div>
           <div className="opening-portrait-col">
-            <picture>
-              <source media="(max-width: 860px)" srcSet="/images/11Heromobile.jpeg" />
-              <img
-                src="/images/1Heroshot.jpeg"
-                alt="John McCracken"
-                className="opening-portrait"
-              />
-            </picture>
+            <img
+              src="/images/john-mccracken-about-hero.jpeg"
+              alt="John McCracken in a navy blazer in front of the Navy Memorial wave sculpture"
+              className="opening-portrait"
+            />
           </div>
           <div className="opening-statement">
             <h1 className="opening-lead">I help leaders get clear and get results.</h1>
