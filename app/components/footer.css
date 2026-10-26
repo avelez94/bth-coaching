@@ -75,6 +75,21 @@
 .footer-contact a:hover {
   color: #fff;
 }
+.footer-contact-link {
+  display: flex !important;
+  align-items: center;
+  gap: 9px;
+}
+.footer-icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.footer-contact-link:hover .footer-icon {
+  opacity: 1;
+}
 .footer-contact-schedule {
   display: inline-block;
   font-size: 0.82rem;
