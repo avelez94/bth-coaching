@@ -46,7 +46,7 @@ export default function TestimonialSlider({ testimonials }: TestimonialSliderPro
         .ts-rule {
           width: 32px;
           height: 1px;
-          background: #C9A23A;
+          background: var(--gold);
           flex-shrink: 0;
         }
         .ts-name {
