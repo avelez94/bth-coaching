@@ -7,7 +7,8 @@ export default function Home() {
       <section className="hero">
         <div className="hero-left">
           <h1 className="hero-headline">The challenge in your job is only part of what you're carrying.</h1>
-          <p className="hero-subhead">Executive and leadership coaching for people who want strong results at work without sacrificing everything else. Guided by 37 years of leadership in the Navy and the Pentagon.</p>
+          <p className="hero-subhead">I help leaders gain clarity and get results, without sacrificing everything else.</p>
+          <p className="hero-body">Executive and leadership coaching backed by 37 years of building teams and leading people through high-stakes change, from Navy ships to large organizations.</p>
           <div className="hero-cta-stack">
             {/* PLACEHOLDER: Replace with Microsoft Bookings URL when provided */}
             <button className="btn-gold" disabled aria-disabled="true">
