@@ -62,8 +62,8 @@ export default function Home() {
       <section className="how-it-works">
         <div className="how-it-works-inner">
           <div>
-            <div className="how-label">How it works</div>
-            <h2 className="how-headline">One Clear Path</h2>
+            <div className="how-label">How it finishes</div>
+            <h2 className="how-headline">Where it leads</h2>
           </div>
           <div className="how-steps">
             <div className="how-step">
@@ -92,9 +92,12 @@ export default function Home() {
       {/* ===== 5. PHILOSOPHY ===== */}
       <section className="philosophy">
         <div className="philosophy-inner">
+          <div>
+          <div className="how-label philosophy-section-label">My approach</div>
           <h2 className="philosophy-headline">You're not one person at work and another at home. Your development shouldn't treat you that way.</h2>
+          </div>
           <div className="philosophy-right">
-            <p className="philosophy-pull">When we address the whole person — every dimension of who you are and what you're carrying — something unlocks. Potential you didn't know you had. Clarity you couldn't find alone. A transformative path forward that lasts.</p>
+            <p className="philosophy-pull">When we address the whole person — every dimension of who you are and what you&apos;re carrying — something unlocks. Potential you didn&apos;t know you had. Clarity you couldn&apos;t find alone. A transformative path forward that lasts.</p>
             <a href="/the-8-pillars" className="philosophy-link">Explore the 8 Pillars →</a>
           </div>
         </div>
@@ -123,8 +126,9 @@ export default function Home() {
         </div>
         <div className="about-strip-content">
           <div className="about-strip-label">Your guide</div>
-          <p className="about-strip-body">I know what it's like to carry more than the job, and to hit a setback you didn't see coming. I spent 30 years leading in the Navy and seven as a senior civilian at the Pentagon learning how people recover and grow. Now I help leaders do it faster and better than I did.</p>
-          <div className="about-strip-credentials">CAPT, USN (Ret.) | EMBA | ACC (ICF) | DoD Certified Executive Coach</div>
+          <p className="about-strip-body">I know what it&apos;s like to carry more than the job, and to hit a setback you didn&apos;t see coming. I spent 30 years leading in the Navy and seven as a senior defense civilian at the Pentagon learning how people recover and grow. Now I help leaders do it faster and better than I did.</p>
+          <div className="about-strip-name">John McCracken</div>
+          <div className="about-strip-credentials">CAPT, USN (Ret.) | EMBA | Associate Certified Coach (ACC) | DoD Certified Executive Coach</div>
           <a href="/about" className="about-link">Read my story →</a>
         </div>
       </section>
@@ -133,8 +137,8 @@ export default function Home() {
       <section className="credibility">
         <div className="credibility-inner">
           <div>
-            <h2 className="credibility-headline">Research-grounded. Experience-tested.</h2>
-            <p className="credibility-body">The coaching and programs at Beyond the Horizon draw on peer-reviewed research on human flourishing — the same science behind the U.S. Army's resilience programs.</p>
+            <h2 className="credibility-headline">Research-grounded.<br />Experience-tested.</h2>
+            <p className="credibility-body">The coaching and programs at Beyond the Horizon draw on peer-reviewed research on human flourishing — the same science behind the U.S. Army&apos;s resilience programs.</p>
           </div>
           <div className="badges-list">
             {[

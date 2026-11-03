@@ -42,7 +42,7 @@
 .hero-inner { max-width: 1200px; }
 .hero-context {
   font-size: 0.78rem;
-  color: rgba(247,244,237,0.45);
+  color: rgba(247,244,237,0.75);
   letter-spacing: 0.04em;
   margin-bottom: 24px;
   font-weight: 400;
@@ -146,6 +146,17 @@
   color: var(--text);
   margin-bottom: 64px;
   letter-spacing: -0.01em;
+}
+.enroll-link-placeholder {
+  margin-top: 16px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+.enroll-link-text {
+  color: var(--text-muted);
+  font-style: italic;
+  /* PENDING ENROLL PAGE: replace with <a href="/enroll"> when available */
 }
 
 .how-timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }

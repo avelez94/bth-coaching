@@ -1,6 +1,3 @@
-'use client'
-
-import { useState } from 'react'
 import './executive-coaching.css'
 
 // PLACEHOLDER: Confirm the executive-presence client is comfortable
@@ -20,8 +17,8 @@ const workAreas = [
   },
   {
     num: '03',
-    title: 'Sustainable performance.',
-    body: "Finding what's draining you, at work and outside it, and building a foundation that doesn't depend on heroic effort.",
+    title: 'Whole-life integration.',
+    body: "Your work, health, family, and finances aren't separate problems. We look at how they affect each other, and build a foundation that doesn't depend on heroic effort.",
   },
   {
     num: '04',
@@ -30,29 +27,10 @@ const workAreas = [
   },
 ]
 
-const engagementDetails = [
-  '12 one-hour sessions, every other week',
-  '8 Pillars whole-person assessment at the start',
-  'Commitments at each session that you define',
-  'Accountability between sessions by email or text',
-  "Final session: reflection, integration, and a plan for what's next",
-]
+// engagement details rendered inline to allow link in first item
+
 
 export default function ExecutiveCoaching() {
-  const [active, setActive] = useState(0)
-  const [fading, setFading] = useState(false)
-
-  function select(i: number) {
-    if (i === active) return
-    setFading(true)
-    setTimeout(() => { setActive(i); setFading(false) }, 200)
-  }
-
-  function handleKey(e: React.KeyboardEvent, i: number) {
-    if (e.key === 'ArrowDown') { e.preventDefault(); select(Math.min(i + 1, workAreas.length - 1)) }
-    if (e.key === 'ArrowUp') { e.preventDefault(); select(Math.max(i - 1, 0)) }
-  }
-
   return (
     <>
       {/* styles in executive-coaching.css */}
@@ -99,7 +77,8 @@ export default function ExecutiveCoaching() {
         <div className="client-story-inner">
           <h2 className="story-heading">What this looks like in practice</h2>
           <div className="story-text">
-            <p>A leader came to me to strengthen his executive presence. As we worked, the real challenge came into focus. His new role required him to lead through influence across the organization, without clear authority, while he also wanted to be more present for a growing family. He shifted from chasing outcomes to building a process and drew on experience he'd been underusing. He also defined what being present at home meant to him and built a plan to get there.</p>
+            <p>A leader came to me to strengthen his executive presence. As we worked, the real challenge came into focus. His new role required him to lead through influence across the organization, without clear authority, while he also wanted to be more present for a growing family. He shifted from chasing outcomes to building a process and drew on experience he&apos;d been underusing. He also defined what being present at home meant to him and built a plan to get there.</p>
+            <p className="story-attribution">Senior leader, new cross-organizational role.</p>
           </div>
         </div>
       </section>
@@ -107,54 +86,15 @@ export default function ExecutiveCoaching() {
       {/* ===== 4. WHAT WE WORK ON ===== */}
       <section className="work-on">
         <div className="work-on-inner">
-          <h2 className="work-on-heading">What we work on.</h2>
+          <h2 className="work-on-heading">What we work on</h2>
 
-          {/* Desktop: editorial index + panel */}
-          <div
-            className="work-selector work-selector-desktop"
-            role="tablist"
-            aria-label="What we work on"
-          >
-            <div className="work-index">
-              {workAreas.map((area, i) => (
-                <button
-                  key={i}
-                  role="tab"
-                  aria-selected={active === i}
-                  aria-controls="work-panel"
-                  id={`work-tab-${i}`}
-                  className={`work-index-btn${active === i ? ' active' : ''}`}
-                  onClick={() => select(i)}
-                  onKeyDown={(e) => handleKey(e, i)}
-                  tabIndex={active === i ? 0 : -1}
-                >
-                  <span className="work-index-num">{area.num}</span>
-                  <span className="work-index-title">{area.title}</span>
-                </button>
-              ))}
-            </div>
-            <div
-              id="work-panel"
-              role="tabpanel"
-              aria-labelledby={`work-tab-${active}`}
-              aria-live="polite"
-              className="work-panel"
-            >
-              <div className={`work-panel-content ${fading ? 'fading' : 'visible'}`}>
-                <div className="work-panel-num">{workAreas[active].num}</div>
-                <div className="work-panel-title">{workAreas[active].title}</div>
-                <p className="work-panel-body">{workAreas[active].body}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile: static stacked list */}
-          <div className="work-mobile-list">
+          {/* All four areas shown at once */}
+          <div className="work-list">
             {workAreas.map((area, i) => (
-              <div key={i} className="work-mobile-item">
-                <div className="work-mobile-num">{area.num}</div>
-                <div className="work-mobile-title">{area.title}</div>
-                <p className="work-mobile-body">{area.body}</p>
+              <div key={i} className="work-list-item">
+                <div className="work-list-num">{area.num}</div>
+                <div className="work-list-title">{area.title}</div>
+                <p className="work-list-body">{area.body}</p>
               </div>
             ))}
           </div>
@@ -164,7 +104,7 @@ export default function ExecutiveCoaching() {
       {/* ===== 5. HOW IT WORKS ===== */}
       <section className="how-it-works">
         <div className="how-inner">
-          <h2 className="how-heading">How it works.</h2>
+          <h2 className="how-heading">How it works</h2>
           <p className="how-body-1">You bring what matters most right now, and we work through it together. I'll ask questions that challenge your assumptions and open up options you can't see from inside the situation. You leave every session with a commitment you defined and a next step you chose.</p>
           <p className="how-body-2">This is your agenda. I bring the structure and the questions.</p>
         </div>
@@ -173,7 +113,7 @@ export default function ExecutiveCoaching() {
       {/* ===== 6. WHAT'S POSSIBLE ===== */}
       <section className="possible">
         <div className="possible-inner">
-          <h2 className="possible-heading">What's possible.</h2>
+          <h2 className="possible-heading">What&apos;s possible</h2>
           <p className="possible-body">Your team brings you solutions, not problems. You make the hard calls without replaying them at 2 a.m. You're home for dinner, and you're actually present.</p>
         </div>
       </section>
@@ -188,16 +128,21 @@ export default function ExecutiveCoaching() {
             <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
             </button>
+            {/* PENDING ENROLL PAGE */}
+            <p className="enroll-link-placeholder">
+              Already decided? <span className="enroll-link-text">Enroll now →</span>
+            </p>
           </div>
           <div>
             <div className="engagement-details">
-              {engagementDetails.map((item, i) => (
-                <div key={i} className="engagement-detail-item">{item}</div>
-              ))}
+              <div className="engagement-detail-item">12 one-hour sessions, every other week</div>
+              <div className="engagement-detail-item"><a href="/the-8-pillars" className="engagement-detail-link">8 Pillars whole-person assessment</a> at the start</div>
+              <div className="engagement-detail-item">Commitments at each session that you define</div>
+              <div className="engagement-detail-item">Final session: reflection, integration, and a plan for what&apos;s next</div>
             </div>
             <div className="investment-block">
               <div className="investment-label">Investment</div>
-              <div className="investment-amount">$3,600</div>
+              <div className="investment-amount">$3,600, or 6 monthly payments of $600</div>
             </div>
           </div>
         </div>

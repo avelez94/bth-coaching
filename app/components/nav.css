@@ -25,7 +25,7 @@
 }
 
 .nav-brand img {
-  height: 56px;
+  height: 64px;
   width: auto;
   display: block;
 }
@@ -149,6 +149,12 @@
 .nav-dropdown-item:hover {
   color: var(--navy);
   background: var(--ivory-dark);
+}
+
+.nav-dropdown-divider {
+  height: 1px;
+  background: rgba(28,43,58,0.12);
+  margin: 4px 0;
 }
 
 /* ============================================================

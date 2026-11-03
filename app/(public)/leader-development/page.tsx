@@ -3,7 +3,7 @@
 import './leader-development.css'
 
 const stages = [
-  { num: '01', label: 'Month 1 — Start with clarity.', body: 'An intake assessment and a one- to two-day kickoff. You define what success looks like for you and where you want to grow.' },
+  { num: '01', label: 'Month 1 — Start with clarity.', body: 'An intake assessment and a half-day kickoff, in person or virtual. You define what success looks like for you and where you want to grow.' },
   { num: '02', label: 'Months 2–9 — One pillar at a time.', body: 'Each month focuses on one pillar, with two sessions: a structured session that uses a focused set of questions to assess where you are and where you want to be, and a coaching session where you set the agenda and work on whatever matters most right now.' },
   { num: '03', label: 'Month 10 — Lock it in.', body: 'Review what you\'ve learned, what has changed, and the commitments you\'re carrying forward.' },
   { num: '04', label: 'After the program — Support when you need it.', body: 'Optional as-needed coaching for the storms that come later.' },
@@ -67,7 +67,7 @@ export default function LeaderDevelopment() {
       {/* ===== 4. HOW IT WORKS ===== */}
       <section className="how">
         <div className="how-inner">
-          <h2 className="how-heading">How it works.</h2>
+          <h2 className="how-heading">How it works</h2>
 
           {/* Desktop: horizontal timeline */}
           <div className="how-timeline">
@@ -97,21 +97,26 @@ export default function LeaderDevelopment() {
       {/* ===== 5. WHAT'S POSSIBLE ===== */}
       <section className="outcomes">
         <div className="outcomes-inner">
-          <h2 className="outcomes-heading">What's possible.</h2>
+          <h2 className="outcomes-heading">What&apos;s possible</h2>
           <p className="outcomes-body">Your former peers now come to you for direction. Your team is moving, and you know why. And the growth holds, because it's built on more than technique.</p>
         </div>
       </section>
 
       {/* ===== 6. THE ENGAGEMENT ===== */}
+      {/* PENDING LINNEA TESTIMONIAL FROM CLIENT */}
       <section className="engagement">
         <div className="engagement-inner">
           <div>
             <p className="engagement-context">The engagement</p>
-            <h2 className="engagement-headline">About 10 months, 16 or more sessions plus a kickoff.</h2>
+            <h2 className="engagement-headline">Ten months. Eight pillars. One whole leader.</h2>
             {/* PENDING MICROSOFT BOOKINGS URL */}
             <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
             </button>
+            {/* PENDING ENROLL PAGE */}
+            <p className="enroll-link-placeholder">
+              Already decided? <span className="enroll-link-text">Enroll now →</span>
+            </p>
           </div>
           <div>
             <div className="engagement-details">
@@ -119,7 +124,7 @@ export default function LeaderDevelopment() {
                 'About 10 months, 16 or more sessions plus a kickoff',
                 '8 Pillars whole-person assessment',
                 'Structured pillar sessions plus open coaching sessions',
-                'Accountability between sessions by email or text',
+                'Commitments you define at each session.',
                 'Optional ongoing support after the program',
               ].map((item, i) => (
                 <div key={i} className="engagement-detail-item">{item}</div>
@@ -127,7 +132,7 @@ export default function LeaderDevelopment() {
             </div>
             <div className="investment-block">
               <div className="investment-label">Investment</div>
-              <div className="investment-amount">$6,000</div>
+              <div className="investment-amount">$6,000, or 10 monthly payments of $600</div>
             </div>
           </div>
         </div>

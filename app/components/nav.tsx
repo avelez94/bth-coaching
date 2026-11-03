@@ -20,6 +20,7 @@ export default function Nav() {
     { label: 'Leader Development', href: '/leader-development' },
     { label: 'For Organizations', href: '/for-organizations' },
     { label: 'Sample Engagements', href: '/sample-engagements' },
+    { label: 'The 8 Pillars', href: '/the-8-pillars' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
   ]
@@ -29,6 +30,8 @@ export default function Nav() {
     { label: 'Leader Development', href: '/leader-development' },
     { label: 'For Organizations', href: '/for-organizations' },
     { label: 'Sample Engagements', href: '/sample-engagements' },
+    { label: 'divider', href: '' },
+    { label: 'The 8 Pillars', href: '/the-8-pillars' },
   ]
 
   return (
@@ -54,11 +57,15 @@ export default function Nav() {
                 <span className="nav-dropdown-chevron" aria-hidden="true" />
               </button>
               <div className="nav-dropdown-menu" role="menu">
-                {serviceLinks.map((link) => (
-                  <a key={link.href} href={link.href} className="nav-dropdown-item" role="menuitem">
-                    {link.label}
-                  </a>
-                ))}
+                {serviceLinks.map((link, i) =>
+                  link.label === 'divider' ? (
+                    <div key={`divider-${i}`} className="nav-dropdown-divider" role="separator" />
+                  ) : (
+                    <a key={link.href} href={link.href} className="nav-dropdown-item" role="menuitem">
+                      {link.label}
+                    </a>
+                  )
+                )}
               </div>
             </div>
 

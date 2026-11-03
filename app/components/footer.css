@@ -138,6 +138,13 @@
   font-size: 0.72rem;
   color: rgba(247,244,237,0.3);
 }
+.footer-disclaimer {
+  font-size: 0.68rem;
+  color: rgba(247,244,237,0.28);
+  line-height: 1.65;
+  max-width: 820px;
+}
+
 .footer-credit {
   font-size: 0.72rem;
   color: rgba(247,244,237,0.28);

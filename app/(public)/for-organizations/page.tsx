@@ -5,11 +5,11 @@ import './for-organizations.css'
 const ways = [
   {
     title: 'Support a leader who\'s struggling.',
-    body: 'You see potential worth investing in. I coach that leader one-on-one to help them regain their footing. You help define the purpose of the engagement and what success looks like. The coaching conversations stay confidential, which is what makes real change possible.',
+    body: 'You see potential worth investing in. I coach that leader one-on-one to help them regain their footing. You help define the purpose of the engagement and what success looks like. The coaching conversations stay confidential, which is what makes real change possible. Includes a kickoff and a close-out conversation with you and the leader.',
     price: 'Six months, 12 sessions — $3,600',
   },
   {
-    title: 'Develop leaders across your team.',
+    title: 'Develop your leaders.',
     body: 'The 8 Pillars Leadership Program combines leadership development with individual coaching, built around a whole-person framework. Your leaders build skills and resilience together, and each one works on their own goals with a coach.',
     price: 'Ten months, tailorable — $6,000 per participant',
   },
@@ -21,9 +21,10 @@ const ways = [
 ]
 
 const howSteps = [
-  { label: 'Start with a conversation.', body: 'Tell me what you\'re seeing and what you need.' },
-  { label: 'Agree on the purpose.', body: 'We define goals, boundaries, and how you\'ll see progress.' },
-  { label: 'Do the work.', body: 'Your leaders get real support, and you see the difference in how they lead.' },
+  { num: '01', label: 'Start with a conversation.', body: 'Tell me what you\'re seeing and what you need.' },
+  { num: '02', label: 'Agree on the purpose.', body: 'We define goals, boundaries, and how you\'ll see progress.' },
+  { num: '03', label: 'Assess (optional).', body: 'For engagements that benefit from a structured baseline, I use the 8 Pillars assessment to identify where the leader is starting from and where they want to grow. This gives the coaching a sharper focus from the first session.' },
+  { num: '04', label: 'Do the work.', body: 'Your leaders get real support, and you see the difference in how they lead.' },
 ]
 
 export default function ForOrganizations() {
@@ -66,7 +67,7 @@ export default function ForOrganizations() {
       {/* ===== 3. THREE WAYS ===== */}
       <section className="ways">
         <div className="ways-inner">
-          <h2 className="ways-heading">Three ways I work with organizations.</h2>
+          <h2 className="ways-heading">Three ways I work with organizations</h2>
 
           {/* Desktop: three-column grid */}
           <div className="ways-grid">
@@ -84,11 +85,11 @@ export default function ForOrganizations() {
       {/* ===== 4. HOW IT WORKS ===== */}
       <section className="how">
         <div className="how-inner">
-          <h2 className="how-heading">How it works.</h2>
+          <h2 className="how-heading">How it works</h2>
           <div className="how-steps">
             {howSteps.map((s, i) => (
               <div key={i} className="how-step">
-                <div className="how-step-num">0{i + 1}</div>
+                <div className="how-step-num">{s.num}</div>
                 <div className="how-step-content">
                   <div className="how-step-label">{s.label}</div>
                   <p className="how-step-body">{s.body}</p>
@@ -100,9 +101,10 @@ export default function ForOrganizations() {
       </section>
 
       {/* ===== 5. WHAT'S POSSIBLE ===== */}
+      {/* PENDING CONSOLIDATION CASE SUMMARY / CLIENT QUOTE */}
       <section className="outcomes">
         <div className="outcomes-inner">
-          <h2 className="outcomes-heading">What's possible.</h2>
+          <h2 className="outcomes-heading">What&apos;s possible</h2>
           <p className="outcomes-body">The leader you almost lost becomes one others learn from. Your team stops working around a problem and starts delivering. You made the call to invest, and it paid off.</p>
         </div>
       </section>
@@ -118,9 +120,12 @@ export default function ForOrganizations() {
       {/* ===== 7. WHY ME ===== */}
       <section className="why">
         <div className="why-inner">
-          <h2 className="why-headline">Thirty years leading in the Navy and seven as a senior defense civilian.</h2>
           <div>
-            <p className="why-body">Including turning around one of the lowest-performing commands in the Naval Reserve. I've led people through consolidations, culture problems, and high-stakes transitions, and I've coached leaders through the same.</p>
+            <p className="why-work-label">Why work with me</p>
+            <h2 className="why-headline">Thirty years leading in the Navy and seven as a senior defense civilian.</h2>
+          </div>
+          <div>
+            <p className="why-body">That includes turning around one of the lowest-performing commands in the Naval Reserve. I&apos;ve led people through consolidations, culture problems, and high-stakes transitions, and I&apos;ve coached leaders through the same.</p>
             <a href="/sample-engagements" className="why-link">See Sample Engagements →</a>
             <div style={{marginTop: '32px'}}>
               {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}

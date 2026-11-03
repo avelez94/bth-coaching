@@ -4,7 +4,7 @@ import { useState } from 'react'
 import './contact.css'
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', organization: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
@@ -24,7 +24,7 @@ export default function Contact() {
       })
       if (!res.ok) throw new Error('Failed')
       setSent(true)
-      setForm({ name: '', email: '', message: '' })
+      setForm({ name: '', email: '', organization: '', message: '' })
     } catch {
       setError('Something went wrong. Please try again or email john@mccrackencoaching.com directly.')
     }
@@ -37,18 +37,20 @@ export default function Contact() {
       <div className="contact-page">
         <div className="contact-canvas">
 
-          <h1 className="contact-headline">A better path starts with a conversation.</h1>
+          <h1 className="contact-headline">A better path starts with a single conversation</h1>
 
           <div className="contact-primary">
-            <p className="contact-body">A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there.</p>
-
-            <p className="org-path">
-              Prefer to start with a consultation?{' '}
+            <div className="contact-cta-row">
+              {/* PENDING PERSONAL MICROSOFT BOOKINGS URL */}
+              <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+                Schedule a Free 15-Minute Call
+              </button>
               {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
-              <button className="org-path-placeholder" disabled aria-disabled="true">
+              <button className="btn btn-outline" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
                 Schedule an Organizational Consultation
               </button>
-            </p>
+            </div>
+            <p className="contact-body">A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we&apos;re the right fit to get you there.</p>
           </div>
 
           {/* ===== FORM + CONTACT MODULE ===== */}
@@ -56,7 +58,7 @@ export default function Contact() {
 
             <div className="form-zone">
               {sent ? (
-                <p className="form-success">Thank you. Your message has been sent.</p>
+                <p className="form-success">Thanks, I&apos;ll respond within one business day.</p>
               ) : (
                 <>
                   {error && <div className="form-error">{error}</div>}
@@ -80,6 +82,17 @@ export default function Contact() {
                       value={form.email}
                       onChange={e => setForm({ ...form, email: e.target.value })}
                       autoComplete="email"
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="organization">Organization <span className="field-optional">(optional)</span></label>
+                    <input
+                      id="organization"
+                      type="text"
+                      placeholder="Your organization"
+                      value={form.organization}
+                      onChange={e => setForm({ ...form, organization: e.target.value })}
+                      autoComplete="organization"
                     />
                   </div>
                   <div className="field">
@@ -129,13 +142,14 @@ export default function Contact() {
       {/* ===== CLOSING: full-width slate section ===== */}
       <section className="contact-closing">
         <div className="contact-closing-inner">
-          <p className="contact-closing-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
+          <p className="contact-closing-statement">I believe setbacks don&apos;t define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that&apos;s the growth you want for yourself or your team, let&apos;s take 15 minutes to chart a path forward.</p>
           <img
             src="/images/john-mccracken-signature.png"
             alt="John McCracken signature"
             className="contact-closing-signature"
             aria-hidden="true"
           />
+          {/* PENDING MICROSOFT BOOKINGS URL */}
           {/* PENDING MICROSOFT BOOKINGS URL */}
           <button
             className="btn-closing-schedule"
@@ -144,11 +158,6 @@ export default function Contact() {
           >
             Schedule a Free 15-Minute Call
           </button>
-          <div className="contact-closing-details">
-            <a href="mailto:john@mccrackencoaching.com">john@mccrackencoaching.com</a>
-            <span className="contact-closing-sep">·</span>
-            <a href="tel:7037052225">703-705-2225</a>
-          </div>
         </div>
       </section>
     </>
