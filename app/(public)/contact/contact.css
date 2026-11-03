@@ -23,11 +23,24 @@
   max-width: 780px;
 }
 
-/* Zone 2 — body + org path, offset right */
+/* Shared btn styles */
+.btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: var(--gold-hover); }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(28,43,58,0.28); }
+.btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
+
+/* Zone 2 — CTA row + body, offset right */
 .contact-primary {
   margin-top: 48px;
   margin-left: auto;
   max-width: 520px;
+}
+.contact-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 36px;
 }
 .contact-body {
   font-size: 1rem;
@@ -35,37 +48,6 @@
   color: var(--text-mid);
   margin-bottom: 28px;
   font-weight: 300;
-}
-
-/* Org path */
-.org-path {
-  margin-top: 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 300;
-}
-.org-path a {
-  color: var(--text-mid);
-  text-decoration: none;
-  border-bottom: 1px solid var(--rule-strong);
-  transition: color 0.2s, border-color 0.2s;
-}
-.org-path a:hover {
-  color: var(--gold);
-  border-bottom-color: var(--gold);
-}
-/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */
-.org-path-placeholder {
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--rule-strong);
-  color: var(--text-mid);
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  padding: 0;
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
 /* Zone 3 — two-column: form left, photo+card right */
@@ -111,7 +93,8 @@
 .field textarea:focus { border-bottom-color: var(--slate); }
 .field input::placeholder,
 .field textarea::placeholder { color: rgba(107,122,141,0.6); font-weight: 300; }
-.field textarea { resize: none; height: 80px; line-height: 1.7; }
+.field textarea { resize: none; height: 140px; line-height: 1.7; }
+.field-optional { font-size: 0.7rem; color: var(--text-muted); font-weight: 300; letter-spacing: 0; text-transform: none; }
 .form-error { font-size: 0.82rem; color: var(--error); margin-bottom: 20px; line-height: 1.5; }
 .form-success { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.7; }
 .btn-send {

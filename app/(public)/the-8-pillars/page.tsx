@@ -55,8 +55,8 @@ const pillars = [
 
 const science = [
   {
-    name: 'Positive psychology',
-    body: 'Dr. Martin Seligman\'s PERMA research established that human flourishing spans multiple interdependent life domains. It became the scientific foundation of the U.S. Army\'s Comprehensive Soldier and Family Fitness program.',
+    name: 'Resilience science',
+    body: 'Dr. Martin Seligman\'s research on resilience and performance under pressure established that strength across interdependent life domains is the foundation of sustained performance. His work became the scientific basis of the U.S. Army\'s Comprehensive Soldier and Family Fitness (CSF2) program.',
   },
   {
     name: 'Total Leadership',
@@ -79,8 +79,17 @@ export default function The8Pillars() {
       {/* ===== 1. HERO ===== */}
       <section className="hero">
         <div className="hero-composition">
-          <h1 className="hero-headline">The challenge in front of you is rarely the whole story.</h1>
-          <p className="hero-subhead">The 8 Pillars is a whole-person framework grounded in peer-reviewed research on human flourishing and informed by neuroscience. It's the foundation of every coaching engagement and program at Beyond the Horizon.</p>
+          <div className="hero-text">
+            <h1 className="hero-headline">The challenge in front of you is rarely the whole story.</h1>
+            <p className="hero-subhead">The 8 Pillars is a whole-person framework grounded in peer-reviewed research on performance, resilience, and well-being and informed by neuroscience. It&apos;s the foundation of every coaching engagement and program at Beyond the Horizon.</p>
+          </div>
+          <div className="hero-compass-col">
+            <img
+              src="/images/9Framework.jpeg"
+              alt="The 8 Pillars compass"
+              className="hero-compass-img"
+            />
+          </div>
         </div>
       </section>
 
@@ -88,7 +97,7 @@ export default function The8Pillars() {
       <section className="miss">
         <div className="miss-inner">
           <div>
-            <h2 className="miss-headline">What most leadership frameworks miss.</h2>
+            <h2 className="miss-headline">What most leadership frameworks miss</h2>
             <p className="miss-body">Most frameworks ask what effective leaders do: which behaviors and competencies they need. The 8 Pillars asks a prior question: what is the condition of the leader doing all of those things?</p>
             <p className="miss-body">A leader carrying financial stress makes different decisions than the same leader who is financially clear. A leader with friction at home brings less to every meeting — not from a lack of professionalism, but because people aren't modular. What we carry in one part of life shows up in all the others.</p>
           </div>
@@ -98,19 +107,10 @@ export default function The8Pillars() {
         </div>
       </section>
 
-      {/* ===== COMPASS IMAGE ===== */}
-      <div className="pillars-compass-block">
-        <img
-          src="/images/9Framework.jpeg"
-          alt="Compass"
-          className="pillars-compass-img"
-        />
-      </div>
-
       {/* ===== 3. WHERE THE FRAMEWORK COMES FROM ===== */}
       <section className="science">
         <div className="science-inner">
-          <h2 className="science-heading">Where the framework comes from.</h2>
+          <h2 className="science-heading">Where the framework comes from</h2>
           <div className="science-grid">
             {science.map((s, i) => (
               <div key={i} className="science-cell">
@@ -156,7 +156,7 @@ export default function The8Pillars() {
       {/* ===== 5. HOW THE PILLARS WORK IN COACHING ===== */}
       <section className="coaching">
         <div className="coaching-inner">
-          <h2 className="coaching-headline">How the Pillars work in coaching.</h2>
+          <h2 className="coaching-headline">How the Pillars work in coaching</h2>
           <div className="coaching-steps">
             {[
               'For each pillar, you define what success looks like — your definition, not an imposed standard.',
@@ -178,12 +178,28 @@ export default function The8Pillars() {
           When ready, add a second button here: "Take the free 8 Pillars self-assessment."
           See v7 spec for placement and styling. */}
 
-      {/* ===== 7. GOLD CTA ===== */}
+      {/* ===== CHERRY BLOSSOM + CTA ===== */}
+      <div className="pillars-blossom-banner">
+        <img
+          src="/images/18Sitewide.jpeg"
+          alt="Cherry blossom canopy"
+          className="pillars-blossom-img"
+        />
+      </div>
       <section className="cta-section">
-        {/* PENDING MICROSOFT BOOKINGS URL */}
-        <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
-          Schedule a Free 15-Minute Call
-        </button>
+        <p className="cta-section-link-row">
+          <a href="/leader-development" className="cta-program-link">See the 8 Pillars Leadership Program →</a>
+        </p>
+        <div className="cta-section-buttons">
+          {/* PENDING PERSONAL MICROSOFT BOOKINGS URL */}
+          <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            Schedule a Free 15-Minute Call
+          </button>
+          {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
+          <button className="btn btn-outline" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            Schedule an Organizational Consultation
+          </button>
+        </div>
       </section>
     </>
   )

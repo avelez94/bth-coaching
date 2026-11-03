@@ -93,6 +93,8 @@ export default function Footer() {
           <div className="footer-bottom">
             <div className="footer-tagline">Together, we get beyond your horizon.</div>
             <div className="footer-copy">© 2026 Beyond the Horizon Executive Coaching &amp; Consulting LLC. All rights reserved.</div>
+            <p className="footer-disclaimer">References to John McCracken&apos;s service with the U.S. Navy and Department of Defense describe professional background only and do not imply endorsement by the Department of the Navy, the Department of Defense, or the U.S. Government.</p>
+            <p className="footer-disclaimer">Coaching is not psychotherapy, counseling, or medical, legal, or financial advice. Client examples are illustrative and anonymized; individual results vary, and past outcomes do not guarantee similar results.</p>
             <div className="footer-credit">Made with <span className="footer-credit-heart">♥</span> by <a href="https://alantevelez.com" target="_blank" rel="noopener noreferrer">Alante Velez</a></div>
           </div>
         </div>

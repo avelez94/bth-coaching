@@ -21,7 +21,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 38%;
+  object-position: center 20%;
   display: block;
 }
 
@@ -36,7 +36,7 @@
 .hero-inner { max-width: 1200px; }
 .hero-context {
   font-size: 0.78rem;
-  color: rgba(247,244,237,0.45);
+  color: rgba(247,244,237,0.75);
   letter-spacing: 0.04em;
   margin-bottom: 24px;
   font-weight: 400;
@@ -100,6 +100,7 @@
   color: var(--text);
   margin-bottom: 56px;
   letter-spacing: -0.01em;
+  /* Trailing period removed per client */
 }
 .ways-grid {
   display: grid;
@@ -246,6 +247,14 @@
   grid-template-columns: 5fr 7fr;
   gap: 80px;
   align-items: start;
+}
+.why-work-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 16px;
 }
 .why-headline {
   font-family: 'DM Serif Display', serif;

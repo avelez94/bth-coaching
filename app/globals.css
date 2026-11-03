@@ -32,7 +32,15 @@ body {
   background: var(--ivory);
   color: var(--text);
   font-family: 'Inter', sans-serif;
+  font-size: 1rem;
   font-weight: 300;
+  line-height: 1.75;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 1.0625rem;
+  }
 }

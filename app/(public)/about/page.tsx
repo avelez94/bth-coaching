@@ -26,7 +26,8 @@ const credCategories = [
     label: 'Certifications',
     entries: [
       { title: 'Associate Certified Coach (ACC)', org: 'International Coaching Federation' },
-      { title: 'DoD Certified Executive Coach', org: '' },
+      { title: 'Leadership Coaching for Organizational Performance (LCOP) Level 2', org: 'American University / Heidrick & Struggles' },
+      { title: 'DoD Coach Training Program (ICF-accredited), graduate', org: '' },
     ],
   },
 ]
@@ -59,7 +60,7 @@ export default function About() {
               <div className="opening-name">John McCracken</div>
             </div>
             <div className="opening-statement">
-              <h1 className="opening-lead">I help leaders get clear and get results.</h1>
+              <h1 className="opening-lead">I help leaders gain clarity and get results, in every part of their lives.</h1>
               <p className="opening-subhead">Thirty-seven years of leadership, the setbacks as well as the successes, and professional coach training, all focused on the results you want.</p>
             </div>
           </div>
@@ -92,7 +93,7 @@ export default function About() {
 
           <div className="story-section">
             <div className="story-section-label">Living the change</div>
-            <p className="story-body">I put my renewed perspective and skills to work when I took command ashore of the largest unit of its type in the nation, and one of the most underperforming in the Naval Reserve. Morale was broken, performance was low, and everyone expected more of the same.</p>
+            <p className="story-body">I put my renewed perspective and skills to work when I took command ashore of NOSC Washington, the largest Navy Operational Support Center in the nation, and one of the most underperforming in the Naval Reserve. Morale was broken, performance was low, and everyone expected more of the same.</p>
             <p className="story-body">I knew something had to change, and it had to start with me. Not a new program or a reorganization plan — how I showed up. The questions I asked instead of the answers I gave. Honesty about what wasn't working, including my own leadership.</p>
             <p className="story-body">Within a year, that team was recognized as the region's #1 large Navy Operational Support Center. Not because I had the answers, but because I learned to lead differently.</p>
           </div>
@@ -101,11 +102,14 @@ export default function About() {
 
         {/* Photo: Living the Change ceremony */}
         <div className="story-portrait-break">
-          <img
-            src="/images/12Livingthechange.jpeg"
-            alt="John McCracken in uniform presenting a reenlistment certificate to a Navy chief petty officer"
-            className="story-portrait-img"
-          />
+          <figure className="story-portrait-figure">
+            <img
+              src="/images/12Livingthechange.jpeg"
+              alt="John McCracken reenlisting the Command Master Chief of NOSC Washington"
+              className="story-portrait-img"
+            />
+            <figcaption className="story-portrait-caption">Reenlisting NOSC Washington&apos;s Command Master Chief</figcaption>
+          </figure>
         </div>
 
         <div className="story-inner" style={{ marginTop: '80px' }}>
@@ -118,11 +122,14 @@ export default function About() {
 
         {/* Photo: After the Navy — square container, preserves Fair Winds sign */}
         <div className="story-square-break">
-          <img
-            src="/images/13AftertheNavy.jpeg"
-            alt="John McCracken celebrating his Navy retirement under a Fair Winds and Following Seas sign"
-            className="story-square-img"
-          />
+          <figure className="story-portrait-figure">
+            <img
+              src="/images/13AftertheNavy.jpeg"
+              alt="John McCracken leaving Joint Base Andrews after completing command of NOSC Washington"
+              className="story-square-img"
+            />
+            <figcaption className="story-portrait-caption">Leaving Joint Base Andrews after completing command of NOSC Washington.</figcaption>
+          </figure>
         </div>
       </section>
 
@@ -152,7 +159,7 @@ export default function About() {
               </div>
             </div>
             <div>
-              <p className="beyond-body">I've been married for 36 years. I'm a father and a grandfather. And I'm a lifelong endurance athlete: marathons, Ironman races, years of running, cycling, and swimming. Last year, wear and tear meant I had to give up running. I didn't quit; I adjusted. I'm still competing on the bike and in the water.</p>
+              <p className="beyond-body">I&apos;ve been married for more than 35 years. I&apos;m a father and a grandfather. And I&apos;m a lifelong endurance athlete: marathons, Ironman races, years of running, cycling, and swimming. Last year, wear and tear meant I had to give up running. I didn't quit; I adjusted. I'm still competing on the bike and in the water.</p>
               <p className="beyond-body">That's the same thing I help clients do: when something changes that you didn't choose, find the path that still gets you where you want to go.</p>
             </div>
           </div>
@@ -162,7 +169,8 @@ export default function About() {
       {/* ===== 4. PULL QUOTE ===== */}
       <section className="pull-quote">
         <div className="pull-quote-inner">
-          <p className="pull-quote-text">When we address the whole person — every dimension of who you are and what you're carrying — something unlocks. Potential you didn't know you had. Clarity you couldn't find alone. A transformative path forward that lasts.</p>
+          <p className="why-this-works-label">Why this works</p>
+          <p className="pull-quote-text">When we address the whole person — every dimension of who you are and what you&apos;re carrying — something unlocks. Potential you didn&apos;t know you had. Clarity you couldn&apos;t find alone. A transformative path forward that lasts.</p>
         </div>
       </section>
 
@@ -173,6 +181,7 @@ export default function About() {
           <div style={{marginBottom: '48px'}}>
             <div style={{fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 2.8vw, 34px)', fontWeight: 400, color: 'var(--text)', letterSpacing: '-0.01em'}}>Preparation and credentials</div>
           </div>
+          {/* PENDING OFFICIAL ICF ACC BADGE — display below certifications entries when available */}
 
           {/* Desktop: tab selector */}
           <div
@@ -228,14 +237,18 @@ export default function About() {
       <section className="how-i-coach">
         <div className="how-i-coach-inner">
           <div className="how-i-coach-label">How I coach</div>
-          <p className="how-i-coach-body">My coaching follows International Coaching Federation methodology and ethics. It's client-centered and goal-focused, built on questions rather than prescriptions. You bring the situation; I help you see it clearly and decide what to do next.</p>
+          <p className="how-i-coach-body">My coaching follows International Coaching Federation methodology and ethics. It&apos;s client-centered and goal-focused, built on questions rather than prescriptions. You bring the situation; I help you see it clearly and decide what to do next.</p>
+          <p className="how-i-coach-body">I use the 8 Pillars of Whole Person Leadership as a framework, not a script. The pillars give us a shared language for what you&apos;re working on, and a way to see how every part of who you are — at work, at home, in how you think about yourself — connects to your results.</p>
+          <p className="how-i-coach-body">Most of my clients come in focused on one problem. By the time we&apos;re done, they&apos;ve solved it and learned something larger: how they lead, how they live, and how those two things are the same.</p>
+          {/* PENDING: replace span with <a href="/the-8-pillars"> when page is confirmed ready */}
+          <a href="/the-8-pillars" className="how-i-coach-link">Explore the 8 Pillars →</a>
         </div>
       </section>
 
       {/* ===== 7. CLOSING ===== */}
       <section className="closing">
         <div className="closing-inner">
-          <p className="closing-statement">I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward.</p>
+          <p className="closing-statement">I believe setbacks don&apos;t define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that&apos;s the growth you want for yourself or your team, let&apos;s take 15 minutes to chart a path forward.</p>
           <img
             src="/images/john-mccracken-signature.png"
             alt="John McCracken signature"
