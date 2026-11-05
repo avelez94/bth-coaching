@@ -1,4 +1,4 @@
-.btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.8rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
 .btn-gold { background: var(--gold); color: var(--navy); }
 .btn-gold:hover { background: var(--gold-hover); }
 
