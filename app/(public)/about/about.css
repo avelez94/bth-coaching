@@ -53,7 +53,7 @@
   max-width: 680px;
 }
 .opening-subhead {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.82;
   color: var(--text-mid);
   max-width: 580px;
@@ -78,7 +78,7 @@
   margin-bottom: 20px;
 }
 .story-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.92;
   color: var(--text-mid);
   margin-bottom: 20px;
@@ -187,7 +187,7 @@
   display: block;
 }
 .beyond-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.92;
   color: var(--text-mid);
   margin-bottom: 20px;
@@ -286,7 +286,7 @@
 .cred-accordion-chevron.open { transform: rotate(180deg); }
 .cred-accordion-body { padding-bottom: 8px; }
 .cred-accordion-entry { padding: 20px 0; border-top: 1px solid var(--rule); }
-.cred-accordion-title { font-size: 0.93rem; color: var(--text); font-weight: 400; margin-bottom: 4px; line-height: 1.45; }
+.cred-accordion-title { font-size: 1.0625rem; color: var(--text); font-weight: 400; margin-bottom: 4px; line-height: 1.45; }
 .cred-accordion-org { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
 
 /* ============================================================
@@ -315,7 +315,7 @@
   margin-bottom: 20px;
 }
 .how-i-coach-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.88;
   color: var(--text-mid);
   font-weight: 300;
@@ -349,7 +349,7 @@
   margin-bottom: 36px;
 }
 .closing-statement {
-  font-size: clamp(1rem, 1.15vw, 1.08rem);
+  font-size: clamp(1.0625rem, 1.15vw, 1.15rem);
   line-height: 1.82;
   color: var(--text);
   font-style: italic;
