@@ -43,7 +43,7 @@
   margin-bottom: 36px;
 }
 .contact-body {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.82;
   color: var(--text-mid);
   margin-bottom: 28px;
@@ -96,7 +96,7 @@
 .field textarea { resize: none; height: 140px; line-height: 1.7; }
 .field-optional { font-size: 0.7rem; color: var(--text-muted); font-weight: 300; letter-spacing: 0; text-transform: none; }
 .form-error { font-size: 0.82rem; color: var(--error); margin-bottom: 20px; line-height: 1.5; }
-.form-success { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.7; }
+.form-success { font-size: 1.0625rem; color: var(--text-mid); margin-bottom: 24px; line-height: 1.7; }
 .btn-send {
   display: inline-flex;
   align-items: center;

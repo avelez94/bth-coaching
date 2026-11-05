@@ -35,7 +35,7 @@
   font-weight: 400;
 }
 .hero-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.82;
   color: var(--text-mid);
   margin-bottom: 36px;
@@ -216,7 +216,7 @@
   padding-top: 3px;
 }
 .how-step-text {
-  font-size: 0.95rem;
+  font-size: 1.0625rem;
   line-height: 1.75;
   color: var(--text-mid);
   font-weight: 300;
@@ -380,7 +380,7 @@
   font-weight: 500;
 }
 .about-strip-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.85;
   color: var(--text-mid);
   font-weight: 300;
@@ -445,7 +445,7 @@
   line-height: 1.25;
 }
 .credibility-body {
-  font-size: 0.93rem;
+  font-size: 1.0625rem;
   line-height: 1.85;
   color: var(--text);
   font-weight: 300;
@@ -499,7 +499,7 @@
   letter-spacing: -0.01em;
 }
 .cta-body {
-  font-size: 0.97rem;
+  font-size: 1.0625rem;
   line-height: 1.85;
   color: rgba(247,244,237,0.88);
   margin-bottom: 32px;
