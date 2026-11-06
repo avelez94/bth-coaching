@@ -41,7 +41,7 @@
 
 .nav-link {
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-decoration: none;
   letter-spacing: 0.06em;
@@ -64,7 +64,7 @@
 
 .nav-dropdown-trigger {
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -130,7 +130,7 @@
 
 .nav-dropdown-item {
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-decoration: none;
   letter-spacing: 0.06em;
@@ -170,7 +170,7 @@
   background: var(--gold);
   color: var(--navy);
   font-family: 'Inter', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 500;
