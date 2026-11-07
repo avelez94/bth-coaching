@@ -131,7 +131,7 @@
 }
 
 .pillars-framework-link { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--rule); }
-.framework-link { font-size: 0.82rem; color: var(--slate-mid); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s; }
+.framework-link { font-size: 0.95rem; color: var(--slate-mid); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s; }
 .framework-link:hover { gap: 14px; }
 
 /* ============================================================
@@ -149,12 +149,12 @@
 }
 .enroll-link-placeholder {
   margin-top: 16px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 300;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-weight: 400;
 }
 .enroll-link-text {
-  color: var(--text-muted);
+  color: var(--text-mid);
   font-style: italic;
   /* PENDING ENROLL PAGE: replace with <a href="/enroll"> when available */
 }
