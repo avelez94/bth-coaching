@@ -154,7 +154,11 @@
 .nav-dropdown-divider {
   height: 1px;
   background: rgba(28,43,58,0.12);
-  margin: 4px 0;
+  margin: 0;
+}
+/* Remove the item's own border-bottom when the divider follows immediately */
+.nav-dropdown-item:has(+ .nav-dropdown-divider) {
+  border-bottom: none;
 }
 
 /* ============================================================
