@@ -103,7 +103,22 @@ export default function LeaderDevelopment() {
       </section>
 
       {/* ===== 6. THE ENGAGEMENT ===== */}
-      {/* PENDING LINNEA TESTIMONIAL FROM CLIENT */}
+      {/* ===== 5b. LINNEA TESTIMONIAL ===== */}
+      <section className="ld-testimonial">
+        <div className="ld-testimonial-inner">
+          <p className="ld-testimonial-label">From a coaching client</p>
+          <div className="ld-testimonial-quote">
+            <p>&ldquo;When I started coaching, I was looking to become a stronger leader. What I found was far more transformative.</p>
+            <p>Through our work together, I learned that empathy and accountability are not opposites &mdash; and that much of my identity and self-worth had become tied to my work in ways that weren&apos;t serving me. Coaching helped me redefine success to include my relationships, health, and personal happiness &mdash; not just professional achievement.</p>
+            <p>Rather than giving me answers, John consistently asked the right questions, helping me uncover insights that felt authentic and sustainable. I leave with greater confidence, stronger boundaries, and a much deeper understanding of the value I bring as both a leader and a person.&rdquo;</p>
+          </div>
+          <div className="ld-testimonial-attribution">
+            <div className="ld-testimonial-name">Linnea Landowski</div>
+            <div className="ld-testimonial-role">Director of Camping Programs, Scouting America, Western Los Angeles County Council</div>
+          </div>
+        </div>
+      </section>
+
       <section className="engagement">
         <div className="engagement-inner">
           <div>

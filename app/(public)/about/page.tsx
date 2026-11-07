@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import './about.css'
 
 const credCategories = [
@@ -26,7 +27,7 @@ const credCategories = [
     label: 'Certifications',
     entries: [
       { title: 'Associate Certified Coach (ACC)', org: 'International Coaching Federation' },
-      { title: 'Leadership Coaching for Organizational Performance (LCOP) Level 2', org: 'American University / Heidrick & Struggles' },
+      { title: 'LCOP Level 2', org: 'American University / Heidrick & Struggles', credUrl: 'https://www.parchment.com/lp/award/fc8113c5-7442-4408-b64e-ff05a7b99774' },
       { title: 'DoD Coach Training Program (ICF-accredited), graduate', org: '' },
     ],
   },
@@ -181,7 +182,16 @@ export default function About() {
           <div style={{marginBottom: '48px'}}>
             <div style={{fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 2.8vw, 34px)', fontWeight: 400, color: 'var(--text)', letterSpacing: '-0.01em'}}>Preparation and credentials</div>
           </div>
-          {/* PENDING OFFICIAL ICF ACC BADGE — display below certifications entries when available */}
+          {/* ICF ACC credential badge */}
+          <div className="cred-badge-row">
+            <Image
+              src="/images/icf-acc-badge.png"
+              alt="ICF Associate Certified Coach (ACC) credential badge"
+              width={100}
+              height={100}
+              className="cred-acc-badge"
+            />
+          </div>
 
           {/* Desktop: tab selector */}
           <div
@@ -216,7 +226,11 @@ export default function About() {
             <div className="cred-entries-grid">
               {credCategories[activeCred].entries.map((entry, i) => (
                 <div key={i} className="cred-entry-block">
-                  <div className="cred-entry-title">{entry.title}</div>
+                  <div className="cred-entry-title">
+                    {'credUrl' in entry && entry.credUrl
+                      ? <a href={entry.credUrl} target="_blank" rel="noopener noreferrer" className="cred-entry-link">{entry.title}</a>
+                      : entry.title}
+                  </div>
                   {entry.org && <div className="cred-entry-org">{entry.org}</div>}
                 </div>
               ))}
@@ -281,7 +295,11 @@ function MobileAccordion({ cat }: { cat: typeof credCategories[0] }) {
         <div className="cred-accordion-body">
           {cat.entries.map((entry, i) => (
             <div key={i} className="cred-accordion-entry">
-              <div className="cred-accordion-title">{entry.title}</div>
+              <div className="cred-accordion-title">
+                {'credUrl' in entry && entry.credUrl
+                  ? <a href={entry.credUrl} target="_blank" rel="noopener noreferrer" className="cred-entry-link">{entry.title}</a>
+                  : entry.title}
+              </div>
               {entry.org && <div className="cred-accordion-org">{entry.org}</div>}
             </div>
           ))}
