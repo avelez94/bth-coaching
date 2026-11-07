@@ -255,7 +255,7 @@
 
 .sponsor-link {
   font-size: 0.88rem;
-  color: var(--text-mid);
+  color: var(--text);
   font-weight: 300;
   line-height: 1.7;
   margin-top: 48px;
@@ -288,12 +288,12 @@
 }
 .enroll-link-placeholder {
   margin-top: 16px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  font-weight: 300;
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-weight: 400;
 }
 .enroll-link-text {
-  color: var(--text-muted);
+  color: var(--text-mid);
   font-style: italic;
   /* PENDING ENROLL PAGE: replace with <a href="/enroll"> when available */
 }
