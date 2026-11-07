@@ -289,7 +289,7 @@
   font-weight: 300;
 }
 .engagement-detail-item:first-child { border-top: 1px solid var(--rule); }
-.investment-block { margin-top: 36px; padding-top: 32px; border-top: 1px solid var(--rule); }
+.investment-block { margin-top: 36px; padding-top: 32px; }
 .investment-label { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
 .investment-amount { font-family: 'DM Serif Display', serif; font-size: 2.2rem; font-weight: 400; color: var(--slate-mid); line-height: 1; margin-bottom: 10px; }
 .investment-note { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
