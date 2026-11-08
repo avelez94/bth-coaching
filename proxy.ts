@@ -16,8 +16,10 @@ import { NextRequest, NextResponse } from 'next/server'
  *
  * This is a server-side var (no NEXT_PUBLIC_ prefix) so it is never
  * included in the client bundle.
+ *
+ * Uses the Next.js 16+ "proxy" convention (renamed from "middleware").
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/enroll')) {
