@@ -1,0 +1,149 @@
+/* ============================================================
+   CONFIRMATION PAGE
+============================================================ */
+.confirm-page {
+  min-height: 100vh;
+  background: var(--ivory);
+}
+
+.confirm-header {
+  background: var(--navy);
+  padding: 100px 72px 32px;
+}
+.confirm-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.confirm-body {
+  padding: 60px 72px 100px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.confirm-card {
+  background: var(--ivory-dark);
+  border: 1px solid var(--rule);
+  padding: 60px 64px;
+}
+
+.confirm-icon {
+  margin-bottom: 28px;
+}
+
+.confirm-heading {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.confirm-subhead {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  font-weight: 300;
+  margin-bottom: 48px;
+  max-width: 520px;
+}
+
+.confirm-section-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.confirm-what-next {
+  margin-bottom: 40px;
+}
+
+.confirm-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.confirm-step-item {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+  font-weight: 300;
+  align-items: flex-start;
+}
+.confirm-step-item:last-child { border-bottom: 1px solid var(--rule); }
+.confirm-step-item strong { color: var(--text); font-weight: 500; }
+
+.confirm-step-num {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  min-width: 20px;
+  padding-top: 3px;
+}
+
+.confirm-pdf {
+  background: var(--ivory);
+  border: 1px solid var(--rule);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+.confirm-pdf-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(13,27,42,0.25);
+  transition: color 0.2s, border-color 0.2s;
+  padding-bottom: 1px;
+}
+.confirm-pdf-link:hover { color: var(--slate); border-color: var(--slate); }
+.confirm-pdf-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 300;
+}
+
+.confirm-ref {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  margin-bottom: 36px;
+}
+.confirm-ref span {
+  font-family: 'Courier New', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.confirm-links { display: flex; gap: 20px; align-items: center; }
+.confirm-home-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.confirm-home-link:hover { color: var(--navy); }
+
+@media (max-width: 768px) {
+  .confirm-header { padding: 100px 24px 28px; }
+  .confirm-body { padding: 36px 24px 64px; }
+  .confirm-card { padding: 36px 24px; }
+}
