@@ -14,18 +14,22 @@ const PROGRAM_INFO = {
   'executive-coaching': {
     label: 'Executive Coaching',
     description: 'One-on-one executive coaching with John McCracken. Tailored to your goals, grounded in the 8 Pillars of Whole Person Leadership.',
-    fullPrice: '$4,800',
-    installmentPrice: '3 payments of $1,700',
+    fullPrice: '$3,600',
     fullNote: 'Single payment',
-    installmentNote: 'Monthly over 3 months',
+    totalCost: '$3,600',
+    installmentCount: 6,
+    installmentAmount: '$600',
+    installmentNote: '6 monthly payments of $600',
   },
   '8-pillars': {
     label: '8 Pillars Leadership Program',
     description: 'A structured cohort-based leadership development program built on the 8 Pillars framework. Combines group sessions with individual coaching.',
-    fullPrice: '$3,600',
-    installmentPrice: '3 payments of $1,275',
+    fullPrice: '$6,000',
     fullNote: 'Single payment',
-    installmentNote: 'Monthly over 3 months',
+    totalCost: '$6,000',
+    installmentCount: 10,
+    installmentAmount: '$600',
+    installmentNote: '10 monthly payments of $600',
   },
 } as const
 
@@ -238,7 +242,7 @@ function EnrollInner() {
                     key={p}
                     type="button"
                     className={`enroll-program-card${program === p ? ' selected' : ''}`}
-                    onClick={() => setProgram(p)}
+                    onClick={() => { setProgram(p); setPaymentOption(null) }}
                   >
                     <div className="enroll-program-name">{PROGRAM_INFO[p].label}</div>
                     <p className="enroll-program-desc">{PROGRAM_INFO[p].description}</p>
@@ -266,8 +270,8 @@ function EnrollInner() {
                       onClick={() => setPaymentOption('installment')}
                     >
                       <div className="enroll-payment-label">Installment plan</div>
-                      <div className="enroll-payment-price">{PROGRAM_INFO[program].installmentPrice}</div>
-                      <div className="enroll-payment-note">{PROGRAM_INFO[program].installmentNote}</div>
+                      <div className="enroll-payment-price">{PROGRAM_INFO[program].installmentNote}</div>
+                      <div className="enroll-payment-note">{PROGRAM_INFO[program].totalCost} total</div>
                     </button>
                   </div>
                 </div>
@@ -514,11 +518,16 @@ function EnrollInner() {
             <div className="enroll-summary-label">Your selection</div>
             <div className="enroll-summary-program">{PROGRAM_INFO[program].label}</div>
             {paymentOption && (
-              <div className="enroll-summary-price">
-                {paymentOption === 'full'
-                  ? PROGRAM_INFO[program].fullPrice
-                  : PROGRAM_INFO[program].installmentPrice}
-              </div>
+              <>
+                <div className="enroll-summary-price">
+                  {PROGRAM_INFO[program].totalCost}
+                </div>
+                <div className="enroll-summary-payment-type">
+                  {paymentOption === 'full'
+                    ? 'Single payment'
+                    : PROGRAM_INFO[program].installmentNote}
+                </div>
+              </>
             )}
             {clientInfo.firstName && (
               <div className="enroll-summary-name">{clientInfo.firstName} {clientInfo.lastName}</div>

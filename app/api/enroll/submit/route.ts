@@ -12,16 +12,14 @@ const supabaseAdmin = createClient(
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-// Stripe payment links — set these in your environment variables.
-// EC full / installment and 8 Pillars full / installment.
 const STRIPE_LINKS: Record<string, Record<string, string>> = {
   'executive-coaching': {
-    full: process.env.STRIPE_LINK_EC_FULL ?? '',
-    installment: process.env.STRIPE_LINK_EC_INSTALLMENT ?? '',
+    full: 'https://buy.stripe.com/8x23cvf9P9Dva6H1Gc3sI00',
+    installment: 'https://buy.stripe.com/28E4gze5L5nfgv5gB63sI01',
   },
   '8-pillars': {
-    full: process.env.STRIPE_LINK_8P_FULL ?? '',
-    installment: process.env.STRIPE_LINK_8P_INSTALLMENT ?? '',
+    full: 'https://buy.stripe.com/9B6fZh5zf5nf6Uvfx23sI02',
+    installment: 'https://buy.stripe.com/7sY28r3r77vn4MnesY3sI03',
   },
 }
 

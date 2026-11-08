@@ -517,6 +517,12 @@
   font-weight: 400;
   margin-bottom: 10px;
 }
+.enroll-summary-payment-type {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  margin-bottom: 10px;
+}
 .enroll-summary-name {
   font-size: 0.82rem;
   color: var(--text-muted);
