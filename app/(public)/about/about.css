@@ -219,7 +219,7 @@
   display: flex;
   align-items: flex-start;
   gap: 32px;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 .cred-acc-badge,
 .cred-member-badge {
