@@ -187,15 +187,15 @@ export default function About() {
             <Image
               src="/images/icf-acc-badge.png"
               alt="ICF Associate Certified Coach (ACC) credential badge"
-              width={130}
-              height={130}
+              width={140}
+              height={140}
               className="cred-acc-badge"
             />
             <Image
               src="/images/icf-member-badge.png"
               alt="ICF Member badge"
-              width={130}
-              height={130}
+              width={140}
+              height={140}
               className="cred-member-badge"
             />
           </div>

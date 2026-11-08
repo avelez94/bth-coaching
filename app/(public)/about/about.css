@@ -217,16 +217,22 @@
 
 .cred-badge-row {
   display: flex;
-  align-items: flex-start;
-  gap: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
   margin-bottom: 40px;
 }
 .cred-acc-badge,
 .cred-member-badge {
-  width: 130px;
-  height: auto;
+  width: auto;
+  height: 140px;
   display: block;
   flex-shrink: 0;
+}
+@media (max-width: 640px) {
+  .cred-badge-row { gap: 32px; flex-wrap: wrap; justify-content: center; }
+  .cred-acc-badge,
+  .cred-member-badge { height: 100px; }
 }
 
 .cred-selector {
