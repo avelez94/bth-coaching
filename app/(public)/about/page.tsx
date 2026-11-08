@@ -182,14 +182,21 @@ export default function About() {
           <div style={{marginBottom: '48px'}}>
             <div style={{fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(24px, 2.8vw, 34px)', fontWeight: 400, color: 'var(--text)', letterSpacing: '-0.01em'}}>Preparation and credentials</div>
           </div>
-          {/* ICF ACC credential badge */}
+          {/* ICF credential badges */}
           <div className="cred-badge-row">
             <Image
               src="/images/icf-acc-badge.png"
               alt="ICF Associate Certified Coach (ACC) credential badge"
-              width={100}
-              height={100}
+              width={120}
+              height={120}
               className="cred-acc-badge"
+            />
+            <Image
+              src="/images/icf-member-badge.png"
+              alt="ICF Member badge"
+              width={120}
+              height={120}
+              className="cred-member-badge"
             />
           </div>
 

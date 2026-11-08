@@ -221,8 +221,9 @@
   gap: 32px;
   margin-bottom: 56px;
 }
-.cred-acc-badge {
-  width: 100px;
+.cred-acc-badge,
+.cred-member-badge {
+  width: 120px;
   height: auto;
   display: block;
   flex-shrink: 0;
