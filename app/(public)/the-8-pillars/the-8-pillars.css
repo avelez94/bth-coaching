@@ -136,7 +136,7 @@
 .science-cell-body {
   font-size: 1.0625rem;
   line-height: 1.82;
-  color: var(--text-muted);
+  color: var(--text-mid);
   font-weight: 300;
 }
 
@@ -262,8 +262,8 @@
 .cta-section { background: var(--ivory-dark); padding: 56px 72px; border-top: 1px solid var(--rule); text-align: center; }
 .cta-section-link-row { margin-bottom: 32px; }
 .cta-program-link {
-  font-size: 0.85rem;
-  color: var(--slate-mid);
+  font-size: 0.95rem;
+  color: var(--slate);
   text-decoration: none;
   font-weight: 500;
   letter-spacing: 0.01em;
