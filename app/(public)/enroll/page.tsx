@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { AGREEMENT_PARAGRAPHS, AGREEMENT_VERSION } from '@/lib/agreement'
+import { AGREEMENT_PARAGRAPHS, AGREEMENT_VERSION, AGREEMENT_IS_PLACEHOLDER } from '@/lib/agreement'
 import './enroll.css'
 
 type Program = 'executive-coaching' | '8-pillars'
@@ -139,7 +139,7 @@ function EnrollInner() {
     clientInfo.email.trim().length > 0 &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clientInfo.email)
 
-  const step3Valid = ack1 && ack2 && ack3 && signatureValid
+  const step3Valid = ack1 && ack2 && ack3 && signatureValid && !AGREEMENT_IS_PLACEHOLDER
 
   async function handleSubmit() {
     if (!program || !paymentOption) return
@@ -380,13 +380,44 @@ function EnrollInner() {
           )}
 
           {/* ===== STEP 3: Agreement + Signature ===== */}
-          {step === 3 && (
+          {step === 3 && program && paymentOption && (
             <div className="enroll-step">
               <h2 className="enroll-step-heading">Review and sign</h2>
+
+              {/* Enrollment summary at top of step 3 */}
+              <div className="enroll-step3-summary">
+                <div className="enroll-step3-summary-row">
+                  <span className="enroll-step3-summary-key">Program</span>
+                  <span className="enroll-step3-summary-val">{PROGRAM_INFO[program].label}</span>
+                </div>
+                <div className="enroll-step3-summary-row">
+                  <span className="enroll-step3-summary-key">Total investment</span>
+                  <span className="enroll-step3-summary-val">{PROGRAM_INFO[program].totalCost}</span>
+                </div>
+                <div className="enroll-step3-summary-row">
+                  <span className="enroll-step3-summary-key">Payment</span>
+                  <span className="enroll-step3-summary-val">
+                    {paymentOption === 'full'
+                      ? `${PROGRAM_INFO[program].fullPrice} paid in full`
+                      : PROGRAM_INFO[program].installmentNote}
+                  </span>
+                </div>
+                <div className="enroll-step3-summary-row">
+                  <span className="enroll-step3-summary-key">Client</span>
+                  <span className="enroll-step3-summary-val">{clientInfo.firstName} {clientInfo.lastName}</span>
+                </div>
+              </div>
+
               <p className="enroll-step-sub">
-                Please read the Coaching Services Agreement in full before signing.
-                Version {AGREEMENT_VERSION}.
+                Read the Coaching Services Agreement in full before signing. Agreement version {AGREEMENT_VERSION}.
               </p>
+
+              {/* Dev-only warning — remove once real agreement text is in place */}
+              {AGREEMENT_IS_PLACEHOLDER && (
+                <div className="enroll-agreement-warning" role="alert">
+                  Agreement text is a placeholder. This enrollment flow must not go live until John supplies the verbatim agreement text and <code>AGREEMENT_IS_PLACEHOLDER</code> is set to <code>false</code> in <code>lib/agreement.ts</code>.
+                </div>
+              )}
 
               {/* Agreement text */}
               <div className="enroll-agreement-scroll" aria-label="Coaching Services Agreement text" role="region" tabIndex={0}>
@@ -522,11 +553,16 @@ function EnrollInner() {
                 <div className="enroll-summary-price">
                   {PROGRAM_INFO[program].totalCost}
                 </div>
-                <div className="enroll-summary-payment-type">
-                  {paymentOption === 'full'
-                    ? 'Single payment'
-                    : PROGRAM_INFO[program].installmentNote}
-                </div>
+                {paymentOption === 'full' ? (
+                  <div className="enroll-summary-payment-type">Paid in full</div>
+                ) : (
+                  <>
+                    <div className="enroll-summary-payment-type">Installment plan</div>
+                    <div className="enroll-summary-installment">
+                      {PROGRAM_INFO[program].installmentCount} monthly payments of {PROGRAM_INFO[program].installmentAmount}
+                    </div>
+                  </>
+                )}
               </>
             )}
             {clientInfo.firstName && (

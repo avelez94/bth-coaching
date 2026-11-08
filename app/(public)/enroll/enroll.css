@@ -157,6 +157,36 @@
   line-height: 1.6;
 }
 
+/* Step 3 enrollment summary block */
+.enroll-step3-summary {
+  background: var(--ivory-dark);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+}
+.enroll-step3-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9rem;
+}
+.enroll-step3-summary-row:first-child { padding-top: 0; }
+.enroll-step3-summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+.enroll-step3-summary-key {
+  color: var(--text-muted);
+  font-weight: 400;
+  flex-shrink: 0;
+}
+.enroll-step3-summary-val {
+  color: var(--text);
+  font-weight: 500;
+  text-align: right;
+}
+
 /* ============================================================
    STEP 1: Program cards
 ============================================================ */
@@ -303,6 +333,23 @@
 /* ============================================================
    STEP 3: Agreement + Signature
 ============================================================ */
+.enroll-agreement-warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  color: #7a5900;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+}
+.enroll-agreement-warning code {
+  font-family: monospace;
+  font-size: 0.82rem;
+  background: rgba(0,0,0,0.07);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
 .enroll-agreement-scroll {
   background: var(--ivory);
   border: 1px solid var(--rule);
@@ -521,7 +568,14 @@
   font-size: 0.82rem;
   color: var(--text-muted);
   font-weight: 300;
+  margin-bottom: 4px;
+}
+.enroll-summary-installment {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 300;
   margin-bottom: 10px;
+  opacity: 0.8;
 }
 .enroll-summary-name {
   font-size: 0.82rem;
