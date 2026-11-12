@@ -423,16 +423,28 @@ export default function AdminPanel() {
   const [agreementMsg, setAgreementMsg] = useState('')
   const [resendingId, setResendingId] = useState<string | null>(null)
 
+  // Helper: get the stored session token (never the password)
+  function getToken(): string { return sessionStorage.getItem('bth_admin_token') || '' }
+
   useEffect(() => {
-    if (sessionStorage.getItem('bth_admin') === 'true') { setAuthed(true); fetchAll() }
-    // bth_admin_pwd is set at login and cleared on sign-out for the agreements API calls
+    const token = sessionStorage.getItem('bth_admin_token')
+    if (token) {
+      // Re-validate token on page load — clears stale/expired sessions
+      fetch('/api/admin/auth', { headers: { 'x-admin-token': token } })
+        .then(r => { if (r.ok) { setAuthed(true); fetchAll() } else { sessionStorage.removeItem('bth_admin_token') } })
+        .catch(() => { sessionStorage.removeItem('bth_admin_token') })
+    }
   }, [])
 
   async function login() {
     try {
       const res = await fetch('/api/admin/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) })
-      if (res.ok) { sessionStorage.setItem('bth_admin', 'true'); sessionStorage.setItem('bth_admin_pwd', password); setAuthed(true); fetchAll() }
-      else setLoginError('Incorrect password.')
+      if (res.ok) {
+        const { token } = await res.json()
+        // Store only the server-issued token — never the password
+        sessionStorage.setItem('bth_admin_token', token)
+        setAuthed(true); fetchAll()
+      } else setLoginError('Incorrect password.')
     } catch { setLoginError('Something went wrong.') }
   }
 
@@ -509,35 +521,30 @@ export default function AdminPanel() {
   }
 
   async function fetchAgreements() {
-    const pwd = sessionStorage.getItem('bth_admin_pwd') || ''
-    const res = await fetch('/api/admin/agreements', { headers: { 'x-admin-token': pwd } })
+    const res = await fetch('/api/admin/agreements', { headers: { 'x-admin-token': getToken() } })
     if (res.ok) { const d = await res.json(); setAgreements(d.agreements || []); setAgreementsLoaded(true) }
   }
 
   async function fetchEnrollments() {
-    const pwd = sessionStorage.getItem('bth_admin_pwd') || ''
-    const res = await fetch('/api/admin/signed-agreements', { headers: { 'x-admin-token': pwd } })
+    const res = await fetch('/api/admin/signed-agreements', { headers: { 'x-admin-token': getToken() } })
     if (res.ok) { const d = await res.json(); setEnrollments(d.enrollments || []); setEnrollmentsLoaded(true) }
   }
 
   async function activateAgreement(id: string) {
-    const pwd = sessionStorage.getItem('bth_admin_pwd') || ''
-    const res = await fetch('/api/admin/agreements', { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-admin-token': pwd }, body: JSON.stringify({ id }) })
+    const res = await fetch('/api/admin/agreements', { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ id }) })
     if (res.ok) { setAgreementMsg('Agreement activated.'); setTimeout(() => setAgreementMsg(''), 3000); fetchAgreements() }
   }
 
   async function addAgreement() {
     if (!newAgreement.version || !newAgreement.effective_date || !newAgreement.content) return
-    const pwd = sessionStorage.getItem('bth_admin_pwd') || ''
-    const res = await fetch('/api/admin/agreements', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': pwd }, body: JSON.stringify({ ...newAgreement, make_active: true }) })
+    const res = await fetch('/api/admin/agreements', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ ...newAgreement, make_active: true }) })
     if (res.ok) { setAgreementMsg('New agreement version added and activated.'); setAddingAgreement(false); setNewAgreement({ version: '', effective_date: '', content: '', notes: '' }); setTimeout(() => setAgreementMsg(''), 4000); fetchAgreements() }
     else { const d = await res.json(); setAgreementMsg('Error: ' + d.error) }
   }
 
   async function resendEmail(enrollmentId: string) {
-    const pwd = sessionStorage.getItem('bth_admin_pwd') || ''
     setResendingId(enrollmentId)
-    await fetch('/api/admin/signed-agreements/resend', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': pwd }, body: JSON.stringify({ enrollmentId }) })
+    await fetch('/api/admin/signed-agreements/resend', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ enrollmentId }) })
     setResendingId(null)
   }
 
@@ -601,7 +608,7 @@ export default function AdminPanel() {
             </div>
           </div>
           <div className="sidebar-footer">
-            <button className="signout-btn" onClick={() => { sessionStorage.removeItem('bth_admin'); sessionStorage.removeItem('bth_admin_pwd'); setAuthed(false) }}>Sign out</button>
+            <button className="signout-btn" onClick={() => { sessionStorage.removeItem('bth_admin_token'); setAuthed(false) }}>Sign out</button>
           </div>
         </div>
 
@@ -1263,64 +1270,90 @@ export default function AdminPanel() {
           {/* ============ AGREEMENTS ============ */}
           {view === 'agreements' && (
             <div className="settings-wrap">
-              {agreementMsg && <div style={{background:'rgba(201,162,58,0.12)',border:'1px solid rgba(201,162,58,0.3)',color:'#C9A23A',padding:'10px 16px',fontSize:12,marginBottom:20}}>{agreementMsg}</div>}
-              <div style={{fontSize:'0.6rem',color:'#C9A23A',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:4}}>Active Agreement</div>
-              <p style={{fontSize:11,color:'rgba(255,255,255,0.35)',marginBottom:20}}>One version is active at a time. Future enrollments use the active version. Signed agreements are never modified.</p>
+              {agreementMsg && <div style={{background:'rgba(201,162,58,0.12)',border:'1px solid rgba(201,162,58,0.3)',color:'#C9A23A',padding:'12px 16px',fontSize:12,marginBottom:24,lineHeight:1.5}}>{agreementMsg}</div>}
 
-              {agreements.length === 0 && !addingAgreement && (
-                <div style={{color:'rgba(255,255,255,0.25)',fontSize:13,padding:'16px 0'}}>No agreements on record. Add a version below.</div>
+              {/* Current agreement */}
+              <div style={{marginBottom:40}}>
+                <div style={{fontSize:'0.6rem',color:'#C9A23A',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:12}}>Current Agreement</div>
+                {agreements.filter(a => a.is_active).map(a => (
+                  <div key={a.id} style={{background:'rgba(201,162,58,0.07)',border:'1px solid rgba(201,162,58,0.25)',padding:'20px 24px'}}>
+                    <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12}}>
+                      <span style={{fontSize:15,fontWeight:600,color:'rgba(255,255,255,0.9)'}}>Version {a.version}</span>
+                      <span style={{fontSize:10,background:'#C9A23A',color:'#0D1B2A',padding:'2px 8px',fontWeight:700,letterSpacing:'0.08em'}}>IN USE</span>
+                    </div>
+                    <div style={{fontSize:12,color:'rgba(255,255,255,0.5)',marginBottom:4}}>Effective date: {a.effective_date}</div>
+                    <div style={{fontSize:12,color:'rgba(255,255,255,0.35)',marginBottom:16}}>Added {new Date(a.created_at).toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})}{a.notes ? ` · ${a.notes}` : ''}</div>
+                    <details style={{cursor:'pointer'}}>
+                      <summary style={{fontSize:12,color:'#C9A23A',listStyle:'none',userSelect:'none'}}>Preview agreement text ▾</summary>
+                      <div style={{marginTop:12,padding:'16px',background:'rgba(0,0,0,0.3)',maxHeight:320,overflowY:'auto',fontSize:11,lineHeight:1.7,color:'rgba(255,255,255,0.6)',whiteSpace:'pre-wrap',fontFamily:'Georgia,serif'}}>{a.content}</div>
+                    </details>
+                  </div>
+                ))}
+                {agreements.filter(a => a.is_active).length === 0 && (
+                  <div style={{color:'rgba(255,255,255,0.25)',fontSize:13,padding:'16px 0'}}>No agreement is active. Upload one below.</div>
+                )}
+              </div>
+
+              {/* Previous versions */}
+              {agreements.filter(a => !a.is_active).length > 0 && (
+                <div style={{marginBottom:40}}>
+                  <div style={{fontSize:'0.6rem',color:'rgba(255,255,255,0.3)',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:12}}>Previous Versions</div>
+                  <p style={{fontSize:11,color:'rgba(255,255,255,0.3)',marginBottom:16}}>Clients who signed these versions still have their original agreement on file. Switching back to an older version only affects new enrollments going forward.</p>
+                  {agreements.filter(a => !a.is_active).map(a => (
+                    <div key={a.id} style={{background:'rgba(255,255,255,0.02)',border:'1px solid rgba(255,255,255,0.06)',padding:'14px 20px',marginBottom:8,display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
+                      <div>
+                        <span style={{fontSize:13,color:'rgba(255,255,255,0.55)'}}>Version {a.version}</span>
+                        <span style={{fontSize:11,color:'rgba(255,255,255,0.25)',marginLeft:12}}>Effective {a.effective_date} · Added {new Date(a.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <button className="save-btn" style={{padding:'6px 14px',fontSize:11}} onClick={() => activateAgreement(a.id)}>Use this version</button>
+                    </div>
+                  ))}
+                </div>
               )}
 
-              {agreements.map(a => (
-                <div key={a.id} style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',padding:'16px 20px',marginBottom:12}}>
-                  <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
-                    <div>
-                      <span style={{fontSize:13,fontWeight:600,color:a.is_active ? '#C9A23A' : 'rgba(255,255,255,0.7)'}}>
-                        Version {a.version}
-                        {a.is_active && <span style={{marginLeft:8,fontSize:10,background:'#C9A23A',color:'#0D1B2A',padding:'2px 7px',borderRadius:2,fontWeight:700,letterSpacing:'0.08em'}}>ACTIVE</span>}
-                      </span>
-                      <div style={{fontSize:11,color:'rgba(255,255,255,0.4)',marginTop:4}}>Effective: {a.effective_date} · Added: {new Date(a.created_at).toLocaleDateString()}</div>
-                      {a.notes && <div style={{fontSize:11,color:'rgba(255,255,255,0.3)',marginTop:2}}>{a.notes}</div>}
-                      <div style={{fontSize:10,color:'rgba(255,255,255,0.2)',marginTop:4,fontFamily:'monospace'}}>SHA-256: {a.content_hash.slice(0, 16)}...</div>
-                    </div>
-                    {!a.is_active && (
-                      <button className="save-btn" style={{padding:'7px 14px',fontSize:11}} onClick={() => activateAgreement(a.id)}>Set as Active</button>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              <div style={{marginTop:24}}>
+              {/* Upload new version */}
+              <div style={{borderTop:'1px solid rgba(255,255,255,0.07)',paddingTop:32}}>
+                <div style={{fontSize:'0.6rem',color:'#C9A23A',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:8}}>Replace Agreement</div>
+                <p style={{fontSize:12,color:'rgba(255,255,255,0.4)',marginBottom:20,lineHeight:1.6}}>
+                  Paste your updated agreement text below. Once you save it, new clients will read and sign this version. <strong style={{color:'rgba(255,255,255,0.6)'}}>Clients who already signed are not affected — their original agreement stays exactly as it was.</strong>
+                </p>
                 {!addingAgreement ? (
-                  <button className="save-btn" onClick={() => setAddingAgreement(true)}>+ Add New Agreement Version</button>
+                  <button className="save-btn" onClick={() => setAddingAgreement(true)}>Upload New Agreement</button>
                 ) : (
-                  <div style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',padding:'20px'}}>
-                    <div style={{fontSize:'0.6rem',color:'#C9A23A',letterSpacing:'0.15em',textTransform:'uppercase',marginBottom:16}}>New Agreement Version</div>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
+                  <div style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',padding:'24px'}}>
+                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:16}}>
                       <div className="field">
-                        <div className="field-label">Version *</div>
-                        <span className="field-hint">e.g. 1.1 or 2.0</span>
+                        <div className="field-label">Version label</div>
+                        <span className="field-hint">Something like 1.1 or 2.0 — for your reference only</span>
                         <input className="field-input" value={newAgreement.version} onChange={e => setNewAgreement({...newAgreement, version: e.target.value})} placeholder="1.1" />
                       </div>
                       <div className="field">
-                        <div className="field-label">Effective date *</div>
-                        <span className="field-hint">e.g. January 2027</span>
+                        <div className="field-label">Effective date</div>
+                        <span className="field-hint">As written in the agreement, e.g. January 2027</span>
                         <input className="field-input" value={newAgreement.effective_date} onChange={e => setNewAgreement({...newAgreement, effective_date: e.target.value})} placeholder="January 2027" />
                       </div>
                     </div>
-                    <div className="field" style={{marginBottom:12}}>
-                      <div className="field-label">Full agreement text *</div>
-                      <span className="field-hint">Paste the complete, verbatim agreement text. This will be shown to all future clients.</span>
-                      <textarea className="field-input" rows={12} value={newAgreement.content} onChange={e => setNewAgreement({...newAgreement, content: e.target.value})} placeholder="COACHING SERVICES AGREEMENT..." />
-                    </div>
                     <div className="field" style={{marginBottom:16}}>
-                      <div className="field-label">Admin notes (optional)</div>
-                      <input className="field-input" value={newAgreement.notes} onChange={e => setNewAgreement({...newAgreement, notes: e.target.value})} placeholder="What changed in this version" />
+                      <div className="field-label">Agreement text</div>
+                      <span className="field-hint">Paste the full, final agreement exactly as it should appear to clients. Everything in the signing section (client name, email, program, payment, acknowledgements, signature, and date) is added automatically.</span>
+                      <textarea className="field-input" rows={14} value={newAgreement.content} onChange={e => setNewAgreement({...newAgreement, content: e.target.value})} placeholder="COACHING SERVICES AGREEMENT&#10;Effective Date: ..." style={{fontFamily:'Georgia,serif',fontSize:12,lineHeight:1.6}} />
                     </div>
-                    <p style={{fontSize:11,color:'rgba(255,255,255,0.3)',marginBottom:16}}>This version will immediately become active and will be used for all new enrollments. Existing signed agreements are not affected.</p>
+                    {newAgreement.content && (
+                      <details style={{marginBottom:16,cursor:'pointer'}}>
+                        <summary style={{fontSize:12,color:'#C9A23A',listStyle:'none',userSelect:'none'}}>Preview how this will look ▾</summary>
+                        <div style={{marginTop:10,padding:'16px',background:'rgba(0,0,0,0.3)',maxHeight:280,overflowY:'auto',fontSize:11,lineHeight:1.7,color:'rgba(255,255,255,0.65)',whiteSpace:'pre-wrap',fontFamily:'Georgia,serif'}}>{newAgreement.content}</div>
+                      </details>
+                    )}
+                    <div className="field" style={{marginBottom:20}}>
+                      <div className="field-label">Notes (optional)</div>
+                      <input className="field-input" value={newAgreement.notes} onChange={e => setNewAgreement({...newAgreement, notes: e.target.value})} placeholder="e.g. Updated cancellation terms in section 4" />
+                    </div>
+                    <div style={{background:'rgba(201,162,58,0.08)',border:'1px solid rgba(201,162,58,0.2)',padding:'12px 16px',fontSize:11,color:'rgba(255,255,255,0.5)',marginBottom:20,lineHeight:1.6}}>
+                      This will become the agreement new clients read and sign. All previous agreements remain on file exactly as they were.
+                    </div>
                     <div style={{display:'flex',gap:10}}>
-                      <button className="save-btn" onClick={addAgreement} disabled={!newAgreement.version || !newAgreement.effective_date || !newAgreement.content}>Save and Activate</button>
-                      <button style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.35)',padding:'9px 16px',fontSize:11,cursor:'pointer'}} onClick={() => setAddingAgreement(false)}>Cancel</button>
+                      <button className="save-btn" onClick={addAgreement} disabled={!newAgreement.version || !newAgreement.effective_date || !newAgreement.content}>Save and Use This Agreement</button>
+                      <button style={{background:'none',border:'1px solid rgba(255,255,255,0.08)',color:'rgba(255,255,255,0.35)',padding:'9px 16px',fontSize:11,cursor:'pointer'}} onClick={() => { setAddingAgreement(false); setNewAgreement({ version: '', effective_date: '', content: '', notes: '' }) }}>Cancel</button>
                     </div>
                   </div>
                 )}

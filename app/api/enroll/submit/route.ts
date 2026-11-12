@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { generateAgreementPDF } from '@/lib/generate-agreement-pdf'
 import { AGREEMENT_HASH, AGREEMENT_VERSION, AGREEMENT_TEXT } from '@/lib/agreement'
+import { PROGRAM_INFO, isProgramKey } from '@/lib/program-info'
 
 // Admin client — bypasses RLS, used server-side only
 const supabaseAdmin = createClient(
@@ -11,22 +12,6 @@ const supabaseAdmin = createClient(
 )
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-
-const STRIPE_LINKS: Record<string, Record<string, string>> = {
-  'executive-coaching': {
-    full: 'https://buy.stripe.com/8x23cvf9P9Dva6H1Gc3sI00',
-    installment: 'https://buy.stripe.com/28E4gze5L5nfgv5gB63sI01',
-  },
-  '8-pillars': {
-    full: 'https://buy.stripe.com/9B6fZh5zf5nf6Uvfx23sI02',
-    installment: 'https://buy.stripe.com/7sY28r3r77vn4MnesY3sI03',
-  },
-}
-
-const PROGRAM_LABELS: Record<string, string> = {
-  'executive-coaching': 'Executive Coaching',
-  '8-pillars': '8 Pillars Leadership Program',
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,12 +34,13 @@ export async function POST(req: NextRequest) {
     if (!program || !paymentOption || !firstName || !lastName || !email || !signatureData || !signatureType) {
       return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 })
     }
-    if (!['executive-coaching', '8-pillars'].includes(program)) {
+    if (!isProgramKey(program)) {
       return NextResponse.json({ error: 'Invalid program.' }, { status: 400 })
     }
     if (!['full', 'installment'].includes(paymentOption)) {
       return NextResponse.json({ error: 'Invalid payment option.' }, { status: 400 })
     }
+    const programConfig = PROGRAM_INFO[program]
 
     const signedAt = new Date()
 
@@ -79,7 +65,8 @@ export async function POST(req: NextRequest) {
       activeAgreementHash = activeAgreement.content_hash
     }
 
-    // 1. Generate signed PDF
+    // 1. Generate signed PDF — pass the active agreement fields so the PDF
+    //    reflects exactly what the client reviewed, not a hardcoded fallback.
     const pdfBytes = await generateAgreementPDF({
       firstName,
       lastName,
@@ -92,6 +79,9 @@ export async function POST(req: NextRequest) {
       signatureData,
       signatureType,
       signedAt,
+      agreementVersion: activeAgreementVersion,
+      agreementHash: activeAgreementHash,
+      agreementContent: activeAgreementContent,
     })
 
     // 2. Upload PDF to Supabase Storage
@@ -152,7 +142,7 @@ export async function POST(req: NextRequest) {
     const enrollmentId = enrollment.id
 
     // 5. Send emails via Resend
-    const programLabel = PROGRAM_LABELS[program] || program
+    const programLabel = programConfig.label
 
     // Email to John
     await resend.emails.send({
@@ -194,8 +184,8 @@ export async function POST(req: NextRequest) {
       `,
     }).catch(e => console.error('Client email error:', e))
 
-    // 6. Return Stripe payment link
-    const stripeLink = STRIPE_LINKS[program]?.[paymentOption] ?? ''
+    // 6. Return Stripe payment link — resolved from centralized program config
+    const stripeLink = programConfig.stripeLinks[paymentOption as 'full' | 'installment'] ?? ''
 
     return NextResponse.json({
       success: true,

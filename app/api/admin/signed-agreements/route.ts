@@ -1,26 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { verifyAdminToken } from '@/lib/admin-auth'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-async function isAdmin(req: NextRequest): Promise<boolean> {
-  const token = req.headers.get('x-admin-token')
-  if (!token) return false
-  const res = await fetch(new URL('/api/admin/auth', req.url), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: token }),
-  })
-  return res.ok
-}
-
 // GET /api/admin/signed-agreements
 // Returns all enrollment records for the admin dashboard
 export async function GET(req: NextRequest) {
-  if (!(await isAdmin(req))) {
+  if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

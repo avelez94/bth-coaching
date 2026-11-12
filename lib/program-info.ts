@@ -16,6 +16,12 @@ export interface ProgramConfig {
   installmentAmount: string
   installmentAmountCents: number
   installmentNote: string
+  // Stripe hosted payment links — set once here, resolved by the submit route.
+  // These never reach the browser; the submit route reads them server-side.
+  stripeLinks: {
+    full: string
+    installment: string
+  }
 }
 
 export const PROGRAM_INFO: Record<ProgramKey, ProgramConfig> = {
@@ -31,6 +37,10 @@ export const PROGRAM_INFO: Record<ProgramKey, ProgramConfig> = {
     installmentAmount: '$600',
     installmentAmountCents: 60000,
     installmentNote: '6 monthly payments of $600',
+    stripeLinks: {
+      full: 'https://buy.stripe.com/8x23cvf9P9Dva6H1Gc3sI00',
+      installment: 'https://buy.stripe.com/28E4gze5L5nfgv5gB63sI01',
+    },
   },
   '8-pillars': {
     label: '8 Pillars Leadership Program',
@@ -44,6 +54,10 @@ export const PROGRAM_INFO: Record<ProgramKey, ProgramConfig> = {
     installmentAmount: '$600',
     installmentAmountCents: 60000,
     installmentNote: '10 monthly payments of $600',
+    stripeLinks: {
+      full: 'https://buy.stripe.com/9B6fZh5zf5nf6Uvfx23sI02',
+      installment: 'https://buy.stripe.com/7sY28r3r77vn4MnesY3sI03',
+    },
   },
 } as const
 

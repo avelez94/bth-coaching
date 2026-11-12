@@ -1,5 +1,4 @@
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
-import { AGREEMENT_TEXT, AGREEMENT_VERSION, AGREEMENT_HASH } from './agreement'
 
 export interface EnrollmentRecord {
   firstName: string
@@ -13,6 +12,11 @@ export interface EnrollmentRecord {
   signatureData: string   // base64 PNG for drawn; plain text for typed
   signatureType: 'drawn' | 'typed'
   signedAt: Date
+  // Agreement fields — passed from submit route so the PDF reflects the
+  // version the client actually reviewed, not a hardcoded fallback.
+  agreementVersion: string
+  agreementHash: string
+  agreementContent: string
 }
 
 const PROGRAM_LABELS: Record<string, string> = {
@@ -93,7 +97,7 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
   })
   y -= 32
 
-  coverPage.drawText(`Agreement Version ${AGREEMENT_VERSION}`, {
+  coverPage.drawText(`Agreement Version ${record.agreementVersion}`, {
     x: margin,
     y,
     font: timesRoman,
@@ -206,7 +210,7 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
     color: gray,
   })
   y -= 12
-  coverPage.drawText(AGREEMENT_HASH, {
+  coverPage.drawText(record.agreementHash, {
     x: margin,
     y,
     font: helvetica,
@@ -292,7 +296,7 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
     }
   }
 
-  addTextPages(AGREEMENT_TEXT)
+  addTextPages(record.agreementContent)
 
   return doc.save()
 }
