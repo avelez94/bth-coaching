@@ -30,6 +30,16 @@ export async function POST(req: NextRequest) {
       signatureType,
     } = body
 
+    // Test mode activation rule:
+    //   VERCEL_ENV === 'production'  → always false, regardless of any other env var
+    //   VERCEL_ENV === 'preview'     → honor ENROLLMENT_TEST_MODE=true
+    //   VERCEL_ENV undefined (local) → honor ENROLLMENT_TEST_MODE=true
+    // A query parameter or any browser input can never influence this — it is
+    // evaluated entirely from server-side environment variables.
+    const vercelEnv = process.env.VERCEL_ENV // 'production' | 'preview' | 'development' | undefined
+    const isProductionDeploy = vercelEnv === 'production'
+    const isTestMode = !isProductionDeploy && process.env.ENROLLMENT_TEST_MODE === 'true'
+
     // Basic validation
     if (!program || !paymentOption || !firstName || !lastName || !email || !signatureData || !signatureType) {
       return NextResponse.json({ error: 'Missing required fields.' }, { status: 400 })
@@ -129,7 +139,8 @@ export async function POST(req: NextRequest) {
         agreement_id: activeAgreementId,
         agreement_content_snapshot: activeAgreementContent,
         pdf_path: uploadError ? null : storagePath,
-        status: 'pending_payment',
+        status: isTestMode ? 'test' : 'pending_payment',
+        test_mode: isTestMode,
       })
       .select('id')
       .single()
@@ -144,12 +155,34 @@ export async function POST(req: NextRequest) {
     // 5. Send emails via Resend
     const programLabel = programConfig.label
 
-    // Email to John
-    await resend.emails.send({
+    // In test mode: both emails are routed to ENROLLMENT_TEST_EMAIL only.
+    // If that env var is missing in test mode, we skip email delivery entirely
+    // rather than falling back to John's address or the client's address.
+    // Production behavior is completely unchanged.
+    const testEmailRecipient = process.env.ENROLLMENT_TEST_EMAIL ?? null
+    const testPrefix = isTestMode ? '[TEST] ' : ''
+    const testBanner = isTestMode
+      ? `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:16px;border-radius:4px;font-weight:bold">
+           TEST MODE: This is a test enrollment. No real payment will be processed.<br/>
+           <span style="font-weight:normal">Production recipient (not sent): ${email}</span>
+         </div>`
+      : ''
+
+    const shouldSendEmail = isTestMode ? testEmailRecipient !== null : true
+
+    if (!shouldSendEmail) {
+      // ENROLLMENT_TEST_EMAIL is not configured — skip email delivery silently.
+      // The test confirmation screen will note that email was suppressed.
+      console.warn(`[TEST MODE] ENROLLMENT_TEST_EMAIL is not set. Skipping email delivery for enrollment ${enrollmentId}.`)
+    }
+
+    // Admin notification
+    if (shouldSendEmail) await resend.emails.send({
       from: 'BTH Coaching <noreply@mccrackencoaching.com>',
-      to: 'john@mccrackencoaching.com',
-      subject: `New Enrollment: ${firstName} ${lastName} — ${programLabel}`,
+      to: isTestMode ? testEmailRecipient! : 'john@mccrackencoaching.com',
+      subject: `${testPrefix}New Enrollment: ${firstName} ${lastName} — ${programLabel}`,
       html: `
+        ${testBanner}
         <p>A new enrollment has been submitted.</p>
         <table style="border-collapse:collapse;width:100%;max-width:560px">
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Name</td><td style="padding:8px;border:1px solid #ddd">${firstName} ${lastName}</td></tr>
@@ -161,17 +194,19 @@ export async function POST(req: NextRequest) {
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Payment</td><td style="padding:8px;border:1px solid #ddd">${paymentOption === 'full' ? 'Full payment' : 'Installment plan'}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Signed at</td><td style="padding:8px;border:1px solid #ddd">${signedAt.toUTCString()}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Enrollment ID</td><td style="padding:8px;border:1px solid #ddd">${enrollmentId}</td></tr>
+          ${isTestMode ? `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:#856404">Test record</td><td style="padding:8px;border:1px solid #ddd;color:#856404">Yes — test_mode=true in database</td></tr>` : ''}
         </table>
         <p style="margin-top:16px;color:#666;font-size:12px">The signed agreement PDF is stored in Supabase Storage at: ${storagePath}</p>
       `,
     }).catch(e => console.error('Admin email error:', e))
 
-    // Confirmation email to client
-    await resend.emails.send({
+    // Confirmation email to client (or to test recipient in test mode)
+    if (shouldSendEmail) await resend.emails.send({
       from: 'John McCracken <john@mccrackencoaching.com>',
-      to: email,
-      subject: `Your enrollment in ${programLabel} — next step`,
+      to: isTestMode ? testEmailRecipient! : email,
+      subject: `${testPrefix}Your enrollment in ${programLabel} — next step`,
       html: `
+        ${testBanner}
         <p>Dear ${firstName},</p>
         <p>Thank you for completing your enrollment agreement for the <strong>${programLabel}</strong>.</p>
         <p>Your signed agreement has been recorded. The next step is to complete your payment to confirm your spot.</p>
@@ -184,14 +219,42 @@ export async function POST(req: NextRequest) {
       `,
     }).catch(e => console.error('Client email error:', e))
 
-    // 6. Return Stripe payment link — resolved from centralized program config
-    const stripeLink = programConfig.stripeLinks[paymentOption as 'full' | 'installment'] ?? ''
+    // 6. Resolve Stripe payment link from centralized program config.
+    // In test mode: return testMode:true and testStripeDestination (domain only, not the full link).
+    // The client will show a test confirmation screen instead of redirecting.
+    const resolvedStripeLink = programConfig.stripeLinks[paymentOption as 'full' | 'installment'] ?? ''
+
+    if (isTestMode) {
+      // Build a human-readable routing label that confirms which of the four
+      // Stripe configurations was resolved — without exposing the actual URL.
+      // Format: "<Program> — <Payment schedule>"
+      const paymentRouteLabel = paymentOption === 'full'
+        ? `${programLabel} — Pay in Full — ${programConfig.fullPrice}`
+        : `${programLabel} — ${programConfig.installmentCount} Monthly Payments of ${programConfig.installmentAmount}`
+
+      // Confirm a Stripe link is configured without revealing it
+      const stripeConfigured = Boolean(resolvedStripeLink)
+
+      return NextResponse.json({
+        success: true,
+        enrollmentId,
+        pdfDownloadUrl,
+        stripeLink: null,
+        testMode: true,
+        testPaymentRouteLabel: paymentRouteLabel,
+        testStripeConfigured: stripeConfigured,
+        testProgramLabel: programLabel,
+        testPaymentOption: paymentOption === 'full' ? 'Pay in Full' : `${programConfig.installmentCount} Monthly Payments of ${programConfig.installmentAmount}`,
+        testEmailRecipient: testEmailRecipient ?? null,
+        testEmailSuppressed: !shouldSendEmail,
+      })
+    }
 
     return NextResponse.json({
       success: true,
       enrollmentId,
       pdfDownloadUrl,
-      stripeLink,
+      stripeLink: resolvedStripeLink,
     })
   } catch (err) {
     console.error('Enroll submit error:', err)

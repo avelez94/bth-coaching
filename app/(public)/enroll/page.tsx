@@ -42,6 +42,28 @@ function EnrollInner() {
   const [ack3, setAck3] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [isTestMode, setIsTestMode] = useState(false)
+  const [testConfirm, setTestConfirm] = useState<null | {
+    enrollmentId: string
+    programLabel: string
+    paymentOption: string
+    paymentRouteLabel: string
+    stripeConfigured: boolean
+    emailRecipient: string | null
+    emailSuppressed: boolean
+    pdfDownloadUrl: string | null
+  }>(null)
+
+  // Fetch server-side test mode flag on mount.
+  // This tells the page to show the TEST MODE banner. The flag is not
+  // in a NEXT_PUBLIC_ env var — it comes from a lightweight API endpoint
+  // so it cannot be set by query params or client JS.
+  useEffect(() => {
+    fetch('/api/enroll/test-mode')
+      .then(r => r.json())
+      .then(d => { if (d.testMode) setIsTestMode(true) })
+      .catch(() => {})
+  }, [])
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isDrawing = useRef(false)
@@ -159,6 +181,22 @@ function EnrollInner() {
         return
       }
 
+      // Test mode: show inline confirmation screen, never redirect to Stripe
+      if (data.testMode) {
+        setTestConfirm({
+          enrollmentId: data.enrollmentId,
+          programLabel: data.testProgramLabel,
+          paymentOption: data.testPaymentOption,
+          paymentRouteLabel: data.testPaymentRouteLabel,
+          stripeConfigured: data.testStripeConfigured,
+          emailRecipient: data.testEmailRecipient,
+          emailSuppressed: data.testEmailSuppressed,
+          pdfDownloadUrl: data.pdfDownloadUrl,
+        })
+        setSubmitting(false)
+        return
+      }
+
       // Store confirmation data for the confirmation page
       sessionStorage.setItem('bth_enrollment', JSON.stringify({
         enrollmentId: data.enrollmentId,
@@ -185,8 +223,101 @@ function EnrollInner() {
     ? { 1: 'Choose your payment', 2: 'Your information', 3: 'Review and sign', 4: 'Confirm' }
     : { 1: 'Choose your program', 2: 'Your information', 3: 'Review and sign', 4: 'Confirm' }
 
+  // Test confirmation screen — shown after a successful test submission instead
+  // of redirecting to Stripe. Never shown in production.
+  if (testConfirm) {
+    return (
+      <div className="enroll-page">
+        <div className="enroll-test-banner" role="alert">
+          TEST MODE — No payment processed
+        </div>
+        <div className="enroll-header">
+          <div className="enroll-header-inner">
+            <div className="enroll-breadcrumb">
+              <a href="/" className="enroll-breadcrumb-home">Beyond the Horizon</a>
+              <span className="enroll-breadcrumb-sep">/</span>
+              <span>Enroll</span>
+            </div>
+            <h1 className="enroll-title">Test Submission Complete</h1>
+          </div>
+        </div>
+        <div className="enroll-body">
+          <div className="enroll-card enroll-test-confirm-card">
+            <div className="enroll-test-confirm-heading">Full flow exercised successfully</div>
+            <p className="enroll-test-confirm-sub">
+              The enrollment was recorded in the database as a test record. No payment was processed.
+              Emails were routed to the admin address only.
+            </p>
+            <div className="enroll-test-confirm-table">
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Program</span>
+                <span className="enroll-test-val">{testConfirm.programLabel}</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Payment option</span>
+                <span className="enroll-test-val">{testConfirm.paymentOption}</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Resolved payment route</span>
+                <span className="enroll-test-val enroll-test-stripe">{testConfirm.paymentRouteLabel}</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Stripe link configured</span>
+                <span className="enroll-test-val">{testConfirm.stripeConfigured ? 'Yes' : 'No — missing from program config'}</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Enrollment ID</span>
+                <span className="enroll-test-val">{testConfirm.enrollmentId}</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">DB record status</span>
+                <span className="enroll-test-val"><code>test</code> (test_mode = true)</span>
+              </div>
+              <div className="enroll-test-row">
+                <span className="enroll-test-label">Email behavior</span>
+                <span className="enroll-test-val">
+                  {testConfirm.emailSuppressed
+                    ? 'Suppressed — ENROLLMENT_TEST_EMAIL not configured'
+                    : `Sent to ${testConfirm.emailRecipient} with [TEST] prefix`}
+                </span>
+              </div>
+            </div>
+            {testConfirm.pdfDownloadUrl && (
+              <div style={{ marginTop: '24px' }}>
+                <a
+                  href={testConfirm.pdfDownloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="enroll-btn-primary"
+                  style={{ display: 'inline-block', textDecoration: 'none' }}
+                >
+                  Download test PDF
+                </a>
+                <p style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>Link valid for 1 hour</p>
+              </div>
+            )}
+            <div style={{ marginTop: '32px' }}>
+              <button
+                type="button"
+                className="enroll-btn-back"
+                onClick={() => { setTestConfirm(null); setStep(1) }}
+              >
+                Run another test
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="enroll-page">
+      {isTestMode && (
+        <div className="enroll-test-banner" role="alert">
+          TEST MODE — Submissions will not go to Stripe. Records are marked as test-only.
+        </div>
+      )}
       <div className="enroll-header">
         <div className="enroll-header-inner">
           <div className="enroll-breadcrumb">

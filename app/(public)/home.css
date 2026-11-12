@@ -517,7 +517,7 @@
 ============================================================ */
 @media (max-width: 1024px) {
   .hero { grid-template-columns: 1fr; min-height: unset; }
-  .hero-left { padding: 120px 48px 56px; }
+  .hero-left { padding: 96px 48px 56px; }
   .hero-right { min-height: 460px; }
   .doors { padding: 80px 48px; }
   .doors-grid { grid-template-columns: 1fr; }
@@ -537,7 +537,7 @@
 }
 
 @media (max-width: 640px) {
-  .hero-left { padding: 110px 24px 48px; }
+  .hero-left { padding: 88px 24px 48px; }
   .hero-headline { font-size: clamp(30px, 8vw, 42px); }
   .hero-subhead { font-size: 1.18rem; }
   .hero-body { font-size: 1.0625rem; }
