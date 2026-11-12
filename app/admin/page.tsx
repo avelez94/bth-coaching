@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 type Page = { id: string; slug: string; title: string; content: Record<string, string> }
 type Testimonial = { id: string; name: string; role: string; company: string; quote: string; is_active: boolean; sort_order: number }
 type SiteSetting = { id: string; key: string; value: string }
-type AgreementRecord = { id: string; version: string; effective_date: string; title: string; content_hash: string; is_active: boolean; notes: string | null; created_at: string }
+type AgreementRecord = { id: string; version: string; effective_date: string; title: string; content: string; content_hash: string; is_active: boolean; notes: string | null; created_at: string }
 type EnrollmentRecord = { id: string; created_at: string; first_name: string; last_name: string; email: string; phone: string | null; organization: string | null; role: string | null; program: string; payment_option: string; signed_at: string; agreement_version: string; agreement_hash: string; pdf_path: string | null; status: string; test_mode: boolean; pdfUrl: string | null }
 
 const HOMEPAGE_CSS = `        :root {
