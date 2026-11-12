@@ -68,15 +68,15 @@ export default function Home() {
           <div className="how-steps">
             <div className="how-step">
               <div className="how-step-num">01</div>
-              <p className="how-step-text">You make hard decisions with more confidence. The doubt that slows you down gives way to clarity about what matters and what doesn't.</p>
+              <p className="how-step-text">You make the hard calls with confidence, using a repeatable framework grounded in your own values.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">02</div>
-              <p className="how-step-text">Your team moves. Not because you pushed harder, but because the way you show up changed and they can feel it.</p>
+              <p className="how-step-text">Your team trusts where you&apos;re taking them. And success at work stops costing you everything else.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">03</div>
-              <p className="how-step-text">The gap between work and the rest of your life starts to close. Success stops feeling like a trade-off.</p>
+              <p className="how-step-text">You&apos;re more present for the parts of your life that matter most.</p>
             </div>
           </div>
         </div>

@@ -423,28 +423,21 @@ export default function AdminPanel() {
   const [agreementMsg, setAgreementMsg] = useState('')
   const [resendingId, setResendingId] = useState<string | null>(null)
 
-  // Helper: get the stored session token (never the password)
-  function getToken(): string { return sessionStorage.getItem('bth_admin_token') || '' }
-
   useEffect(() => {
-    const token = sessionStorage.getItem('bth_admin_token')
-    if (token) {
-      // Re-validate token on page load — clears stale/expired sessions
-      fetch('/api/admin/auth', { headers: { 'x-admin-token': token } })
-        .then(r => { if (r.ok) { setAuthed(true); fetchAll() } else { sessionStorage.removeItem('bth_admin_token') } })
-        .catch(() => { sessionStorage.removeItem('bth_admin_token') })
-    }
+    // Check whether the HttpOnly session cookie is still valid.
+    // No token is read from JS — the browser sends the cookie automatically.
+    fetch('/api/admin/auth')
+      .then(r => { if (r.ok) { setAuthed(true); fetchAll() } })
+      .catch(() => {/* no session — stay on login screen */})
   }, [])
 
   async function login() {
     try {
+      // Server verifies the password and sets an HttpOnly session cookie.
+      // No token is returned to or stored by client JS.
       const res = await fetch('/api/admin/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) })
-      if (res.ok) {
-        const { token } = await res.json()
-        // Store only the server-issued token — never the password
-        sessionStorage.setItem('bth_admin_token', token)
-        setAuthed(true); fetchAll()
-      } else setLoginError('Incorrect password.')
+      if (res.ok) { setAuthed(true); fetchAll() }
+      else setLoginError('Incorrect password.')
     } catch { setLoginError('Something went wrong.') }
   }
 
@@ -521,30 +514,31 @@ export default function AdminPanel() {
   }
 
   async function fetchAgreements() {
-    const res = await fetch('/api/admin/agreements', { headers: { 'x-admin-token': getToken() } })
+    // Cookie is sent automatically — no token header needed
+    const res = await fetch('/api/admin/agreements')
     if (res.ok) { const d = await res.json(); setAgreements(d.agreements || []); setAgreementsLoaded(true) }
   }
 
   async function fetchEnrollments() {
-    const res = await fetch('/api/admin/signed-agreements', { headers: { 'x-admin-token': getToken() } })
+    const res = await fetch('/api/admin/signed-agreements')
     if (res.ok) { const d = await res.json(); setEnrollments(d.enrollments || []); setEnrollmentsLoaded(true) }
   }
 
   async function activateAgreement(id: string) {
-    const res = await fetch('/api/admin/agreements', { method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ id }) })
+    const res = await fetch('/api/admin/agreements', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
     if (res.ok) { setAgreementMsg('Agreement activated.'); setTimeout(() => setAgreementMsg(''), 3000); fetchAgreements() }
   }
 
   async function addAgreement() {
     if (!newAgreement.version || !newAgreement.effective_date || !newAgreement.content) return
-    const res = await fetch('/api/admin/agreements', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ ...newAgreement, make_active: true }) })
+    const res = await fetch('/api/admin/agreements', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...newAgreement, make_active: true }) })
     if (res.ok) { setAgreementMsg('New agreement version added and activated.'); setAddingAgreement(false); setNewAgreement({ version: '', effective_date: '', content: '', notes: '' }); setTimeout(() => setAgreementMsg(''), 4000); fetchAgreements() }
     else { const d = await res.json(); setAgreementMsg('Error: ' + d.error) }
   }
 
   async function resendEmail(enrollmentId: string) {
     setResendingId(enrollmentId)
-    await fetch('/api/admin/signed-agreements/resend', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-token': getToken() }, body: JSON.stringify({ enrollmentId }) })
+    await fetch('/api/admin/signed-agreements/resend', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ enrollmentId }) })
     setResendingId(null)
   }
 
@@ -608,7 +602,10 @@ export default function AdminPanel() {
             </div>
           </div>
           <div className="sidebar-footer">
-            <button className="signout-btn" onClick={() => { sessionStorage.removeItem('bth_admin_token'); setAuthed(false) }}>Sign out</button>
+            <button className="signout-btn" onClick={() => {
+              // Clear the session cookie server-side, then return to login
+              fetch('/api/admin/auth', { method: 'DELETE' }).finally(() => setAuthed(false))
+            }}>Sign out</button>
           </div>
         </div>
 
