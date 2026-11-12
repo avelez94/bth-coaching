@@ -1,28 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { createHash } from 'crypto'
+import { verifyAdminToken } from '@/lib/admin-auth'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Admin auth check — same password gate as /api/admin/auth
-async function isAdmin(req: NextRequest): Promise<boolean> {
-  const token = req.headers.get('x-admin-token')
-  if (!token) return false
-  const res = await fetch(new URL('/api/admin/auth', req.url), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password: token }),
-  })
-  return res.ok
-}
-
 // GET /api/admin/agreements
 // Returns all agreement versions, most recent first
 export async function GET(req: NextRequest) {
-  if (!(await isAdmin(req))) {
+  if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -42,7 +31,7 @@ export async function GET(req: NextRequest) {
 // Add a new agreement version and optionally mark it active
 // Body: { version, effective_date, content, notes?, make_active? }
 export async function POST(req: NextRequest) {
-  if (!(await isAdmin(req))) {
+  if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -88,7 +77,7 @@ export async function POST(req: NextRequest) {
 // Set a specific agreement version as active
 // Body: { id }
 export async function PATCH(req: NextRequest) {
-  if (!(await isAdmin(req))) {
+  if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
