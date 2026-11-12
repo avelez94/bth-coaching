@@ -283,18 +283,12 @@
 }
 
 @media (max-width: 860px) {
-  .nav-inner { padding: 10px 24px; }
-  .nav-brand img { height: 56px; }
+  .nav-inner {
+    padding: 4px 24px;
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+  .nav-brand img { height: 86px; }
   .nav-links, .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
-}
-
-/* Tighter still at phone width; preserve safe-area insets */
-@media (max-width: 430px) {
-  .nav-inner {
-    padding: 8px 20px;
-    padding-left: max(20px, env(safe-area-inset-left));
-    padding-right: max(20px, env(safe-area-inset-right));
-  }
-  .nav-brand img { height: 52px; }
 }
