@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { generateAgreementPDF } from '@/lib/generate-agreement-pdf'
-import { AGREEMENT_HASH, AGREEMENT_VERSION } from '@/lib/agreement'
+import { AGREEMENT_HASH, AGREEMENT_VERSION, AGREEMENT_TEXT } from '@/lib/agreement'
 
 // Admin client — bypasses RLS, used server-side only
 const supabaseAdmin = createClient(
@@ -57,6 +57,27 @@ export async function POST(req: NextRequest) {
     }
 
     const signedAt = new Date()
+
+    // 0. Fetch the active agreement version from the database.
+    //    Falls back to the hardcoded lib/agreement.ts values if the
+    //    agreements table is empty (e.g. before the seed has run).
+    let activeAgreementId: string | null = null
+    let activeAgreementContent: string = AGREEMENT_TEXT
+    let activeAgreementVersion: string = AGREEMENT_VERSION
+    let activeAgreementHash: string = AGREEMENT_HASH
+
+    const { data: activeAgreement } = await supabaseAdmin
+      .from('agreements')
+      .select('id, content, version, content_hash')
+      .eq('is_active', true)
+      .maybeSingle()
+
+    if (activeAgreement) {
+      activeAgreementId = activeAgreement.id
+      activeAgreementContent = activeAgreement.content
+      activeAgreementVersion = activeAgreement.version
+      activeAgreementHash = activeAgreement.content_hash
+    }
 
     // 1. Generate signed PDF
     const pdfBytes = await generateAgreementPDF({
@@ -113,8 +134,10 @@ export async function POST(req: NextRequest) {
         signature_data: signatureType === 'typed' ? signatureData : '[drawn — stored in PDF]',
         signature_type: signatureType,
         signed_at: signedAt.toISOString(),
-        agreement_version: AGREEMENT_VERSION,
-        agreement_hash: AGREEMENT_HASH,
+        agreement_version: activeAgreementVersion,
+        agreement_hash: activeAgreementHash,
+        agreement_id: activeAgreementId,
+        agreement_content_snapshot: activeAgreementContent,
         pdf_path: uploadError ? null : storagePath,
         status: 'pending_payment',
       })
@@ -167,7 +190,7 @@ export async function POST(req: NextRequest) {
         <br/>
         <p>John McCracken<br/>Beyond the Horizon Executive Coaching<br/>mccrackencoaching.com</p>
         <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
-        <p style="font-size:11px;color:#999">Enrollment ID: ${enrollmentId}<br/>Agreement version: ${AGREEMENT_VERSION}<br/>Signed: ${signedAt.toUTCString()}</p>
+        <p style="font-size:11px;color:#999">Enrollment ID: ${enrollmentId}<br/>Agreement version: ${activeAgreementVersion}<br/>Signed: ${signedAt.toUTCString()}</p>
       `,
     }).catch(e => console.error('Client email error:', e))
 

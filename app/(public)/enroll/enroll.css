@@ -242,6 +242,30 @@
   border-color: var(--navy);
 }
 
+/* Pre-selected program confirmation banner */
+.enroll-program-confirmed {
+  background: var(--navy);
+  color: var(--ivory);
+  border-radius: 4px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.enroll-program-confirmed-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.enroll-program-confirmed-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ivory);
+}
+
 /* Payment options */
 .enroll-payment-section { margin-bottom: 8px; }
 .enroll-field-label {

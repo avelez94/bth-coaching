@@ -3,41 +3,28 @@
 import { useState, useRef, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { AGREEMENT_PARAGRAPHS, AGREEMENT_VERSION, AGREEMENT_IS_PLACEHOLDER } from '@/lib/agreement'
+import { PROGRAM_INFO, type ProgramKey } from '@/lib/program-info'
 import './enroll.css'
 
-type Program = 'executive-coaching' | '8-pillars'
+type Program = ProgramKey
 type PaymentOption = 'full' | 'installment'
 type SignatureType = 'drawn' | 'typed'
+// Steps when program is pre-selected: 1=Payment, 2=Info, 3=Sign
+// Steps when program is not pre-selected: 1=Choose Program+Payment, 2=Info, 3=Sign
 type Step = 1 | 2 | 3 | 4
-
-const PROGRAM_INFO = {
-  'executive-coaching': {
-    label: 'Executive Coaching',
-    description: 'One-on-one executive coaching with John McCracken. Tailored to your goals, grounded in the 8 Pillars of Whole Person Leadership.',
-    fullPrice: '$3,600',
-    fullNote: 'Single payment',
-    totalCost: '$3,600',
-    installmentCount: 6,
-    installmentAmount: '$600',
-    installmentNote: '6 monthly payments of $600',
-  },
-  '8-pillars': {
-    label: '8 Pillars Leadership Program',
-    description: 'A structured cohort-based leadership development program built on the 8 Pillars framework. Combines group sessions with individual coaching.',
-    fullPrice: '$6,000',
-    fullNote: 'Single payment',
-    totalCost: '$6,000',
-    installmentCount: 10,
-    installmentAmount: '$600',
-    installmentNote: '10 monthly payments of $600',
-  },
-} as const
 
 function EnrollInner() {
   const searchParams = useSearchParams()
-  const initialProgram = (searchParams.get('program') as Program) || null
+  const rawProgram = searchParams.get('program')
+  const initialProgram: Program | null =
+    rawProgram === 'executive-coaching' || rawProgram === '8-pillars' ? rawProgram : null
 
-  const [step, setStep] = useState<Step>(initialProgram ? 1 : 1)
+  // When a program is pre-selected from a CTA, skip program selection (step 1)
+  // and start at step 1 which becomes "Choose your payment" for the pre-selected program.
+  // The stepTitles and progress labels adjust accordingly.
+  const hasPreselectedProgram = initialProgram !== null
+
+  const [step, setStep] = useState<Step>(1)
   const [program, setProgram] = useState<Program | null>(initialProgram)
   const [paymentOption, setPaymentOption] = useState<PaymentOption | null>(null)
   const [clientInfo, setClientInfo] = useState({
@@ -193,12 +180,10 @@ function EnrollInner() {
     }
   }
 
-  const stepTitles: Record<Step, string> = {
-    1: 'Choose your program',
-    2: 'Your information',
-    3: 'Review and sign',
-    4: 'Confirm',
-  }
+  // When a program is pre-selected, step 1 is payment choice (program selection skipped)
+  const stepTitles: Record<Step, string> = hasPreselectedProgram
+    ? { 1: 'Choose your payment', 2: 'Your information', 3: 'Review and sign', 4: 'Confirm' }
+    : { 1: 'Choose your program', 2: 'Your information', 3: 'Review and sign', 4: 'Confirm' }
 
   return (
     <div className="enroll-page">
@@ -231,29 +216,42 @@ function EnrollInner() {
 
         <div className="enroll-card">
 
-          {/* ===== STEP 1: Program + Payment ===== */}
+          {/* ===== STEP 1: Program selection (generic entry) OR Payment only (pre-selected) ===== */}
           {step === 1 && (
             <div className="enroll-step">
-              <h2 className="enroll-step-heading">Choose your program</h2>
-
-              <div className="enroll-program-grid">
-                {(['executive-coaching', '8-pillars'] as Program[]).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    className={`enroll-program-card${program === p ? ' selected' : ''}`}
-                    onClick={() => { setProgram(p); setPaymentOption(null) }}
-                  >
-                    <div className="enroll-program-name">{PROGRAM_INFO[p].label}</div>
-                    <p className="enroll-program-desc">{PROGRAM_INFO[p].description}</p>
-                    <div className="enroll-program-check" aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
+              {hasPreselectedProgram && program ? (
+                // Pre-selected: show program as confirmed context, ask only for payment
+                <>
+                  <div className="enroll-program-confirmed">
+                    <div className="enroll-program-confirmed-label">Program</div>
+                    <div className="enroll-program-confirmed-name">{PROGRAM_INFO[program].label}</div>
+                  </div>
+                  <h2 className="enroll-step-heading">Choose your payment option</h2>
+                </>
+              ) : (
+                // Generic entry: show program selection first
+                <>
+                  <h2 className="enroll-step-heading">Choose your program</h2>
+                  <div className="enroll-program-grid">
+                    {(['executive-coaching', '8-pillars'] as Program[]).map((p) => (
+                      <button
+                        key={p}
+                        type="button"
+                        className={`enroll-program-card${program === p ? ' selected' : ''}`}
+                        onClick={() => { setProgram(p); setPaymentOption(null) }}
+                      >
+                        <div className="enroll-program-name">{PROGRAM_INFO[p].label}</div>
+                        <p className="enroll-program-desc">{PROGRAM_INFO[p].description}</p>
+                        <div className="enroll-program-check" aria-hidden="true" />
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {program && (
                 <div className="enroll-payment-section">
-                  <div className="enroll-field-label">Payment option</div>
+                  {!hasPreselectedProgram && <div className="enroll-field-label">Payment option</div>}
                   <div className="enroll-payment-options">
                     <button
                       type="button"
