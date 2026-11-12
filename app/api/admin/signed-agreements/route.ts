@@ -1,0 +1,68 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
+
+async function isAdmin(req: NextRequest): Promise<boolean> {
+  const token = req.headers.get('x-admin-token')
+  if (!token) return false
+  const res = await fetch(new URL('/api/admin/auth', req.url), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: token }),
+  })
+  return res.ok
+}
+
+// GET /api/admin/signed-agreements
+// Returns all enrollment records for the admin dashboard
+export async function GET(req: NextRequest) {
+  if (!(await isAdmin(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const { data, error } = await supabaseAdmin
+    .from('enrollments')
+    .select(`
+      id,
+      created_at,
+      first_name,
+      last_name,
+      email,
+      phone,
+      organization,
+      role,
+      program,
+      payment_option,
+      signed_at,
+      agreement_version,
+      agreement_hash,
+      agreement_id,
+      pdf_path,
+      status
+    `)
+    .order('signed_at', { ascending: false })
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  // Generate signed PDF download URLs for records that have a pdf_path
+  const withUrls = await Promise.all(
+    (data || []).map(async (enrollment) => {
+      let pdfUrl: string | null = null
+      if (enrollment.pdf_path) {
+        const { data: signedUrl } = await supabaseAdmin.storage
+          .from('signed-agreements')
+          .createSignedUrl(enrollment.pdf_path, 3600)
+        pdfUrl = signedUrl?.signedUrl ?? null
+      }
+      return { ...enrollment, pdfUrl }
+    })
+  )
+
+  return NextResponse.json({ enrollments: withUrls })
+}

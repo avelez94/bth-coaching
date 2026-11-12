@@ -62,21 +62,21 @@ export default function Home() {
       <section className="how-it-works">
         <div className="how-it-works-inner">
           <div>
-            <div className="how-label">How it finishes</div>
-            <h2 className="how-headline">Where it leads</h2>
+            <div className="how-label">How it works</div>
+            <h2 className="how-headline">What changes</h2>
           </div>
           <div className="how-steps">
             <div className="how-step">
               <div className="how-step-num">01</div>
-              <p className="how-step-text">Book a free 15-minute call. Tell me what's hardest right now.</p>
+              <p className="how-step-text">You make hard decisions with more confidence. The doubt that slows you down gives way to clarity about what matters and what doesn't.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">02</div>
-              <p className="how-step-text">Get clear on where you want to go. We define success in your own terms.</p>
+              <p className="how-step-text">Your team moves. Not because you pushed harder, but because the way you show up changed and they can feel it.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">03</div>
-              <p className="how-step-text">Work the plan with a coach beside you. You make the decisions, and I help you stay on track.</p>
+              <p className="how-step-text">The gap between work and the rest of your life starts to close. Success stops feeling like a trade-off.</p>
             </div>
           </div>
         </div>
