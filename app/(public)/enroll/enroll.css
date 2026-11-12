@@ -638,3 +638,90 @@
   .enroll-btn-primary { justify-content: center; }
   .enroll-btn-back { text-align: center; }
 }
+
+/* ============================================================
+   TEST MODE BANNER + CONFIRMATION
+   Visible only when ENROLLMENT_TEST_MODE=true in development/preview.
+   Never rendered in production.
+============================================================ */
+.enroll-test-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: #ffc107;
+  color: #1a1a1a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 8px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.enroll-test-confirm-card {
+  max-width: 640px;
+}
+
+.enroll-test-confirm-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.enroll-test-confirm-sub {
+  font-size: 0.925rem;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.enroll-test-confirm-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.enroll-test-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #eee;
+}
+.enroll-test-row:last-child {
+  border-bottom: none;
+}
+
+.enroll-test-label {
+  flex: 0 0 220px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--navy);
+  background: #f7f7f5;
+  border-right: 1px solid #eee;
+}
+
+.enroll-test-val {
+  flex: 1;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: #333;
+  word-break: break-all;
+}
+
+.enroll-test-stripe {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #005a1e;
+}
+
+@media (max-width: 600px) {
+  .enroll-test-row { flex-direction: column; }
+  .enroll-test-label { flex: none; border-right: none; border-bottom: 1px solid #eee; }
+}

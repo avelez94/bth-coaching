@@ -7,7 +7,7 @@ type Page = { id: string; slug: string; title: string; content: Record<string, s
 type Testimonial = { id: string; name: string; role: string; company: string; quote: string; is_active: boolean; sort_order: number }
 type SiteSetting = { id: string; key: string; value: string }
 type AgreementRecord = { id: string; version: string; effective_date: string; title: string; content_hash: string; is_active: boolean; notes: string | null; created_at: string }
-type EnrollmentRecord = { id: string; created_at: string; first_name: string; last_name: string; email: string; phone: string | null; organization: string | null; role: string | null; program: string; payment_option: string; signed_at: string; agreement_version: string; agreement_hash: string; pdf_path: string | null; status: string; pdfUrl: string | null }
+type EnrollmentRecord = { id: string; created_at: string; first_name: string; last_name: string; email: string; phone: string | null; organization: string | null; role: string | null; program: string; payment_option: string; signed_at: string; agreement_version: string; agreement_hash: string; pdf_path: string | null; status: string; test_mode: boolean; pdfUrl: string | null }
 
 const HOMEPAGE_CSS = `        :root {
           --navy: #0D1B2A;
@@ -1380,7 +1380,14 @@ export default function AdminPanel() {
                 <div key={e.id} style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.08)',padding:'16px 20px',marginBottom:10}}>
                   <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12,flexWrap:'wrap'}}>
                     <div>
-                      <div style={{fontSize:14,fontWeight:600,color:'rgba(255,255,255,0.85)',marginBottom:4}}>{e.first_name} {e.last_name}</div>
+                      <div style={{fontSize:14,fontWeight:600,color:'rgba(255,255,255,0.85)',marginBottom:4,display:'flex',alignItems:'center',gap:8}}>
+                        {e.first_name} {e.last_name}
+                        {e.test_mode && (
+                          <span style={{fontSize:10,fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',background:'#ffc107',color:'#1a1a1a',padding:'2px 7px',borderRadius:3}}>
+                            TEST
+                          </span>
+                        )}
+                      </div>
                       <div style={{fontSize:12,color:'rgba(255,255,255,0.45)',marginBottom:2}}>{e.email}{e.organization ? ` · ${e.organization}` : ''}</div>
                       <div style={{fontSize:12,color:'rgba(255,255,255,0.5)',marginBottom:4}}>
                         {e.program === 'executive-coaching' ? 'Executive Coaching' : '8 Pillars Leadership Program'}
@@ -1391,7 +1398,7 @@ export default function AdminPanel() {
                         Signed: {new Date(e.signed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                         {' · '}Agreement v{e.agreement_version}
                         {' · '}
-                        <span style={{color: e.status === 'paid' ? '#4ade80' : e.status === 'pending_payment' ? '#fbbf24' : 'rgba(255,255,255,0.3)'}}>{e.status.replace('_', ' ')}</span>
+                        <span style={{color: e.status === 'paid' ? '#4ade80' : e.status === 'pending_payment' ? '#fbbf24' : e.status === 'test' ? '#ffc107' : 'rgba(255,255,255,0.3)'}}>{e.status.replace('_', ' ')}</span>
                       </div>
                     </div>
                     <div style={{display:'flex',gap:8,flexShrink:0,flexWrap:'wrap'}}>

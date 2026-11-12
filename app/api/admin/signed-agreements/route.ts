@@ -32,7 +32,8 @@ export async function GET(req: NextRequest) {
       agreement_hash,
       agreement_id,
       pdf_path,
-      status
+      status,
+      test_mode
     `)
     .order('signed_at', { ascending: false })
 
