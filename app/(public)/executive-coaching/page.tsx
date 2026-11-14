@@ -128,7 +128,9 @@ export default function ExecutiveCoaching() {
             <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
             </button>
-            {/* Enrollment link hidden until /enroll launches */}
+            <a href="/enroll?program=executive-coaching" className="btn btn-outline-light" style={{marginTop: 12}}>
+              Enroll in Executive Coaching
+            </a>
           </div>
           <div>
             <div className="engagement-details">

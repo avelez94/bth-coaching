@@ -128,7 +128,9 @@ export default function LeaderDevelopment() {
             <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
             </button>
-            {/* Enrollment link hidden until /enroll launches */}
+            <a href="/enroll?program=8-pillars" className="btn btn-outline-light" style={{marginTop: 12}}>
+              Enroll in the 8 Pillars Leadership Program
+            </a>
           </div>
           <div>
             <div className="engagement-details">
