@@ -110,3 +110,16 @@ export async function getActiveAgreement(): Promise<ActiveAgreement> {
   } catch { /* fall back */ }
   return { id: null, version: AGREEMENT_VERSION, content: AGREEMENT_TEXT, hash: AGREEMENT_HASH }
 }
+
+// Everything an editable page view needs: its content, booking links,
+// display prices (no Stripe links), and contact details.
+export async function getViewProps(page: PageKey): Promise<import('./view-props').ViewProps> {
+  const [c, programs, settings] = await Promise.all([getPageContent(page), getPrograms(), getSettings()])
+  const { toPublic } = await import('./program-info')
+  return {
+    c,
+    programs: { 'executive-coaching': toPublic(programs['executive-coaching']), '8-pillars': toPublic(programs['8-pillars']) },
+    booking: { free: settings.bookingFreeCallUrl, org: settings.bookingOrgConsultUrl },
+    contact: { email: settings.contactEmail, phone: settings.phone, location: settings.location },
+  }
+}

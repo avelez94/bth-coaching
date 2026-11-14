@@ -1,7 +1,7 @@
 import HomeView from './home-view'
-import { getPageContent, getSettings } from '@/lib/site-data'
+import { getViewProps } from '@/lib/site-data'
 
 export default async function Home() {
-  const [c, settings] = await Promise.all([getPageContent('home'), getSettings()])
-  return <HomeView c={c} bookingUrl={settings.bookingFreeCallUrl} />
+  const props = await getViewProps('home')
+  return <HomeView c={props.c} bookingUrl={props.booking?.free} />
 }
