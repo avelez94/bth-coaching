@@ -300,9 +300,13 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
       textAt(first, LEFT, y, F.bold, 20, C.navy)
       y -= 31
       for (const l of lines.slice(1)) {
-        drawRuns([{ text: l, font: F.italic }], { size: 9, lh: 12.5, color: C.blue })
         if (/^Effective Date:/i.test(l)) {
-          drawRuns([{ text: `Effective date of this Agreement: ${effectiveDateText}`, font: F.bold }], { size: 9, lh: 12.5, color: C.blue })
+          // The agreement defines the effective date as the signing date, so the
+          // signed copy shows the actual date in place of that generic wording.
+          // The stored agreement text (and its hash) is unchanged.
+          drawRuns([{ text: `Effective Date: ${effectiveDateText}`, font: F.bold }], { size: 9, lh: 12.5, color: C.blue })
+        } else {
+          drawRuns([{ text: l, font: F.italic }], { size: 9, lh: 12.5, color: C.blue })
         }
       }
       y -= 8
