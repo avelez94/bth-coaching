@@ -165,7 +165,7 @@ export default function PageEditor({ page, setDirty, toast }: { page: PageKey } 
             <div ref={wrap} className={`preview-frame-wrap ${device}`} style={{ overflow: 'hidden', position: 'relative' }}>
               <iframe ref={frame} className="preview-frame" src={`/admin/preview/${page}`} title={`${def.label} page preview`} onLoad={postPreview}
                 style={device === 'desktop' && box.w
-                  ? { width: DESKTOP_W, height: Math.min(box.h / scale, 820), transform: `scale(${scale})`, transformOrigin: 'top left', position: 'absolute', left: 0, top: 0, flex: 'none' }
+                  ? { width: DESKTOP_W, height: box.h / scale, transform: `scale(${scale})`, transformOrigin: 'top left', position: 'absolute', left: 0, top: 0, flex: 'none' }
                   : undefined} />
             </div>
           </div>

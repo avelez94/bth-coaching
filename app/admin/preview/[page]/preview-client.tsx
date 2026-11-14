@@ -43,6 +43,9 @@ export default function PreviewClient({ page, base, settings }: { page: PageKey;
   const View = VIEWS[page]
   return (
     <>
+      {/* The preview frame is taller than a laptop screen. Keep the Home top
+          section at the height it has on a typical laptop (88% of ~820px). */}
+      {page === 'home' && <style>{`.hero { min-height: min(88vh, 722px) !important; }`}</style>}
       <Nav bookingUrl={settings.bookingFreeCallUrl} />
       <main><View {...base} c={content} /></main>
       <Footer settings={settings} />
