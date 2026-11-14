@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
     if (!uploadError) {
       const { data: signedUrl } = await supabaseAdmin.storage
         .from('signed-agreements')
-        .createSignedUrl(storagePath, 3600)
+        .createSignedUrl(storagePath, 31536000) // 1 year
       pdfDownloadUrl = signedUrl?.signedUrl ?? null
     }
 
