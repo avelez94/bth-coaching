@@ -1,6 +1,8 @@
 .btn { display: inline-flex; align-items: center; gap: 9px; padding: 13px 28px; font-size: 0.8rem; letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
 .btn-gold { background: var(--gold); color: var(--navy); }
 .btn-gold:hover { background: var(--gold-hover); }
+.btn-navy { background: var(--navy); color: var(--ivory); }
+.btn-navy:hover { background: var(--slate-mid); }
 .btn-outline-light { background: transparent; color: var(--ivory); border: 1px solid rgba(247,244,237,0.35); }
 .btn-outline-light:hover { background: rgba(247,244,237,0.1); }
 
