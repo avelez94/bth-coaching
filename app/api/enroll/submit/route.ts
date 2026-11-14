@@ -54,6 +54,22 @@ export async function POST(req: NextRequest) {
 
     const signedAt = new Date()
 
+    // Format signedAt in Eastern Time for display in emails and PDF.
+    // The ISO timestamp is stored in the database; this is display only.
+    // Intl.DateTimeFormat with timeZone 'America/New_York' automatically
+    // handles EST/EDT — no manual offset math needed.
+    const signedAtDisplay = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/New_York',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZoneName: 'short',
+    }).format(signedAt)
+    // e.g. "November 13, 2026 at 10:52 PM EST"
+
     // 0. Fetch the active agreement version from the database.
     //    Falls back to the hardcoded lib/agreement.ts values if the
     //    agreements table is empty (e.g. before the seed has run).
@@ -89,6 +105,7 @@ export async function POST(req: NextRequest) {
       signatureData,
       signatureType,
       signedAt,
+      signedAtDisplay,
       agreementVersion: activeAgreementVersion,
       agreementHash: activeAgreementHash,
       agreementContent: activeAgreementContent,
@@ -192,7 +209,7 @@ export async function POST(req: NextRequest) {
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Role</td><td style="padding:8px;border:1px solid #ddd">${role || 'Not provided'}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Program</td><td style="padding:8px;border:1px solid #ddd">${programLabel}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Payment</td><td style="padding:8px;border:1px solid #ddd">${paymentOption === 'full' ? 'Full payment' : 'Installment plan'}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Signed at</td><td style="padding:8px;border:1px solid #ddd">${signedAt.toUTCString()}</td></tr>
+          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Signed at</td><td style="padding:8px;border:1px solid #ddd">${signedAtDisplay}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Enrollment ID</td><td style="padding:8px;border:1px solid #ddd">${enrollmentId}</td></tr>
           ${isTestMode ? `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:#856404">Test record</td><td style="padding:8px;border:1px solid #ddd;color:#856404">Yes — test_mode=true in database</td></tr>` : ''}
         </table>
@@ -215,7 +232,7 @@ export async function POST(req: NextRequest) {
         <br/>
         <p>John McCracken<br/>Beyond the Horizon Executive Coaching<br/>mccrackencoaching.com</p>
         <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
-        <p style="font-size:11px;color:#999">Enrollment ID: ${enrollmentId}<br/>Agreement version: ${activeAgreementVersion}<br/>Signed: ${signedAt.toUTCString()}</p>
+        <p style="font-size:11px;color:#999">Enrollment ID: ${enrollmentId}<br/>Agreement version: ${activeAgreementVersion}<br/>Signed: ${signedAtDisplay}</p>
       `,
     }).catch(e => console.error('Client email error:', e))
 

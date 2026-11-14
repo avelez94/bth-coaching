@@ -12,6 +12,7 @@ export interface EnrollmentRecord {
   signatureData: string   // base64 PNG for drawn; plain text for typed
   signatureType: 'drawn' | 'typed'
   signedAt: Date
+  signedAtDisplay?: string  // Eastern Time human-readable, e.g. "November 13, 2026 at 10:52 PM EST"
   // Agreement fields — passed from submit route so the PDF reflects the
   // version the client actually reviewed, not a hardcoded fallback.
   agreementVersion: string
@@ -133,7 +134,8 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
     color: navy,
   })
   y -= 18
-  coverPage.drawText(record.signedAt.toUTCString(), {
+  const signedAtText = record.signedAtDisplay ?? record.signedAt.toUTCString()
+  coverPage.drawText(signedAtText, {
     x: margin,
     y,
     font: timesRoman,
