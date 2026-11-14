@@ -58,7 +58,7 @@ export default function ConfirmationPage() {
 
           <p className="confirm-subhead">
             Your agreement has been signed and recorded.
-            {data?.programLabel && ` Your enrollment in the ${data.programLabel} is pending payment confirmation.`}
+            {data?.programLabel && ` A confirmation email is on its way, and John will be in touch once your payment is received.`}
           </p>
 
           <div className="confirm-what-next">
@@ -67,19 +67,19 @@ export default function ConfirmationPage() {
               <li className="confirm-step-item">
                 <div className="confirm-step-num">1</div>
                 <div>
-                  <strong>Check your inbox.</strong> A confirmation email with your agreement details has been sent to the email address you provided.
+                  <strong>Check your inbox.</strong> A confirmation email with your signed agreement details has been sent to the email address you provided.
                 </div>
               </li>
               <li className="confirm-step-item">
                 <div className="confirm-step-num">2</div>
                 <div>
-                  <strong>Complete your payment.</strong> If you were not redirected to payment automatically, use the link in your confirmation email or contact John directly.
+                  <strong>Your payment is being processed.</strong> You will receive a receipt from Stripe once it clears.
                 </div>
               </li>
               <li className="confirm-step-item">
                 <div className="confirm-step-num">3</div>
                 <div>
-                  <strong>John will reach out.</strong> Once payment is received, John will contact you to schedule your first session.
+                  <strong>John will reach out.</strong> Once payment is confirmed, John will contact you to schedule your first session.
                 </div>
               </li>
             </ol>
@@ -95,7 +95,7 @@ export default function ConfirmationPage() {
               >
                 Download your signed agreement (PDF)
               </a>
-              <p className="confirm-pdf-note">This link is valid for one hour. John also has a copy on file.</p>
+              <p className="confirm-pdf-note">John also has a copy on file.</p>
             </div>
           )}
 
