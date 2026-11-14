@@ -3,29 +3,25 @@
 import { useEffect, useState, type ComponentType } from 'react'
 import Nav from '@/app/components/nav'
 import Footer from '@/app/components/footer'
-import HomeView from '@/app/(public)/home-view'
-import ExecutiveCoachingView from '@/app/(public)/executive-coaching/view'
-import LeaderDevelopmentView from '@/app/(public)/leader-development/view'
-import ForOrganizationsView from '@/app/(public)/for-organizations/view'
-import SampleEngagementsView from '@/app/(public)/sample-engagements/view'
-import The8PillarsView from '@/app/(public)/the-8-pillars/view'
-import AboutView from '@/app/(public)/about/view'
-import ContactView from '@/app/(public)/contact/view'
+import dynamic from 'next/dynamic'
 import type { PageContent, PageKey } from '@/lib/site-content'
 import type { SiteSettings } from '@/lib/site-settings'
 import type { ViewProps } from '@/lib/view-props'
 
-const HomeAdapter = ({ c, booking }: ViewProps) => <HomeView c={c} bookingUrl={booking?.free} />
-
+// Each view is loaded on its own so only that page's stylesheet is present,
+// matching the live page exactly (several pages share class names).
 const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
-  home: HomeAdapter,
-  'executive-coaching': ExecutiveCoachingView,
-  'leader-development': LeaderDevelopmentView,
-  'for-organizations': ForOrganizationsView,
-  'sample-engagements': SampleEngagementsView,
-  'the-8-pillars': The8PillarsView,
-  about: AboutView,
-  contact: ContactView,
+  home: dynamic(() => import('@/app/(public)/home-view').then(m => {
+    const Home = m.default
+    return function HomeAdapter({ c, booking }: ViewProps) { return <Home c={c} bookingUrl={booking?.free} /> }
+  })),
+  'executive-coaching': dynamic(() => import('@/app/(public)/executive-coaching/view')),
+  'leader-development': dynamic(() => import('@/app/(public)/leader-development/view')),
+  'for-organizations': dynamic(() => import('@/app/(public)/for-organizations/view')),
+  'sample-engagements': dynamic(() => import('@/app/(public)/sample-engagements/view')),
+  'the-8-pillars': dynamic(() => import('@/app/(public)/the-8-pillars/view')),
+  about: dynamic(() => import('@/app/(public)/about/view')),
+  contact: dynamic(() => import('@/app/(public)/contact/view')),
 }
 
 export default function PreviewClient({ page, base, settings }: { page: PageKey; base: ViewProps; settings: SiteSettings }) {
