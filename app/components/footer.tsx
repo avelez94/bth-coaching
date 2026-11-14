@@ -1,4 +1,6 @@
 import './footer.css'
+import ScheduleButton from './schedule-button'
+import { telHref, type SiteSettings } from '@/lib/site-settings'
 
 const IconMail = () => (
   <svg className="footer-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -30,7 +32,7 @@ const IconInstagram = () => (
   </svg>
 )
 
-export default function Footer() {
+export default function Footer({ settings }: { settings: SiteSettings }) {
   const links = [
     { label: 'Home', href: '/' },
     { label: 'Executive Coaching', href: '/executive-coaching' },
@@ -52,8 +54,8 @@ export default function Footer() {
               <a href="/">
                 <img src="/images/bth-logo-footer.png" alt="Beyond the Horizon" />
               </a>
-              <p className="footer-desc">Whole-person coaching and leadership development.</p>
-              <p className="footer-location">Washington, DC area | Virtual worldwide</p>
+              <p className="footer-desc">{settings.footerDescription}</p>
+              <p className="footer-location">{settings.location}</p>
             </div>
 
             {/* Column 2: Navigation links */}
@@ -65,34 +67,37 @@ export default function Footer() {
 
             {/* Column 3: Contact */}
             <div className="footer-contact">
-              <a href="mailto:john@mccrackencoaching.com" className="footer-contact-link">
+              <a href={`mailto:${settings.contactEmail}`} className="footer-contact-link">
                 <IconMail />
-                john@mccrackencoaching.com
+                {settings.contactEmail}
               </a>
-              <a href="tel:7037052225" className="footer-contact-link">
+              <a href={telHref(settings.phone)} className="footer-contact-link">
                 <IconPhone />
-                703-705-2225
+                {settings.phone}
               </a>
-              {/* PENDING MICROSOFT BOOKINGS URL */}
-              <button className="footer-schedule-placeholder" disabled aria-disabled="true">
+              <ScheduleButton url={settings.bookingFreeCallUrl} className="footer-schedule-placeholder">
                 Schedule a Free 15-Minute Call →
-              </button>
-              <a href="https://www.linkedin.com/company/beyond-the-horizon-executive-coaching-and-consulting/" target="_blank" rel="noopener noreferrer" className="footer-contact-link">
-                <IconLinkedIn />
-                LinkedIn: Beyond the Horizon
-              </a>
-              <a href="https://www.linkedin.com/in/johnmccracken3/" target="_blank" rel="noopener noreferrer" className="footer-contact-link">
-                <IconLinkedIn />
-                LinkedIn: John McCracken
-              </a>
+              </ScheduleButton>
+              {settings.linkedinCompanyUrl && (
+                <a href={settings.linkedinCompanyUrl} target="_blank" rel="noopener noreferrer" className="footer-contact-link">
+                  <IconLinkedIn />
+                  LinkedIn: Beyond the Horizon
+                </a>
+              )}
+              {settings.linkedinPersonalUrl && (
+                <a href={settings.linkedinPersonalUrl} target="_blank" rel="noopener noreferrer" className="footer-contact-link">
+                  <IconLinkedIn />
+                  LinkedIn: John McCracken
+                </a>
+              )}
               {/* PENDING INSTAGRAM URL: add when available */}
             </div>
 
           </div>
 
           <div className="footer-bottom">
-            <div className="footer-tagline">Together, we get beyond your horizon.</div>
-            <div className="footer-copy">© 2026 Beyond the Horizon Executive Coaching &amp; Consulting LLC. All rights reserved.</div>
+            <div className="footer-tagline">{settings.footerTagline}</div>
+            <div className="footer-copy">© {new Date().getFullYear()} {settings.businessName}. All rights reserved.</div>
             <p className="footer-disclaimer">References to John McCracken&apos;s service with the U.S. Navy and Department of Defense describe professional background only and do not imply endorsement by the Department of the Navy, the Department of Defense, or the U.S. Government.</p>
             <p className="footer-disclaimer">Coaching is not psychotherapy, counseling, or medical, legal, or financial advice. Client examples are illustrative and anonymized; individual results vary, and past outcomes do not guarantee similar results.</p>
             <div className="footer-credit">Made with <span className="footer-credit-heart">♥</span> by <a href="https://alantevelez.com" target="_blank" rel="noopener noreferrer">Alante Velez</a></div>

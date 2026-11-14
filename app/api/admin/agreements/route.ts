@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin
     .from('agreements')
-    .select('id, version, effective_date, title, content_hash, is_active, notes, created_at')
+    .select('id, version, effective_date, title, content, content_hash, is_active, notes, created_at')
     .order('created_at', { ascending: false })
 
   if (error) {
@@ -28,28 +28,37 @@ export async function GET(req: NextRequest) {
 }
 
 // POST /api/admin/agreements
-// Add a new agreement version and optionally mark it active
-// Body: { version, effective_date, content, notes?, make_active? }
+// Saves a NEW agreement version. It is not used for enrollments until it is
+// activated (PATCH), so there is never a moment with no active agreement.
+// Existing versions and signed agreements are never modified.
+// Body: { version, effective_date, content, notes? }
 export async function POST(req: NextRequest) {
   if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const body = await req.json()
-  const { version, effective_date, content, notes, make_active } = body
+  const body = await req.json().catch(() => ({}))
+  const version = String(body.version || '').trim()
+  const effective_date = String(body.effective_date || '').trim()
+  const content = String(body.content || '').replace(/\r\n/g, '\n')
+  const notes = String(body.notes || '').trim()
 
-  if (!version || !effective_date || !content) {
-    return NextResponse.json({ error: 'version, effective_date, and content are required.' }, { status: 400 })
+  if (!version || !effective_date || !content.trim()) {
+    return NextResponse.json({ error: 'A version label, an effective date, and the agreement text are all required.' }, { status: 400 })
+  }
+  if (version.length > 20) {
+    return NextResponse.json({ error: 'Keep the version label short, for example 1.1 or 2.0.' }, { status: 400 })
   }
 
   const content_hash = createHash('sha256').update(content).digest('hex')
 
-  // If making active, deactivate all others first
-  if (make_active) {
-    await supabaseAdmin
-      .from('agreements')
-      .update({ is_active: false })
-      .neq('id', '00000000-0000-0000-0000-000000000000') // update all rows
+  const { data: existing } = await supabaseAdmin.from('agreements').select('version, content_hash')
+  if (existing?.some(a => a.version === version)) {
+    return NextResponse.json({ error: `Version ${version} already exists. Choose a new version label.` }, { status: 400 })
+  }
+  const same = existing?.find(a => a.content_hash === content_hash)
+  if (same) {
+    return NextResponse.json({ error: `This text is identical to version ${same.version}. Make your changes before saving a new version.` }, { status: 400 })
   }
 
   const { data, error } = await supabaseAdmin
@@ -59,7 +68,7 @@ export async function POST(req: NextRequest) {
       effective_date,
       content,
       content_hash,
-      is_active: make_active === true,
+      is_active: false,
       notes: notes || null,
       title: 'Coaching Services Agreement',
     })
@@ -67,7 +76,7 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: 'Could not save the new version. Please try again.' }, { status: 500 })
   }
 
   return NextResponse.json({ agreement: data })

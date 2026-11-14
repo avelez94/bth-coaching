@@ -38,21 +38,41 @@ export async function POST(req: NextRequest) {
   }
   const programLabel = programLabels[enrollment.program] || enrollment.program
 
-  await resend.emails.send({
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: 'Email sending is not set up yet, so the copy could not be sent. Use Download PDF and email it yourself for now.' }, { status: 503 })
+  }
+
+  // Attach the signed PDF exactly as it was stored at signing
+  let attachments: { filename: string; content: Buffer }[] | undefined
+  if (enrollment.pdf_path) {
+    const { data: file } = await supabaseAdmin.storage.from('signed-agreements').download(enrollment.pdf_path)
+    if (file) attachments = [{ filename: 'Coaching Services Agreement.pdf', content: Buffer.from(await file.arrayBuffer()) }]
+  }
+  if (!attachments) {
+    return NextResponse.json({ error: 'The signed PDF for this client could not be found, so nothing was sent.' }, { status: 404 })
+  }
+
+  const signedOn = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(new Date(enrollment.signed_at))
+
+  const { error: sendError } = await resend.emails.send({
+    attachments,
     from: 'John McCracken <john@mccrackencoaching.com>',
     to: enrollment.email,
     subject: `Your signed agreement for ${programLabel} (resent)`,
     html: `
       <p>Dear ${enrollment.first_name},</p>
-      <p>As requested, here is a copy of your signed Coaching Services Agreement for the <strong>${programLabel}</strong>.</p>
+      <p>As requested, attached is a copy of your signed Coaching Services Agreement for the <strong>${programLabel}</strong>.</p>
       <p>Your agreement was signed on ${new Date(enrollment.signed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.</p>
       <p>If you have any questions, reply to this email.</p>
       <br/>
       <p>John McCracken<br/>Beyond the Horizon Executive Coaching<br/>mccrackencoaching.com</p>
       <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
-      <p style="font-size:11px;color:#999">Enrollment ID: ${enrollment.id}<br/>Agreement version: ${enrollment.agreement_version}<br/>Signed: ${new Date(enrollment.signed_at).toUTCString()}</p>
+      <p style="font-size:11px;color:#999">Enrollment ID: ${enrollment.id}<br/>Agreement version: ${enrollment.agreement_version}<br/>Signed: ${signedOn}</p>
     `,
   })
+  if (sendError) {
+    return NextResponse.json({ error: 'The email could not be sent. Email sending may not be fully set up yet.' }, { status: 502 })
+  }
 
   return NextResponse.json({ success: true })
 }

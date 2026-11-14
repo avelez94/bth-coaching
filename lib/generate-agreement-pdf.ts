@@ -33,6 +33,9 @@ export interface EnrollmentRecord {
   agreementVersion: string
   agreementHash: string
   agreementContent: string
+  // From Admin > Site Settings; defaults used if omitted
+  coachEmail?: string
+  coachPhone?: string
 }
 
 const PROGRAM_TEXT_PREFIX: Record<string, string> = {
@@ -41,7 +44,7 @@ const PROGRAM_TEXT_PREFIX: Record<string, string> = {
 }
 
 // Coach identity shown in the letterhead and parties table.
-const COACH = {
+const COACH_DEFAULTS = {
   letterName: 'John J. McCracken III, EMBA, ACC',
   name: 'John McCracken',
   firm: 'Beyond the Horizon Executive Coaching & Consulting, LLC',
@@ -111,6 +114,7 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
   const signedAtText = etDateTime(record.signedAt)
   const effectiveDateText = etDate(record.signedAt)
   const fullName = `${record.firstName} ${record.lastName}`.trim()
+  const COACH = { ...COACH_DEFAULTS, email: record.coachEmail || COACH_DEFAULTS.email, phone: record.coachPhone || COACH_DEFAULTS.phone }
 
   // ---------- Layout state ----------
   let page: PDFPage = doc.addPage([PAGE_W, PAGE_H])
@@ -478,7 +482,7 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
   const pages = doc.getPages()
   pages.forEach((p, i) => {
     p.drawText('BEYOND THE HORIZON  |  COACHING SERVICES AGREEMENT', { x: LEFT, y: PAGE_H - 734.5, font: F.bold, size: 7.5, color: C.muted })
-    p.drawText(COACH.firm, { x: LEFT, y: PAGE_H - 744, font: F.reg, size: 7, color: C.muted })
+    p.drawText(COACH_DEFAULTS.firm, { x: LEFT, y: PAGE_H - 744, font: F.reg, size: 7, color: C.muted })
     const num = String(i + 1)
     const numW = F.reg.widthOfTextAtSize(num, 9.5)
     const pageW = F.reg.widthOfTextAtSize('Page ', 8)

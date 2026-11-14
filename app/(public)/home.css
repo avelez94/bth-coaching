@@ -554,3 +554,7 @@
   .credibility { padding: 64px 24px; }
   .closing-cta { padding: 64px 24px; }
 }
+
+/* Live booking link (after a Microsoft Bookings URL is saved in Admin > Scheduling) */
+a.btn-gold { cursor: pointer; opacity: 1; transition: background 0.2s; }
+a.btn-gold:hover { background: var(--gold-hover, var(--gold)); }

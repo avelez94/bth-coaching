@@ -45,13 +45,17 @@ export async function GET(req: NextRequest) {
   const withUrls = await Promise.all(
     (data || []).map(async (enrollment) => {
       let pdfUrl: string | null = null
+      let pdfDownloadUrl: string | null = null
       if (enrollment.pdf_path) {
-        const { data: signedUrl } = await supabaseAdmin.storage
-          .from('signed-agreements')
-          .createSignedUrl(enrollment.pdf_path, 3600)
-        pdfUrl = signedUrl?.signedUrl ?? null
+        const fileName = `Coaching Agreement - ${enrollment.first_name} ${enrollment.last_name}.pdf`.replace(/[^\w .-]/g, '')
+        const [view, download] = await Promise.all([
+          supabaseAdmin.storage.from('signed-agreements').createSignedUrl(enrollment.pdf_path, 3600),
+          supabaseAdmin.storage.from('signed-agreements').createSignedUrl(enrollment.pdf_path, 3600, { download: fileName }),
+        ])
+        pdfUrl = view.data?.signedUrl ?? null
+        pdfDownloadUrl = download.data?.signedUrl ?? null
       }
-      return { ...enrollment, pdfUrl }
+      return { ...enrollment, pdfUrl, pdfDownloadUrl }
     })
   )
 

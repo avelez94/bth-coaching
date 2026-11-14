@@ -172,3 +172,7 @@
   .footer { padding: 60px 24px 40px; }
   .footer-top { grid-template-columns: 1fr; gap: 40px; }
 }
+
+/* Live booking link (after a Microsoft Bookings URL is saved in Admin > Scheduling) */
+a.footer-schedule-placeholder { cursor: pointer; color: rgba(247,244,237,0.8); text-decoration: none; }
+a.footer-schedule-placeholder:hover { color: var(--gold); }

@@ -1,0 +1,75 @@
+// ============================================================
+// Site Settings: contact details and booking links John can edit
+// in Admin > Site Settings and Admin > Scheduling.
+// Defaults match what the live site showed before these became
+// editable, so an empty database never changes the site.
+// Safe to import in client components (no secrets).
+// ============================================================
+
+export interface SiteSettings {
+  businessName: string
+  footerDescription: string
+  location: string
+  contactEmail: string
+  phone: string
+  linkedinCompanyUrl: string
+  linkedinPersonalUrl: string
+  footerTagline: string
+  bookingFreeCallUrl: string
+  bookingOrgConsultUrl: string
+}
+
+export const DEFAULT_SETTINGS: SiteSettings = {
+  businessName: 'Beyond the Horizon Executive Coaching & Consulting LLC',
+  footerDescription: 'Whole-person coaching and leadership development.',
+  location: 'Washington, DC area | Virtual worldwide',
+  contactEmail: 'john@mccrackencoaching.com',
+  phone: '703-705-2225',
+  linkedinCompanyUrl: 'https://www.linkedin.com/company/beyond-the-horizon-executive-coaching-and-consulting/',
+  linkedinPersonalUrl: 'https://www.linkedin.com/in/johnmccracken3/',
+  footerTagline: 'Together, we get beyond your horizon.',
+  bookingFreeCallUrl: '',
+  bookingOrgConsultUrl: '',
+}
+
+// Database keys (site_settings.key) for each setting
+export const SETTING_KEYS: Record<keyof SiteSettings, string> = {
+  businessName: 'business_name',
+  footerDescription: 'footer_description',
+  location: 'location',
+  contactEmail: 'contact_email',
+  phone: 'phone_display',
+  linkedinCompanyUrl: 'linkedin_company_url',
+  linkedinPersonalUrl: 'linkedin_personal_url',
+  footerTagline: 'footer_tagline',
+  bookingFreeCallUrl: 'booking_free_call_url',
+  bookingOrgConsultUrl: 'booking_org_consult_url',
+}
+
+export function telHref(phone: string): string {
+  return 'tel:' + phone.replace(/[^\d+]/g, '')
+}
+
+export type SettingCheck = { ok: true; value: string } | { ok: false; error: string }
+
+// Validation shared by the admin form and the save route
+export function validateSetting(key: keyof SiteSettings, raw: string): SettingCheck {
+  const value = raw.trim()
+  const isUrl = (v: string) => { try { const u = new URL(v); return u.protocol === 'https:' } catch { return false } }
+  switch (key) {
+    case 'contactEmail':
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? { ok: true, value } : { ok: false, error: 'Enter a valid email address.' }
+    case 'phone':
+      return value.replace(/\D/g, '').length >= 10 ? { ok: true, value } : { ok: false, error: 'Enter a phone number with area code.' }
+    case 'linkedinCompanyUrl':
+    case 'linkedinPersonalUrl':
+      if (!value) return { ok: true, value }
+      return isUrl(value) && /linkedin\.com/i.test(value) ? { ok: true, value } : { ok: false, error: 'Paste the full LinkedIn address, starting with https://' }
+    case 'bookingFreeCallUrl':
+    case 'bookingOrgConsultUrl':
+      if (!value) return { ok: true, value }
+      return isUrl(value) ? { ok: true, value } : { ok: false, error: 'Paste the full booking page address, starting with https://' }
+    default:
+      return value ? { ok: true, value } : { ok: false, error: 'This field cannot be empty.' }
+  }
+}

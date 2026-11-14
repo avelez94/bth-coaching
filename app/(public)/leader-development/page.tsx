@@ -1,6 +1,6 @@
-'use client'
-
 import './leader-development.css'
+import ScheduleButton from '../../components/schedule-button'
+import { getPrograms, getSettings } from '@/lib/site-data'
 
 const stages = [
   { num: '01', label: 'Month 1 — Start with clarity.', body: 'An intake assessment and a half-day kickoff, in person or virtual. You define what success looks like for you and where you want to grow.' },
@@ -9,7 +9,9 @@ const stages = [
   { num: '04', label: 'After the program — Support when you need it.', body: 'Optional as-needed coaching for the storms that come later.' },
 ]
 
-export default function LeaderDevelopment() {
+export default async function LeaderDevelopment() {
+  const [programs, settings] = await Promise.all([getPrograms(), getSettings()])
+  const lp = programs['8-pillars']
   return (
     <>
 
@@ -20,10 +22,9 @@ export default function LeaderDevelopment() {
           <h1 className="hero-headline">You're leading people, and it's harder than you expected.</h1>
           <p className="hero-subhead">A ten-month development and coaching program for new leaders, stretched leaders, and anyone ready to become the leader they want to be, and the one their team needs.</p>
           <div className="hero-cta">
-            {/* PENDING MICROSOFT BOOKINGS URL */}
-            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            <ScheduleButton url={settings.bookingFreeCallUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
-            </button>
+            </ScheduleButton>
           </div>
         </div>
       </section>
@@ -124,10 +125,9 @@ export default function LeaderDevelopment() {
           <div>
             <p className="engagement-context">The engagement</p>
             <h2 className="engagement-headline">Ten months. Eight pillars. One whole leader.</h2>
-            {/* PENDING MICROSOFT BOOKINGS URL */}
-            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            <ScheduleButton url={settings.bookingFreeCallUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
-            </button>
+            </ScheduleButton>
             <a href="/enroll?program=8-pillars" className="btn btn-navy" style={{marginTop: 12}}>
               Enroll in the 8 Pillars Leadership Program
             </a>
@@ -146,7 +146,7 @@ export default function LeaderDevelopment() {
             </div>
             <div className="investment-block">
               <div className="investment-label">Investment</div>
-              <div className="investment-amount">$6,000, or 10 monthly payments of $600</div>
+              <div className="investment-amount">{lp.fullPrice}, or {lp.installmentCount} monthly payments of {lp.installmentAmount}</div>
             </div>
           </div>
         </div>

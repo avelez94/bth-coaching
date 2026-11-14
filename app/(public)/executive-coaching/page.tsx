@@ -1,4 +1,6 @@
 import './executive-coaching.css'
+import ScheduleButton from '../../components/schedule-button'
+import { getPrograms, getSettings } from '@/lib/site-data'
 
 // PLACEHOLDER: Confirm the executive-presence client is comfortable
 // with the anonymized story in "What this looks like in practice"
@@ -30,7 +32,9 @@ const workAreas = [
 // engagement details rendered inline to allow link in first item
 
 
-export default function ExecutiveCoaching() {
+export default async function ExecutiveCoaching() {
+  const [programs, settings] = await Promise.all([getPrograms(), getSettings()])
+  const ec = programs['executive-coaching']
   return (
     <>
       {/* styles in executive-coaching.css */}
@@ -43,10 +47,9 @@ export default function ExecutiveCoaching() {
           <h1 className="hero-headline">When the challenges are outpacing the solutions.</h1>
           <p className="hero-subhead">You're not getting the results you want from yourself or your team, and working harder isn't closing the gap.</p>
           <div className="hero-cta">
-            {/* PENDING MICROSOFT BOOKINGS URL */}
-            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            <ScheduleButton url={settings.bookingFreeCallUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
-            </button>
+            </ScheduleButton>
           </div>
         </div>
       </section>
@@ -124,10 +127,9 @@ export default function ExecutiveCoaching() {
           <div>
             <p className="engagement-context">The engagement</p>
             <h2 className="engagement-headline">Six months. Twelve sessions. Your agenda.</h2>
-            {/* PENDING MICROSOFT BOOKINGS URL */}
-            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            <ScheduleButton url={settings.bookingFreeCallUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule a Free 15-Minute Call
-            </button>
+            </ScheduleButton>
             <a href="/enroll?program=executive-coaching" className="btn btn-navy" style={{marginTop: 12}}>
               Enroll in Executive Coaching
             </a>
@@ -141,7 +143,7 @@ export default function ExecutiveCoaching() {
             </div>
             <div className="investment-block">
               <div className="investment-label">Investment</div>
-              <div className="investment-amount">$3,600, or 6 monthly payments of $600</div>
+              <div className="investment-amount">{ec.fullPrice}, or {ec.installmentCount} monthly payments of {ec.installmentAmount}</div>
             </div>
           </div>
         </div>

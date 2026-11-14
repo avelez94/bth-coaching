@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { generateAgreementPDF } from '@/lib/generate-agreement-pdf'
-import { AGREEMENT_HASH, AGREEMENT_VERSION, AGREEMENT_TEXT } from '@/lib/agreement'
-import { PROGRAM_INFO, isProgramKey } from '@/lib/program-info'
+import { isProgramKey } from '@/lib/program-info'
+import { getActiveAgreement, getPrograms, getSettings } from '@/lib/site-data'
 
 // Admin client — bypasses RLS, used server-side only
 const supabaseAdmin = createClient(
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
       role,
       signatureData,
       signatureType,
+      agreementHash: viewedAgreementHash,
     } = body
 
     // Test mode activation rule:
@@ -50,7 +51,9 @@ export async function POST(req: NextRequest) {
     if (!['full', 'installment'].includes(paymentOption)) {
       return NextResponse.json({ error: 'Invalid payment option.' }, { status: 400 })
     }
-    const programConfig = PROGRAM_INFO[program]
+    // Current pricing and Stripe links from Admin > Pricing & Payments
+    const [programs, settings] = await Promise.all([getPrograms(), getSettings()])
+    const programConfig = programs[program]
 
     const signedAt = new Date()
 
@@ -70,25 +73,20 @@ export async function POST(req: NextRequest) {
     }).format(signedAt)
     // e.g. "November 13, 2026 at 10:52 PM EST"
 
-    // 0. Fetch the active agreement version from the database.
-    //    Falls back to the hardcoded lib/agreement.ts values if the
-    //    agreements table is empty (e.g. before the seed has run).
-    let activeAgreementId: string | null = null
-    let activeAgreementContent: string = AGREEMENT_TEXT
-    let activeAgreementVersion: string = AGREEMENT_VERSION
-    let activeAgreementHash: string = AGREEMENT_HASH
+    // 0. The agreement new clients sign is the active version in
+    //    Admin > Coaching Agreement (falls back to lib/agreement.ts).
+    const active = await getActiveAgreement()
+    const activeAgreementId = active.id
+    const activeAgreementContent = active.content
+    const activeAgreementVersion = active.version
+    const activeAgreementHash = active.hash
 
-    const { data: activeAgreement } = await supabaseAdmin
-      .from('agreements')
-      .select('id, content, version, content_hash')
-      .eq('is_active', true)
-      .maybeSingle()
-
-    if (activeAgreement) {
-      activeAgreementId = activeAgreement.id
-      activeAgreementContent = activeAgreement.content
-      activeAgreementVersion = activeAgreement.version
-      activeAgreementHash = activeAgreement.content_hash
+    // The client must sign the exact text they read. If John activated a new
+    // version while this client was on the page, ask them to review it.
+    if (viewedAgreementHash && viewedAgreementHash !== activeAgreementHash) {
+      return NextResponse.json({
+        error: 'The coaching agreement was just updated. Please refresh the page to review the current version before signing.',
+      }, { status: 409 })
     }
 
     // 1. Generate signed PDF — pass the active agreement fields so the PDF
@@ -108,6 +106,8 @@ export async function POST(req: NextRequest) {
       agreementVersion: activeAgreementVersion,
       agreementHash: activeAgreementHash,
       agreementContent: activeAgreementContent,
+      coachEmail: settings.contactEmail,
+      coachPhone: settings.phone,
     })
 
     // 2. Upload PDF to Supabase Storage
@@ -157,6 +157,11 @@ export async function POST(req: NextRequest) {
         pdf_path: uploadError ? null : storagePath,
         status: isTestMode ? 'test' : 'pending_payment',
         test_mode: isTestMode,
+        // Price at the moment of signing; later price changes never alter this record
+        price_total_cents: programConfig.fullPriceCents,
+        price_installment_cents: programConfig.installmentAmountCents,
+        price_installment_count: programConfig.installmentCount,
+        amount_due_today_cents: paymentOption === 'full' ? programConfig.fullPriceCents : programConfig.installmentAmountCents,
       })
       .select('id')
       .single()

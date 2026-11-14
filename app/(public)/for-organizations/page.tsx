@@ -1,17 +1,18 @@
-'use client'
-
 import './for-organizations.css'
+import ScheduleButton from '../../components/schedule-button'
+import { getPrograms, getSettings } from '@/lib/site-data'
+import type { ProgramConfig } from '@/lib/program-info'
 
-const ways = [
+const waysFor = (ec: ProgramConfig, lp: ProgramConfig) => [
   {
     title: 'Support a leader who\'s struggling.',
     body: 'You see potential worth investing in. I coach that leader one-on-one to help them regain their footing. You help define the purpose of the engagement and what success looks like. The coaching conversations stay confidential, which is what makes real change possible. Includes a kickoff and a close-out conversation with you and the leader.',
-    price: 'Six months, 12 sessions — $3,600',
+    price: `Six months, 12 sessions — ${ec.fullPrice}`,
   },
   {
     title: 'Develop your leaders.',
     body: 'The 8 Pillars Leadership Program combines leadership development with individual coaching, built around a whole-person framework. Your leaders build skills and resilience together, and each one works on their own goals with a coach.',
-    price: 'Ten months, tailorable — $6,000 per participant',
+    price: `Ten months, tailorable — ${lp.fullPrice} per participant`,
   },
   {
     title: 'Build a custom leadership program.',
@@ -27,7 +28,9 @@ const howSteps = [
   { num: '04', label: 'Do the work.', body: 'Your leaders get real support, and you see the difference in how they lead.' },
 ]
 
-export default function ForOrganizations() {
+export default async function ForOrganizations() {
+  const [programs, settings] = await Promise.all([getPrograms(), getSettings()])
+  const ways = waysFor(programs['executive-coaching'], programs['8-pillars'])
   return (
     <>
       {/* ===== 1. HERO ===== */}
@@ -38,9 +41,9 @@ export default function ForOrganizations() {
           <p className="hero-subhead">When someone isn't there yet, you can replace them or invest in them. I help you invest well.</p>
           <div className="hero-cta">
             {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
-            <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+            <ScheduleButton url={settings.bookingOrgConsultUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
               Schedule an Organizational Consultation
-            </button>
+            </ScheduleButton>
           </div>
         </div>
       </section>
@@ -129,9 +132,9 @@ export default function ForOrganizations() {
             <a href="/sample-engagements" className="why-link">See Sample Engagements →</a>
             <div style={{marginTop: '32px'}}>
               {/* PENDING ORGANIZATIONAL MICROSOFT BOOKINGS URL */}
-              <button className="btn btn-gold" disabled aria-disabled="true" style={{opacity: 0.72, cursor: 'not-allowed'}}>
+              <ScheduleButton url={settings.bookingOrgConsultUrl} className="btn btn-gold" disabledStyle={{opacity: 0.72, cursor: 'not-allowed'}}>
                 Schedule an Organizational Consultation
-              </button>
+              </ScheduleButton>
             </div>
           </div>
         </div>

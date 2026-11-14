@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import './nav.css'
+import ScheduleButton from './schedule-button'
 
-export default function Nav() {
+export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -73,10 +74,9 @@ export default function Nav() {
             <a href="/contact" className="nav-link">Contact</a>
           </div>
 
-          {/* PLACEHOLDER: Replace with <a href="{bookingsUrl}" target="_blank"> once Microsoft Bookings URL is provided */}
-          <button className="nav-cta" disabled aria-disabled="true">
+          <ScheduleButton url={bookingUrl} className="nav-cta">
             Schedule a Free 15-Minute Call
-          </button>
+          </ScheduleButton>
 
           <button
             className="nav-hamburger"
@@ -99,10 +99,9 @@ export default function Nav() {
           <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>
         ))}
 
-        {/* PLACEHOLDER: Replace with <a href="{bookingsUrl}" target="_blank"> once Microsoft Bookings URL is provided */}
-        <button className="nav-mobile-cta" disabled aria-disabled="true">
+        <ScheduleButton url={bookingUrl} className="nav-mobile-cta">
           Schedule a Free 15-Minute Call
-        </button>
+        </ScheduleButton>
       </div>
     </>
   )

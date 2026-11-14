@@ -1,12 +1,14 @@
 import Nav from '../components/nav'
 import Footer from '../components/footer'
+import { getSettings } from '@/lib/site-data'
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSettings()
   return (
     <>
-      <Nav />
+      <Nav bookingUrl={settings.bookingFreeCallUrl} />
       <main>{children}</main>
-      <Footer />
+      <Footer settings={settings} />
     </>
   )
 }
