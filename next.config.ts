@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Fonts and logo read at runtime by the signed agreement PDF generator
+  outputFileTracingIncludes: {
+    '/api/enroll/submit': ['./lib/pdf-assets/**/*'],
+  },
   async redirects() {
     return [
       {
