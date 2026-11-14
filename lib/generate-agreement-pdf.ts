@@ -1,4 +1,4 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib'
+import { PDFDocument, PDFFont, PDFPage, rgb, StandardFonts } from 'pdf-lib'
 
 export interface EnrollmentRecord {
   firstName: string
@@ -12,8 +12,8 @@ export interface EnrollmentRecord {
   signatureData: string   // base64 PNG for drawn; plain text for typed
   signatureType: 'drawn' | 'typed'
   signedAt: Date
-  signedAtDisplay?: string  // Eastern Time human-readable, e.g. "November 13, 2026 at 10:52 PM EST"
-  // Agreement fields — passed from submit route so the PDF reflects the
+  signedAtDisplay?: string  // Eastern Time, e.g. "November 13, 2026 at 10:52 PM EST"
+  // Agreement fields: passed from the submit route so the PDF reflects the
   // version the client actually reviewed, not a hardcoded fallback.
   agreementVersion: string
   agreementHash: string
@@ -30,6 +30,8 @@ const PAYMENT_LABELS: Record<string, string> = {
   'installment': 'Installment plan',
 }
 
+const HEADER_TEXT = 'BEYOND THE HORIZON EXECUTIVE COACHING  |  Coaching Services Agreement'
+
 function wrapText(text: string, maxCharsPerLine: number): string[] {
   const words = text.split(' ')
   const lines: string[] = []
@@ -44,6 +46,17 @@ function wrapText(text: string, maxCharsPerLine: number): string[] {
   }
   if (current) lines.push(current)
   return lines
+}
+
+// Eastern Time, date only, e.g. "November 14, 2026". The effective date is the
+// signing date, so it is derived from the same server-generated timestamp.
+function formatEffectiveDate(d: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(d)
 }
 
 export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Uint8Array> {
@@ -64,241 +77,182 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
   const margin = 72
   const contentWidth = pageWidth - margin * 2
 
+  const signedAtText = record.signedAtDisplay ?? record.signedAt.toUTCString()
+  const effectiveDateText = formatEffectiveDate(record.signedAt)
+  const fullName = `${record.firstName} ${record.lastName}`
+
   // ============================================================
-  // PAGE 1: Cover / Signature page
+  // PAGE 1: Cover / summary page
   // ============================================================
   const coverPage = doc.addPage([pageWidth, pageHeight])
 
-  // Header bar
   coverPage.drawRectangle({ x: 0, y: pageHeight - 80, width: pageWidth, height: 80, color: navy })
   coverPage.drawText('BEYOND THE HORIZON EXECUTIVE COACHING', {
-    x: margin,
-    y: pageHeight - 50,
-    font: helveticaBold,
-    size: 11,
+    x: margin, y: pageHeight - 50, font: helveticaBold, size: 11,
     color: rgb(0.969, 0.957, 0.929), // ivory
   })
   coverPage.drawText('Coaching Services Agreement', {
-    x: margin,
-    y: pageHeight - 65,
-    font: helvetica,
-    size: 9,
+    x: margin, y: pageHeight - 65, font: helvetica, size: 9,
     color: rgb(0.769, 0.769, 0.769),
   })
 
   let y = pageHeight - 120
 
-  // Title
-  coverPage.drawText('SIGNED AGREEMENT', {
-    x: margin,
-    y,
-    font: timesBold,
-    size: 22,
-    color: navy,
-  })
+  coverPage.drawText('SIGNED AGREEMENT', { x: margin, y, font: timesBold, size: 22, color: navy })
   y -= 32
-
-  coverPage.drawText(`Agreement Version ${record.agreementVersion}`, {
-    x: margin,
-    y,
-    font: timesRoman,
-    size: 11,
-    color: gray,
-  })
+  coverPage.drawText(`Agreement Version ${record.agreementVersion}`, { x: margin, y, font: timesRoman, size: 11, color: gray })
   y -= 48
 
   // Client info box
   coverPage.drawRectangle({ x: margin, y: y - 130, width: contentWidth, height: 140, color: lightGray })
-
   const infoLabel = (label: string, value: string, yPos: number) => {
     coverPage.drawText(label, { x: margin + 16, y: yPos, font: helveticaBold, size: 9, color: gray })
     coverPage.drawText(value, { x: margin + 130, y: yPos, font: helvetica, size: 9, color: black })
   }
-
-  infoLabel('Full Name', `${record.firstName} ${record.lastName}`, y - 20)
+  infoLabel('Full Name', fullName, y - 20)
   infoLabel('Email', record.email, y - 36)
   infoLabel('Phone', record.phone || 'Not provided', y - 52)
   infoLabel('Organization', record.organization || 'Not provided', y - 68)
   infoLabel('Role / Title', record.role || 'Not provided', y - 84)
   infoLabel('Program', PROGRAM_LABELS[record.program] || record.program, y - 100)
   infoLabel('Payment Option', PAYMENT_LABELS[record.paymentOption] || record.paymentOption, y - 116)
-
   y -= 160
 
-  // Signed at / audit
-  coverPage.drawText('Signed electronically on:', {
-    x: margin,
-    y,
-    font: timesBold,
-    size: 10,
-    color: navy,
-  })
-  y -= 18
-  const signedAtText = record.signedAtDisplay ?? record.signedAt.toUTCString()
-  coverPage.drawText(signedAtText, {
-    x: margin,
-    y,
-    font: timesRoman,
-    size: 10,
-    color: black,
-  })
-  y -= 36
-
-  // Signature
-  coverPage.drawText('Signature:', {
-    x: margin,
-    y,
-    font: timesBold,
-    size: 10,
-    color: navy,
-  })
-  y -= 16
-
-  if (record.signatureType === 'typed') {
-    coverPage.drawText(record.signatureData, {
-      x: margin,
-      y,
-      font: timesRoman,
-      size: 20,
-      color: navy,
-    })
-    y -= 24
-    coverPage.drawText('(Typed signature)', {
-      x: margin,
-      y,
-      font: helvetica,
-      size: 8,
-      color: gray,
-    })
-    y -= 24
-  } else {
-    // Drawn signature — embed as image
-    try {
-      const base64Data = record.signatureData.replace(/^data:image\/png;base64,/, '')
-      const signatureBytes = Buffer.from(base64Data, 'base64')
-      const signatureImage = await doc.embedPng(signatureBytes)
-      const sigDims = signatureImage.scale(0.5)
-      const sigHeight = Math.min(sigDims.height, 80)
-      const sigWidth = (sigDims.width / sigDims.height) * sigHeight
-      coverPage.drawImage(signatureImage, {
-        x: margin,
-        y: y - sigHeight,
-        width: sigWidth,
-        height: sigHeight,
-      })
-      y -= sigHeight + 24
-    } catch {
-      coverPage.drawText('[Drawn signature on file]', {
-        x: margin,
-        y,
-        font: timesRoman,
-        size: 11,
-        color: slate,
-      })
-      y -= 24
-    }
+  const coverField = (label: string, value: string) => {
+    coverPage.drawText(label, { x: margin, y, font: timesBold, size: 10, color: navy })
+    y -= 18
+    coverPage.drawText(value, { x: margin, y, font: timesRoman, size: 10, color: black })
+    y -= 30
   }
+  coverField('Effective date:', effectiveDateText)
+  coverField('Signed electronically on:', signedAtText)
+  coverField('Signature:', 'See the signature page at the end of this document.')
 
-  // Divider
+  y -= 6
   coverPage.drawLine({ start: { x: margin, y }, end: { x: pageWidth - margin, y }, thickness: 0.5, color: lightGray })
   y -= 20
-
-  // Agreement hash / audit trail
-  coverPage.drawText('Agreement integrity hash (SHA-256):', {
-    x: margin,
-    y,
-    font: helveticaBold,
-    size: 7,
-    color: gray,
-  })
+  coverPage.drawText('Agreement integrity hash (SHA-256):', { x: margin, y, font: helveticaBold, size: 7, color: gray })
   y -= 12
-  coverPage.drawText(record.agreementHash, {
-    x: margin,
-    y,
-    font: helvetica,
-    size: 7,
-    color: gray,
-  })
+  coverPage.drawText(record.agreementHash, { x: margin, y, font: helvetica, size: 7, color: gray })
   y -= 12
   coverPage.drawText('This hash identifies the exact agreement text the client reviewed and signed.', {
-    x: margin,
-    y,
-    font: helvetica,
-    size: 7,
-    color: gray,
+    x: margin, y, font: helvetica, size: 7, color: gray,
   })
 
   // ============================================================
-  // PAGE 2+: Agreement text
+  // PAGE 2+: Agreement text, then the signature page content
   // ============================================================
-  const addTextPages = (text: string) => {
-    let page = doc.addPage([pageWidth, pageHeight])
-    let curY = pageHeight - margin
+  let page: PDFPage = doc.addPage([pageWidth, pageHeight])
+  let curY = 0
+  const bottomLimit = margin + 30
 
-    // Page header
-    page.drawText('BEYOND THE HORIZON EXECUTIVE COACHING — Coaching Services Agreement', {
-      x: margin,
-      y: curY,
-      font: helvetica,
-      size: 7,
-      color: gray,
-    })
+  const startPage = () => {
+    curY = pageHeight - margin
+    page.drawText(HEADER_TEXT, { x: margin, y: curY, font: helvetica, size: 7, color: gray })
     curY -= 20
     page.drawLine({ start: { x: margin, y: curY }, end: { x: pageWidth - margin, y: curY }, thickness: 0.3, color: lightGray })
     curY -= 16
+  }
+  const newPage = () => {
+    page = doc.addPage([pageWidth, pageHeight])
+    startPage()
+  }
+  const ensureSpace = (height: number) => {
+    if (curY - height < bottomLimit) newPage()
+  }
+  const drawLine = (text: string, font: PDFFont, size: number, color = black, step = size + 4) => {
+    ensureSpace(step)
+    page.drawText(text, { x: margin, y: curY, font, size, color })
+    curY -= step
+  }
 
-    const paragraphs = text.split(/\n{2,}/)
+  startPage()
 
-    for (const para of paragraphs) {
-      const lines = para.split('\n')
-      for (const line of lines) {
-        const isHeading = line.trim() === line.trim().toUpperCase() && line.trim().length < 80
-        const font = isHeading ? timesBold : timesRoman
-        const size = isHeading ? 10 : 9.5
-        const wrapped = wrapText(line, isHeading ? 90 : 100)
+  // The agreement wording itself is never changed. Where it says the effective
+  // date is the date of signing, the actual date is shown on a separate line
+  // directly beneath it, styled as a recorded value rather than agreement text.
+  let effectiveDateNoted = false
 
-        for (const wline of wrapped) {
-          if (curY < margin + 30) {
-            // Footer
-            page.drawLine({ start: { x: margin, y: margin + 20 }, end: { x: pageWidth - margin, y: margin + 20 }, thickness: 0.3, color: lightGray })
-            page.drawText(`Page ${doc.getPageCount() - 1} of ${doc.getPageCount()}`, {
-              x: pageWidth / 2 - 20,
-              y: margin + 8,
-              font: helvetica,
-              size: 7,
-              color: gray,
-            })
-            page = doc.addPage([pageWidth, pageHeight])
-            curY = pageHeight - margin
-            // Repeat header on new page
-            page.drawText('BEYOND THE HORIZON EXECUTIVE COACHING — Coaching Services Agreement', {
-              x: margin,
-              y: curY,
-              font: helvetica,
-              size: 7,
-              color: gray,
-            })
-            curY -= 20
-            page.drawLine({ start: { x: margin, y: curY }, end: { x: pageWidth - margin, y: curY }, thickness: 0.3, color: lightGray })
-            curY -= 16
-          }
-          page.drawText(wline, {
-            x: margin,
-            y: curY,
-            font,
-            size,
-            color: black,
-          })
-          curY -= isHeading ? size + 6 : size + 4
-        }
-
-        // Paragraph spacing
-        curY -= isHeading ? 8 : 6
+  for (const para of record.agreementContent.split(/\n{2,}/)) {
+    for (const line of para.split('\n')) {
+      const isHeading = line.trim() === line.trim().toUpperCase() && line.trim().length < 80
+      const font = isHeading ? timesBold : timesRoman
+      const size = isHeading ? 10 : 9.5
+      for (const wline of wrapText(line, isHeading ? 90 : 100)) {
+        drawLine(wline, font, size, black, isHeading ? size + 6 : size + 4)
       }
+      if (!effectiveDateNoted && /^Effective Date:/i.test(line.trim())) {
+        effectiveDateNoted = true
+        drawLine(`Effective date of this Agreement: ${effectiveDateText}`, helveticaBold, 9, slate, 13)
+      }
+      curY -= isHeading ? 8 : 6
     }
   }
 
-  addTextPages(record.agreementContent)
+  // ------------------------------------------------------------
+  // Coachee signature block, below the agreement text
+  // ------------------------------------------------------------
+  let sigImage: Awaited<ReturnType<PDFDocument['embedPng']>> | null = null
+  let sigWidth = 0
+  let sigHeight = 0
+  if (record.signatureType === 'drawn') {
+    try {
+      const base64Data = record.signatureData.replace(/^data:image\/png;base64,/, '')
+      sigImage = await doc.embedPng(Buffer.from(base64Data, 'base64'))
+      const dims = sigImage.scale(0.5)
+      sigHeight = Math.min(dims.height, 80)
+      sigWidth = (dims.width / dims.height) * sigHeight
+    } catch {
+      sigImage = null
+    }
+  }
+  const signatureAreaHeight = sigImage ? sigHeight + 12 : 44
+  const blockHeight = 40 + 30 + signatureAreaHeight + 18 + 3 * 28
+
+  curY -= 12
+  ensureSpace(blockHeight)
+  const pageTopY = pageHeight - margin - 36
+  if (curY < pageTopY) {
+    // Only separate from the agreement text when sharing a page with it
+    page.drawLine({ start: { x: margin, y: curY }, end: { x: pageWidth - margin, y: curY }, thickness: 0.5, color: lightGray })
+    curY -= 24
+  }
+  page.drawText('COACHEE SIGNATURE', { x: margin, y: curY, font: timesBold, size: 11, color: navy })
+  curY -= 30
+
+  if (sigImage) {
+    page.drawImage(sigImage, { x: margin, y: curY - sigHeight + 10, width: sigWidth, height: sigHeight })
+    curY -= sigHeight + 2
+  } else if (record.signatureType === 'typed') {
+    page.drawText(record.signatureData, { x: margin, y: curY - 10, font: timesRoman, size: 20, color: navy })
+    curY -= 24
+    page.drawText('(Typed signature)', { x: margin, y: curY, font: helvetica, size: 8, color: gray })
+    curY -= 10
+  } else {
+    page.drawText('[Drawn signature on file]', { x: margin, y: curY - 10, font: timesRoman, size: 11, color: slate })
+    curY -= 30
+  }
+  page.drawLine({ start: { x: margin, y: curY }, end: { x: margin + 260, y: curY }, thickness: 0.5, color: gray })
+  curY -= 18
+
+  const sigField = (label: string, value: string) => {
+    page.drawText(label, { x: margin, y: curY, font: helveticaBold, size: 8, color: gray })
+    page.drawText(value, { x: margin + 130, y: curY, font: timesRoman, size: 10, color: black })
+    curY -= 28
+  }
+  sigField('Name', fullName)
+  sigField('Signed electronically on', signedAtText)
+  sigField('Effective date', effectiveDateText)
+
+  // ------------------------------------------------------------
+  // Page numbers on every page, now that the total is known
+  // ------------------------------------------------------------
+  const pages = doc.getPages()
+  pages.forEach((p, i) => {
+    const label = `Page ${i + 1} of ${pages.length}`
+    const w = helvetica.widthOfTextAtSize(label, 7)
+    p.drawText(label, { x: (pageWidth - w) / 2, y: margin - 30, font: helvetica, size: 7, color: gray })
+  })
 
   return doc.save()
 }
