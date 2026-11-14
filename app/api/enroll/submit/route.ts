@@ -105,7 +105,6 @@ export async function POST(req: NextRequest) {
       signatureData,
       signatureType,
       signedAt,
-      signedAtDisplay,
       agreementVersion: activeAgreementVersion,
       agreementHash: activeAgreementHash,
       agreementContent: activeAgreementContent,
