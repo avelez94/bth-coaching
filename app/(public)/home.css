@@ -234,6 +234,9 @@
   max-width: 820px;
   margin: 0 auto;
 }
+.whats-possible-heading {
+  margin-bottom: 20px;
+}
 .whats-possible-text {
   font-family: 'DM Serif Display', serif;
   font-size: clamp(20px, 2.2vw, 28px);

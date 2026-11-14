@@ -62,30 +62,30 @@ export default function Home() {
       <section className="how-it-works">
         <div className="how-it-works-inner">
           <div>
-            <div className="how-label">How it works</div>
-            <h2 className="how-headline">What changes</h2>
+            <h2 className="how-headline">How it works</h2>
           </div>
           <div className="how-steps">
             <div className="how-step">
               <div className="how-step-num">01</div>
-              <p className="how-step-text">You make the hard calls with confidence, using a repeatable framework grounded in your own values.</p>
+              <p className="how-step-text">Book a free 15-minute call. Tell me what’s hardest right now.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">02</div>
-              <p className="how-step-text">Your team trusts where you&apos;re taking them. And success at work stops costing you everything else.</p>
+              <p className="how-step-text">Get clear on where you want to go. We define success in your own terms.</p>
             </div>
             <div className="how-step">
               <div className="how-step-num">03</div>
-              <p className="how-step-text">You&apos;re more present for the parts of your life that matter most.</p>
+              <p className="how-step-text">Work the plan with a coach beside you. You make the decisions, and I help you stay on track.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== 4. WHAT'S POSSIBLE ===== */}
+      {/* ===== 4. WHAT CHANGES ===== */}
       <section className="whats-possible">
         <div className="whats-possible-inner">
-          <p className="whats-possible-text">You make the hard calls with confidence. Your team trusts where you're taking them. And success at work stops costing you everything else. You're more present for the parts of your life that matter most.</p>
+          <h2 className="how-headline whats-possible-heading">What Changes</h2>
+          <p className="whats-possible-text">You make the hard calls with confidence, using a repeatable framework grounded in your own values. Your team trusts where you’re taking them. And success at work stops costing you everything else. You’re more present for the parts of your life that matter most.</p>
         </div>
       </section>
 
