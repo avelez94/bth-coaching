@@ -335,3 +335,18 @@
   .possible { padding: 64px 24px; }
   .engagement { padding: 64px 24px; }
 }
+
+/* ============================================================
+   READABILITY PASS: stronger contrast at every size, and larger
+   supporting text on laptops and desktops. Mobile sizes unchanged.
+============================================================ */
+.hero-context, .hero-subhead { color: var(--ivory); }
+.story-attribution { color: var(--text-mid); font-weight: 400; }
+
+@media (min-width: 1025px) {
+  .hero-subhead, .familiar-body, .work-list-body, .how-body-1, .how-body-2, .possible-body,
+  .engagement-detail-item, .client-story p:not(.story-attribution) { font-size: 1.125rem; font-weight: 350; }
+  .hero-context { font-size: 0.84rem; }
+  .story-attribution { font-size: 0.9rem; }
+  .sponsor-link { font-size: 0.98rem; font-weight: 350; }
+}

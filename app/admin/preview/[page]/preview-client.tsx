@@ -13,7 +13,7 @@ import type { ViewProps } from '@/lib/view-props'
 const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
   home: dynamic(() => import('@/app/(public)/home-view').then(m => {
     const Home = m.default
-    return function HomeAdapter({ c, booking }: ViewProps) { return <Home c={c} bookingUrl={booking?.free} /> }
+    return function HomeAdapter({ c, booking, engagements }: ViewProps) { return <Home c={c} bookingUrl={booking?.free} engagements={engagements} /> }
   })),
   'executive-coaching': dynamic(() => import('@/app/(public)/executive-coaching/view')),
   'leader-development': dynamic(() => import('@/app/(public)/leader-development/view')),

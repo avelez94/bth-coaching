@@ -107,6 +107,15 @@ export const PAGE_SCHEMA = {
         ],
       },
       {
+        id: 'engagements',
+        title: 'Sample engagements',
+        description: 'A rotating preview of your Sample Engagements. The examples themselves are edited on the Sample Engagements page.',
+        fields: [
+          line('engagements.label', 'Section label', 'Sample engagements'),
+          line('engagements.link', 'Link text', 'See Sample Engagements →'),
+        ],
+      },
+      {
         id: 'approach',
         title: 'My approach',
         description: 'The dark section about coaching the whole person.',
@@ -120,12 +129,18 @@ export const PAGE_SCHEMA = {
       {
         id: 'testimonial',
         title: 'Client testimonial',
-        description: 'The quote from a client and who said it.',
+        description: 'Client quotes. The Home page rotates through them.',
         fields: [
           { key: 'testimonial.label', label: 'Section label', type: 'text', default: 'What clients say' },
           { key: 'testimonial.quote', label: 'Quote', type: 'textarea', default: "When I started coaching, I was looking to become a stronger leader. What I found was far more transformative. Through our work together, I learned that empathy and accountability are not opposites — and that much of my identity and self-worth had become tied to my work in ways that weren't serving me. Coaching helped me redefine success to include my relationships, health, and personal happiness — not just professional achievement. Rather than giving me answers, John consistently asked the right questions, helping me uncover insights that felt authentic and sustainable. I leave with greater confidence, stronger boundaries, and a much deeper understanding of the value I bring as both a leader and a person." },
           { key: 'testimonial.name', label: 'Client name', type: 'text', default: 'Linnea Landowski' },
           { key: 'testimonial.role', label: 'Client title and organization', type: 'text', default: 'Director of Camping Programs, Scouting America, Western Los Angeles County Council' },
+          para('testimonial.2.quote', 'Testimonial 2: quote', "I am retiring from the Navy after 30 years and looking forward to the next adventure. The only problem: what is that next adventure? Once you start looking at all the possibilities that are out there, it is easy to get overwhelmed. This is where John can be a tremendous help as a coach. Over several sessions, John was able to help me navigate through the challenges of 'what do you want to do when you grow up,' then work with me to brainstorm on the art of the possible. He helped me really focus on what I wanted to do, vice what I thought I had to do. John is friendly, engaging, and very supportive \u2014 it is clear he wants to help and really listens as you work through what is best for you. I highly recommend talking with John. You will not be disappointed, and you will be surprised at what you learn that you never considered before. Two thumbs up!!", { optional: true, help: 'The Home page rotates through every testimonial that has a quote. Clear a quote to remove it from the rotation.' }),
+          line('testimonial.2.name', 'Testimonial 2: client name', 'Billy D.', { optional: true }),
+          line('testimonial.2.role', 'Testimonial 2: client title', 'CAPT (USN), Ret.', { optional: true }),
+          para('testimonial.3.quote', 'Testimonial 3: quote', "Working with John as my coach has been a truly transformative experience. After retiring from the military, I transitioned into government contracting, but I was still looking for something more. John's coaching style was the ideal blend of support and structure \u2014 friendly, engaging, and supportive throughout, creating a safe space for honest self-reflection, while holding me accountable to the actionable plans we built together. Thanks to his guidance, I made that transition into government service and gained a much clearer sense of purpose and confidence along the way. I wouldn't be where I am today without him, and I highly recommend his coaching to anyone looking to make real, lasting progress in their life or career.", { optional: true }),
+          line('testimonial.3.name', 'Testimonial 3: client name', 'Matt', { optional: true }),
+          line('testimonial.3.role', 'Testimonial 3: client title', 'Senior Professional, transitioning from the private sector to government service.', { optional: true }),
         ],
       },
       {

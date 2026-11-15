@@ -1,12 +1,25 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './nav.css'
 import ScheduleButton from './schedule-button'
 
 export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const navRef = useRef<HTMLDivElement>(null)
+
+  // Publish the real nav height so page content can always clear it,
+  // whatever the browser, zoom, font rendering, or screen size.
+  useEffect(() => {
+    const el = navRef.current
+    if (!el) return
+    const set = () => document.documentElement.style.setProperty('--nav-h', `${Math.ceil(el.getBoundingClientRect().height)}px`)
+    set()
+    const ro = new ResizeObserver(set)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60)
@@ -38,6 +51,7 @@ export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
   return (
     <>
       <div
+        ref={navRef}
         className="nav-wrap"
         style={{
           background: scrolled ? 'rgba(247,244,237,0.98)' : 'rgba(247,244,237,0.95)',

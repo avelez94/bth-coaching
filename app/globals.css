@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300..600&display=swap');
 
 :root {
   --ivory: #F7F4ED;
@@ -11,12 +11,18 @@
   --gold-hover: #b08918;
   --text: #1C2B3A;
   --text-mid: #3D5166;
-  --text-muted: #6B7A8D;
+  --text-muted: #56657A; /* darkened for contrast on cream (was #6B7A8D) */
   --rule: rgba(28,43,58,0.1);
   --rule-strong: rgba(28,43,58,0.28);
   --rule-slate: rgba(247,244,237,0.12);
   --error: #b91c1c;
+
+  /* Height of the fixed navigation bar. The Nav component keeps this exact
+     at runtime (ResizeObserver); these values match nav.css as a fallback. */
+  --nav-h: 87px;
 }
+@media (max-width: 1024px) { :root { --nav-h: 97px; } }
+@media (max-width: 860px)  { :root { --nav-h: 95px; } }
 
 *, *::before, *::after {
   box-sizing: border-box;

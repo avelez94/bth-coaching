@@ -367,3 +367,23 @@
   .engagement { padding: 64px 24px; }
   .team-link-section { padding: 56px 24px; }
 }
+
+/* ============================================================
+   READABILITY PASS: stronger contrast at every size, and larger
+   supporting text on laptops and desktops. Mobile sizes unchanged.
+============================================================ */
+.hero-context { color: rgba(247,244,237,0.92); }
+.hero-subhead { color: rgba(247,244,237,0.95); }
+.how-stage-body { color: var(--text-mid); }
+.team-link-body { color: var(--ivory); }
+.ld-testimonial-role { color: var(--text-mid); font-weight: 400; }
+.pillars-intro-label, .pillars-names { color: var(--text-mid); font-weight: 400; }
+.btn-outline-light { border-color: rgba(247,244,237,0.6); }
+
+@media (min-width: 1025px) {
+  .hero-subhead, .familiar-body, .pillars-subhead, .how-stage-body, .outcomes-body,
+  .engagement-detail-item, .team-link-body { font-size: 1.125rem; font-weight: 350; }
+  .hero-context { font-size: 0.84rem; }
+  .ld-testimonial-role { font-size: 0.86rem; }
+  .pillars-names { font-size: 0.92rem; }
+}

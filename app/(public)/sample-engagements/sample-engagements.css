@@ -232,3 +232,21 @@
   .entry { padding: 28px 0; }
   .entry-light { padding: 28px 0; }
 }
+
+/* ============================================================
+   READABILITY PASS: stronger contrast at every size, and larger
+   supporting text on laptops and desktops. Mobile sizes unchanged.
+============================================================ */
+.entry-context { color: var(--text-mid); font-weight: 400; }
+.section-label-light { color: rgba(247,244,237,0.88); }
+.entry-result-light { color: var(--ivory); }
+.entry-context-light { color: rgba(247,244,237,0.92); font-weight: 400; }
+.entry-body-light { color: rgba(247,244,237,0.97); }
+.entry-program-link-light { color: var(--ivory); }
+
+@media (min-width: 1025px) {
+  .hero-body, .entry-body, .entry-body-light { font-size: 1.125rem; font-weight: 350; }
+  .entry-result, .entry-result-light { font-size: 0.96rem; }
+  .entry-context, .entry-context-light { font-size: 0.88rem; }
+  .entry-program-link, .entry-program-link-light { font-size: 0.85rem; }
+}

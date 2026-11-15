@@ -312,3 +312,16 @@
   .coaching { padding: 64px 24px; }
   .cta-section { padding: 42px 24px; }
 }
+
+/* ============================================================
+   READABILITY PASS: stronger contrast at every size, and larger
+   supporting text on laptops and desktops. Mobile sizes unchanged.
+============================================================ */
+.cta-program-link { color: var(--slate-mid); }
+
+@media (min-width: 1025px) {
+  .hero-subhead, .miss-body, .science-cell-body, .coaching-step-body, .coaching-body { font-size: 1.125rem; font-weight: 350; }
+  .pillar-card-body { font-size: 1rem; font-weight: 350; }
+  .pillar-card-subtitle { font-size: 0.84rem; }
+  .cta-program-link { font-size: 1rem; }
+}

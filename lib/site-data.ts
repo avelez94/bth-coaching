@@ -114,12 +114,35 @@ export async function getActiveAgreement(): Promise<ActiveAgreement> {
 // Everything an editable page view needs: its content, booking links,
 // display prices (no Stripe links), and contact details.
 export async function getViewProps(page: PageKey): Promise<import('./view-props').ViewProps> {
-  const [c, programs, settings] = await Promise.all([getPageContent(page), getPrograms(), getSettings()])
+  const [c, programs, settings, se] = await Promise.all([
+    getPageContent(page), getPrograms(), getSettings(),
+    page === 'home' ? getPageContent('sample-engagements') : Promise.resolve(null),
+  ])
   const { toPublic } = await import('./program-info')
   return {
     c,
+    ...(se ? { engagements: engagementPreviews(se) } : {}),
     programs: { 'executive-coaching': toPublic(programs['executive-coaching']), '8-pillars': toPublic(programs['8-pillars']) },
     booking: { free: settings.bookingFreeCallUrl, org: settings.bookingOrgConsultUrl },
     contact: { email: settings.contactEmail, phone: settings.phone, location: settings.location },
   }
+}
+
+// Program each Sample Engagement links to (matches the Sample Engagements page)
+const ENGAGEMENT_LINKS: Record<string, string[]> = {
+  coach: ['/for-organizations', '/executive-coaching', '/leader-development'],
+  cmd: ['/leader-development', '/for-organizations', '/for-organizations', '/leader-development'],
+}
+
+function engagementPreviews(se: Record<string, string>): import('./view-props').EngagementPreview[] {
+  return Object.entries(ENGAGEMENT_LINKS).flatMap(([g, links]) =>
+    links.map((href, i) => ({
+      group: (se[`${g}.label`] ?? '').replace(/\.$/, ''),
+      title: se[`${g}.${i + 1}.title`] ?? '',
+      result: se[`${g}.${i + 1}.result`] ?? '',
+      context: se[`${g}.${i + 1}.context`] ?? '',
+      link: se[`${g}.${i + 1}.link`] ?? '',
+      href,
+    })),
+  ).filter(e => e.title && e.result)
 }

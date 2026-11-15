@@ -1,15 +1,26 @@
 import './home.css'
 import ScheduleButton from '../components/schedule-button'
+import Rotator from '../components/rotator'
+import Image from 'next/image'
 import type { PageContent } from '@/lib/site-content'
+import type { EngagementPreview } from '@/lib/view-props'
+
+const words = (...t: string[]) => t.join(' ').split(/\s+/).filter(Boolean).length
 
 // Home page layout. Text and photos come from `c` (John's saved content
 // merged over the launch copy). Used by the live page and the admin preview.
-export default function HomeView({ c, bookingUrl }: { c: PageContent; bookingUrl?: string }) {
+export default function HomeView({ c, bookingUrl, engagements = [] }: { c: PageContent; bookingUrl?: string; engagements?: EngagementPreview[] }) {
   const badges = [
     { main: c['cred.badge1'], detail: c['cred.badge1Detail'] },
     { main: c['cred.badge2'], detail: c['cred.badge2Detail'] },
     { main: c['cred.badge3'], detail: c['cred.badge3Detail'] },
   ]
+  // Every testimonial with a quote rotates; the first is the original one
+  const testimonials = [
+    { quote: c['testimonial.quote'], name: c['testimonial.name'], role: c['testimonial.role'] },
+    { quote: c['testimonial.2.quote'], name: c['testimonial.2.name'], role: c['testimonial.2.role'] },
+    { quote: c['testimonial.3.quote'], name: c['testimonial.3.name'], role: c['testimonial.3.role'] },
+  ].filter(t => t.quote?.trim())
   return (
     <>
       {/* ===== 1. HERO ===== */}
@@ -83,6 +94,34 @@ export default function HomeView({ c, bookingUrl }: { c: PageContent; bookingUrl
         </div>
       </section>
 
+      {/* ===== 4b. SAMPLE ENGAGEMENTS (rotating preview) ===== */}
+      {engagements.length > 0 && (
+        <section className="engagements-feature">
+          <div className="engagements-inner">
+            <div className="engagements-head">
+              <div className="how-label">{c['engagements.label']}</div>
+              <a href="/sample-engagements" className="engagements-all">{c['engagements.link']}</a>
+            </div>
+            <Rotator
+              label={c['engagements.label']}
+              items={engagements.map((e, i) => ({
+                key: String(i),
+                words: words(e.title, e.result, e.context),
+                node: (
+                  <article className="engagement-card">
+                    <div className="engagement-group">{e.group}</div>
+                    <h3 className="engagement-title">{e.title}</h3>
+                    <p className="engagement-result">{e.result}</p>
+                    <div className="engagement-context">{e.context}</div>
+                    <a href={e.href} className="engagement-link">{e.link}</a>
+                  </article>
+                ),
+              }))}
+            />
+          </div>
+        </section>
+      )}
+
       {/* ===== 5. PHILOSOPHY ===== */}
       <section className="philosophy">
         <div className="philosophy-inner">
@@ -101,11 +140,22 @@ export default function HomeView({ c, bookingUrl }: { c: PageContent; bookingUrl
       <section className="testimonial-section">
         <div className="testimonial-inner">
           <div className="testimonial-label">{c['testimonial.label']}</div>
-          <p className="testimonial-quote">{c['testimonial.quote']}</p>
-          <div className="testimonial-attribution">
-            <div className="testimonial-name">{c['testimonial.name']}</div>
-            <div className="testimonial-role">{c['testimonial.role']}</div>
-          </div>
+          <Rotator
+            label={c['testimonial.label']}
+            items={testimonials.map((t, i) => ({
+              key: String(i),
+              words: words(t.quote),
+              node: (
+                <figure className="testimonial-item">
+                  <blockquote className="testimonial-quote">{t.quote}</blockquote>
+                  <figcaption className="testimonial-attribution">
+                    <div className="testimonial-name">{t.name}</div>
+                    {t.role && <div className="testimonial-role">{t.role}</div>}
+                  </figcaption>
+                </figure>
+              ),
+            }))}
+          />
         </div>
       </section>
 
@@ -129,6 +179,10 @@ export default function HomeView({ c, bookingUrl }: { c: PageContent; bookingUrl
           <div>
             <h2 className="credibility-headline">{c['cred.line1']}<br />{c['cred.line2']}</h2>
             <p className="credibility-body">{c['cred.body']}</p>
+            <div className="credibility-icf">
+              <Image src="/images/icf-acc-badge.png" alt="ICF Associate Certified Coach (ACC) credential badge" width={140} height={140} />
+              <Image src="/images/icf-member-badge.png" alt="ICF Member badge" width={140} height={140} />
+            </div>
           </div>
           <div className="badges-list">
             {badges.filter(b => b.main).map((b, i) => (
