@@ -20,7 +20,22 @@
   /* Height of the fixed navigation bar. The Nav component keeps this exact
      at runtime (ResizeObserver); these values match nav.css as a fallback. */
   --nav-h: 87px;
+
+  /* Type scale for text below the headings. Every page stylesheet uses
+     these, so supporting copy, captions and labels match across the site.
+       body     main paragraphs: 17px phone and tablet, 18px desktop
+       support  card text, descriptions, secondary paragraphs: 16px
+       caption  roles, credentials, captions, secondary links: 14px
+       label    eyebrows, section labels, step numbers: 12px, weight 500
+       button   button text: 12.8px, weight 500, uppercase
+     Inter weight 350 is the reading weight for body and supporting copy. */
+  --fs-body: 1.0625rem;
+  --fs-support: 1rem;
+  --fs-caption: 0.875rem;
+  --fs-label: 0.75rem;
+  --fs-button: 0.8rem;
 }
+@media (min-width: 1025px) { :root { --fs-body: 1.125rem; } }
 @media (max-width: 1024px) { :root { --nav-h: 97px; } }
 @media (max-width: 860px)  { :root { --nav-h: 95px; } }
 
@@ -34,12 +49,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Form controls do not inherit the page font by default, which made
+   enrollment cards and other buttons fall back to Arial. */
+button, input, select, textarea, optgroup {
+  font-family: inherit;
+}
+
 body {
   background: var(--ivory);
   color: var(--text);
   font-family: 'Inter', sans-serif;
   font-size: 1.0625rem;
-  font-weight: 300;
+  font-weight: 350;
   line-height: 1.75;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;

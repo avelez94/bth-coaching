@@ -25,14 +25,14 @@
   display: block;
 }
 .footer-desc {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   line-height: 1.75;
   color: rgba(247,244,237,0.52);
   max-width: 280px;
   margin-bottom: 10px;
 }
 .footer-location {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.42);
   line-height: 1.6;
 }
@@ -44,7 +44,7 @@
   gap: 0;
 }
 .footer-links a {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.68);
   text-decoration: none;
   padding: 7px 0;
@@ -65,7 +65,7 @@
   gap: 4px;
 }
 .footer-contact a {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.68);
   text-decoration: none;
   padding: 7px 0;
@@ -92,7 +92,7 @@
 }
 .footer-contact-schedule {
   display: inline-block;
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.55);
   padding: 7px 0;
 }
@@ -101,7 +101,7 @@
   display: block;
   width: 100%;
   text-align: left;
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.55);
   padding: 7px 0;
   background: none;
@@ -112,7 +112,7 @@
 }
 /* PLACEHOLDER: LinkedIn URLs pending */
 .footer-linkedin-pending {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: rgba(247,244,237,0.35);
   padding: 7px 0;
   display: block;
@@ -133,20 +133,21 @@
   color: rgba(247,244,237,0.55);
   font-style: italic;
   letter-spacing: -0.01em;
+  font-weight: 400;
 }
 .footer-copy {
-  font-size: 0.8rem;
+  font-size: var(--fs-caption);
   color: rgba(247,244,237,0.52);
 }
 .footer-disclaimer {
-  font-size: 0.875rem;
+  font-size: var(--fs-caption);
   color: rgba(247,244,237,0.50);
   line-height: 1.65;
   max-width: 820px;
 }
 
 .footer-credit {
-  font-size: 0.8rem;
+  font-size: var(--fs-caption);
   color: rgba(247,244,237,0.50);
   margin-top: 4px;
 }

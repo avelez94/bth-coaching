@@ -14,7 +14,6 @@
   gap: 80px;
   align-items: center;
 }
-.hero-text { }
 .hero-headline {
   font-family: 'DM Serif Display', serif;
   font-size: clamp(34px, 4.8vw, 64px);
@@ -30,7 +29,7 @@
   line-height: 1.82;
   color: var(--text-mid);
   max-width: 560px;
-  font-weight: 300;
+  font-weight: 350;
   margin-top: 32px;
 }
 .hero-compass-col {
@@ -73,7 +72,7 @@
   line-height: 1.88;
   color: var(--text-mid);
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 350;
 }
 .miss-body:last-child { margin-bottom: 0; }
 .miss-quote-col { padding-top: 8px; position: sticky; top: 100px; }
@@ -86,7 +85,7 @@
   margin-bottom: 16px;
   font-style: italic;
 }
-.miss-quote-attr { font-size: 0.78rem; color: var(--text-muted); font-weight: 400; }
+.miss-quote-attr { font-size: var(--fs-caption); color: var(--text-muted); font-weight: 400; }
 
 
 /* ============================================================
@@ -137,7 +136,7 @@
   font-size: 1.0625rem;
   line-height: 1.82;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
 }
 
 /* ============================================================
@@ -175,7 +174,7 @@
   margin-left: -1px;
 }
 .pillar-card-num {
-  font-size: 0.62rem;
+  font-size: var(--fs-label);
   color: var(--text-muted);
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -192,7 +191,7 @@
   letter-spacing: -0.01em;
 }
 .pillar-card-subtitle {
-  font-size: 0.78rem;
+  font-size: var(--fs-caption);
   color: var(--slate-mid);
   font-style: italic;
   font-weight: 400;
@@ -200,10 +199,10 @@
   line-height: 1.4;
 }
 .pillar-card-body {
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   line-height: 1.72;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
 }
 
 /* Mobile: single-column card stack */
@@ -234,9 +233,9 @@
   align-items: baseline;
 }
 .coaching-step:last-child { border-bottom: 1px solid var(--rule); }
-.coaching-step-num { font-size: 0.68rem; color: var(--slate-mid); font-weight: 500; letter-spacing: 0.04em; padding-top: 2px; }
-.coaching-step-body { font-size: 1.0625rem; line-height: 1.82; color: var(--text-mid); font-weight: 300; }
-.coaching-body { font-size: 1.0625rem; line-height: 1.88; color: var(--text-mid); font-weight: 300; margin-top: 28px; }
+.coaching-step-num { font-size: var(--fs-label); color: var(--slate-mid); font-weight: 500; letter-spacing: 0.04em; padding-top: 2px; }
+.coaching-step-body { font-size: 1.0625rem; line-height: 1.82; color: var(--text-mid); font-weight: 350; }
+.coaching-body { font-size: 1.0625rem; line-height: 1.88; color: var(--text-mid); font-weight: 350; margin-top: 28px; }
 
 /* ============================================================
    CHERRY BLOSSOM HALF-HEIGHT BAND
@@ -262,7 +261,7 @@
 .cta-section { background: var(--ivory-dark); padding: 56px 72px; border-top: 1px solid var(--rule); text-align: center; }
 .cta-section-link-row { margin-bottom: 32px; }
 .cta-program-link {
-  font-size: 0.95rem;
+  font-size: var(--fs-caption);
   color: var(--slate);
   text-decoration: none;
   font-weight: 500;
@@ -321,7 +320,4 @@
 
 @media (min-width: 1025px) {
   .hero-subhead, .miss-body, .science-cell-body, .coaching-step-body, .coaching-body { font-size: 1.125rem; font-weight: 350; }
-  .pillar-card-body { font-size: 1rem; font-weight: 350; }
-  .pillar-card-subtitle { font-size: 0.84rem; }
-  .cta-program-link { font-size: 1rem; }
 }

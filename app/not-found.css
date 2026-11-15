@@ -7,7 +7,7 @@
 }
 .nf-inner { max-width: 640px; }
 .nf-label {
-  font-size: 0.75rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--slate-mid);
@@ -23,10 +23,11 @@
   margin-bottom: 18px;
 }
 .nf-body {
-  font-size: 1.125rem;
+  font-size: var(--fs-body);
   line-height: 1.7;
   color: var(--text-mid);
   margin-bottom: 36px;
+  font-weight: 350;
 }
 .nf-links { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
 .nf-primary {
@@ -42,7 +43,7 @@
 .nf-secondary {
   color: var(--slate-mid);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--fs-caption);
   font-weight: 500;
 }
 @media (max-width: 640px) {

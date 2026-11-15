@@ -42,16 +42,16 @@
 }
 
 .confirm-subhead {
-  font-size: 1.0625rem;
+  font-size: var(--fs-body);
   line-height: 1.75;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
   margin-bottom: 48px;
   max-width: 520px;
 }
 
 .confirm-section-label {
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -77,17 +77,17 @@
   gap: 20px;
   padding: 20px 0;
   border-top: 1px solid var(--rule);
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: var(--text-mid);
   line-height: 1.65;
-  font-weight: 300;
+  font-weight: 350;
   align-items: flex-start;
 }
 .confirm-step-item:last-child { border-bottom: 1px solid var(--rule); }
 .confirm-step-item strong { color: var(--text); font-weight: 500; }
 
 .confirm-step-num {
-  font-size: 0.68rem;
+  font-size: var(--fs-label);
   color: var(--text-muted);
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -102,7 +102,7 @@
   margin-bottom: 28px;
 }
 .confirm-pdf-link {
-  font-size: 0.88rem;
+  font-size: var(--fs-caption);
   font-weight: 500;
   color: var(--navy);
   text-decoration: none;
@@ -112,21 +112,21 @@
 }
 .confirm-pdf-link:hover { color: var(--slate); border-color: var(--slate); }
 .confirm-pdf-note {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   color: var(--text-muted);
   margin-top: 6px;
-  font-weight: 300;
+  font-weight: 350;
 }
 
 .confirm-ref {
-  font-size: 0.75rem;
+  font-size: var(--fs-caption);
   color: var(--text-muted);
-  font-weight: 300;
+  font-weight: 350;
   margin-bottom: 36px;
 }
 .confirm-ref span {
   font-family: 'Courier New', monospace;
-  font-size: 0.72rem;
+  font-size: var(--fs-caption);
   color: var(--text-muted);
 }
 

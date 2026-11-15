@@ -43,12 +43,13 @@
 .rot-btn:hover { border-color: var(--gold); color: var(--text); }
 .rot-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .rot-count {
-  font-size: 0.8rem;
+  font-size: var(--fs-label);
   letter-spacing: 0.08em;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
   min-width: 3.2em;
   text-align: center;
+  font-weight: 500;
 }
 .rot-dark .rot-btn { border-color: rgba(247,244,237,0.35); color: rgba(247,244,237,0.85); }
 .rot-dark .rot-btn:hover { border-color: var(--gold); color: var(--ivory); }

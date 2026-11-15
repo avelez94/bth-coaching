@@ -41,7 +41,7 @@
 .hero { background: var(--slate); padding: 160px 72px 100px; }
 .hero-inner { max-width: 1200px; }
 .hero-context {
-  font-size: 0.78rem;
+  font-size: var(--fs-caption);
   color: rgba(247,244,237,0.75);
   letter-spacing: 0.04em;
   margin-bottom: 24px;
@@ -64,7 +64,7 @@
   margin-top: 36px;
   margin-left: auto;
   max-width: 480px;
-  font-weight: 300;
+  font-weight: 350;
   margin-bottom: 32px;
 }
 .hero-cta { margin-left: auto; max-width: 480px; }
@@ -89,7 +89,7 @@
   line-height: 1.88;
   color: var(--text-mid);
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 350;
   max-width: 640px;
 }
 
@@ -109,29 +109,29 @@
   letter-spacing: -0.01em;
 }
 .pillars-intro-label {
-  font-size: 0.85rem;
+  font-size: var(--fs-caption);
   font-style: italic;
   color: var(--text-muted);
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 350;
 }
 .pillars-subhead {
   font-size: 1.0625rem;
   line-height: 1.78;
   color: var(--text-muted);
-  font-weight: 300;
+  font-weight: 350;
   margin-bottom: 16px;
 }
 .pillars-names {
-  font-size: 0.87rem;
+  font-size: var(--fs-support);
   color: var(--text-muted);
-  font-weight: 300;
+  font-weight: 350;
   line-height: 1.6;
   margin-bottom: 8px;
 }
 
 .pillars-framework-link { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--rule); }
-.framework-link { font-size: 0.95rem; color: var(--slate-mid); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s; }
+.framework-link { font-size: var(--fs-caption); color: var(--slate-mid); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s; }
 .framework-link:hover { gap: 14px; }
 
 /* ============================================================
@@ -149,7 +149,7 @@
 }
 .enroll-link-placeholder {
   margin-top: 16px;
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: var(--text-mid);
   font-weight: 400;
 }
@@ -183,16 +183,16 @@
   position: relative; z-index: 1;
   margin-bottom: 28px; flex-shrink: 0;
 }
-.how-stage-num { font-size: 0.65rem; color: var(--slate-mid); letter-spacing: 0.06em; font-weight: 500; margin-bottom: 10px; display: block; }
+.how-stage-num { font-size: var(--fs-label); color: var(--slate-mid); letter-spacing: 0.06em; font-weight: 500; margin-bottom: 10px; display: block; }
 .how-stage-label { font-family: 'DM Serif Display', serif; font-size: 1.05rem; font-weight: 400; color: var(--text); margin-bottom: 14px; line-height: 1.3; letter-spacing: -0.01em; }
-.how-stage-body { font-size: 1.0625rem; line-height: 1.78; color: var(--text-muted); font-weight: 300; }
+.how-stage-body { font-size: 1.0625rem; line-height: 1.78; color: var(--text-muted); font-weight: 350; }
 
 .how-list-mobile { display: none; flex-direction: column; }
 .how-list-item { padding: 28px 0 28px 24px; border-top: 1px solid var(--rule); border-left: 2px solid var(--rule); }
 .how-list-item:last-child { border-bottom: 1px solid var(--rule); }
-.how-list-num { font-size: 0.65rem; color: var(--slate-mid); letter-spacing: 0.06em; font-weight: 500; margin-bottom: 6px; display: block; }
+.how-list-num { font-size: var(--fs-label); color: var(--slate-mid); letter-spacing: 0.06em; font-weight: 500; margin-bottom: 6px; display: block; }
 .how-list-label { font-family: 'DM Serif Display', serif; font-size: 1rem; font-weight: 400; color: var(--text); margin-bottom: 10px; line-height: 1.3; }
-.how-list-body { font-size: 1.0625rem; line-height: 1.78; color: var(--text-muted); font-weight: 300; }
+.how-list-body { font-size: 1.0625rem; line-height: 1.78; color: var(--text-muted); font-weight: 350; }
 
 /* ============================================================
    5. WHAT'S POSSIBLE
@@ -211,7 +211,7 @@
   font-size: 1.0625rem;
   line-height: 1.88;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
   max-width: 640px;
 }
 
@@ -221,12 +221,12 @@
 .ld-testimonial { background: var(--ivory-dark); padding: 100px 72px; border-top: 1px solid var(--rule); }
 .ld-testimonial-inner { max-width: 820px; margin: 0 auto; }
 .ld-testimonial-label {
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   color: var(--text-muted);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   margin-bottom: 48px;
-  font-weight: 400;
+  font-weight: 500;
 }
 .ld-testimonial-quote {
   font-family: 'DM Serif Display', serif;
@@ -244,15 +244,15 @@
   border-top: 1px solid var(--rule);
 }
 .ld-testimonial-name {
-  font-size: 0.88rem;
+  font-size: var(--fs-support);
   font-weight: 500;
   color: var(--text);
   margin-bottom: 4px;
 }
 .ld-testimonial-role {
-  font-size: 0.78rem;
+  font-size: var(--fs-caption);
   color: var(--text-muted);
-  font-weight: 300;
+  font-weight: 350;
   line-height: 1.5;
 }
 
@@ -269,7 +269,7 @@
   align-items: start;
 }
 .engagement-context {
-  font-size: 0.78rem;
+  font-size: var(--fs-label);
   color: var(--text-muted);
   letter-spacing: 0.03em;
   font-weight: 500;
@@ -292,13 +292,13 @@
   font-size: 1.0625rem;
   line-height: 1.7;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
 }
 .engagement-detail-item:first-child { border-top: 1px solid var(--rule); }
 .investment-block { margin-top: 36px; padding-top: 32px; }
-.investment-label { font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
+.investment-label { font-size: var(--fs-label); color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
 .investment-amount { font-family: 'DM Serif Display', serif; font-size: 2.2rem; font-weight: 400; color: var(--slate-mid); line-height: 1; margin-bottom: 10px; }
-.investment-note { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; line-height: 1.6; }
+.investment-note { font-size: var(--fs-caption); color: var(--text-muted); font-weight: 350; line-height: 1.6; }
 
 /* ============================================================
    7. TEAM LINK
@@ -325,7 +325,7 @@
   line-height: 1.88;
   color: rgba(247,244,237,0.88);
   margin-bottom: 28px;
-  font-weight: 300;
+  font-weight: 350;
 }
 
 /* ============================================================
@@ -383,7 +383,4 @@
 @media (min-width: 1025px) {
   .hero-subhead, .familiar-body, .pillars-subhead, .how-stage-body, .outcomes-body,
   .engagement-detail-item, .team-link-body { font-size: 1.125rem; font-weight: 350; }
-  .hero-context { font-size: 0.84rem; }
-  .ld-testimonial-role { font-size: 0.86rem; }
-  .pillars-names { font-size: 0.92rem; }
 }

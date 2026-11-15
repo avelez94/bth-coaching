@@ -12,7 +12,7 @@
 .hero { background: var(--slate); padding: 160px 72px 100px; }
 .hero-inner { max-width: 1200px; }
 .hero-context {
-  font-size: 0.78rem;
+  font-size: var(--fs-caption);
   color: rgba(247,244,237,0.92);
   letter-spacing: 0.04em;
   margin-bottom: 24px;
@@ -35,7 +35,7 @@
   margin-top: 36px;
   margin-left: auto;
   max-width: 480px;
-  font-weight: 300;
+  font-weight: 350;
   margin-bottom: 32px;
 }
 .hero-cta { margin-left: auto; max-width: 480px; }
@@ -60,7 +60,7 @@
   line-height: 1.88;
   color: var(--text-mid);
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 350;
   max-width: 640px;
 }
 .familiar-body:last-child { margin-bottom: 0; }
@@ -111,15 +111,15 @@
   color: var(--text);
   border-left: 2px solid var(--slate);
   padding-left: 32px;
-  font-weight: 300;
+  font-weight: 350;
 }
 .story-text p { margin-bottom: 0; }
 .story-attribution {
   margin-top: 20px;
-  font-size: 0.82rem;
+  font-size: var(--fs-caption);
   color: var(--text-muted);
   font-style: italic;
-  font-weight: 300;
+  font-weight: 350;
   letter-spacing: 0.01em;
 }
 
@@ -150,7 +150,7 @@
   padding: 40px 36px;
 }
 .work-list-num {
-  font-size: 0.65rem;
+  font-size: var(--fs-label);
   color: var(--gold);
   letter-spacing: 0.04em;
   margin-bottom: 10px;
@@ -169,7 +169,7 @@
   font-size: 1.0625rem;
   line-height: 1.82;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
 }
 
 /* ============================================================
@@ -187,11 +187,11 @@
 }
 .how-body-1 {
   font-size: 1.0625rem; line-height: 1.88; color: var(--text-mid);
-  margin-bottom: 24px; font-weight: 300; max-width: 620px; margin-left: 0;
+  margin-bottom: 24px; font-weight: 350; max-width: 620px; margin-left: 0;
 }
 .how-body-2 {
   font-size: 1.0625rem; line-height: 1.88; color: var(--text-mid);
-  font-weight: 300; max-width: 560px;
+  font-weight: 350; max-width: 560px;
   margin-left: 0;
 }
 
@@ -212,7 +212,7 @@
   font-size: 1.0625rem;
   line-height: 1.88;
   color: var(--text-mid);
-  font-weight: 300;
+  font-weight: 350;
   max-width: 640px;
 }
 
@@ -226,7 +226,7 @@
   gap: 80px; align-items: start;
 }
 .engagement-context {
-  font-size: 0.78rem; color: var(--text-muted);
+  font-size: var(--fs-label); color: var(--text-muted);
   letter-spacing: 0.03em; font-weight: 500;
   text-transform: uppercase; margin-bottom: 16px;
 }
@@ -240,12 +240,12 @@
 .engagement-detail-item {
   padding: 18px 0; border-bottom: 1px solid var(--rule);
   font-size: 1.0625rem; line-height: 1.7;
-  color: var(--text-mid); font-weight: 300;
+  color: var(--text-mid); font-weight: 350;
 }
 .engagement-detail-item:first-child { border-top: 1px solid var(--rule); }
 .investment-block { margin-top: 36px; padding-top: 32px; border-top: 1px solid var(--rule); }
 .investment-label {
-  font-size: 0.72rem; color: var(--text-muted);
+  font-size: var(--fs-label); color: var(--text-muted);
   letter-spacing: 0.06em; text-transform: uppercase;
   margin-bottom: 10px; font-weight: 500;
 }
@@ -256,9 +256,9 @@
 }
 
 .sponsor-link {
-  font-size: 0.88rem;
+  font-size: var(--fs-support);
   color: var(--text);
-  font-weight: 300;
+  font-weight: 350;
   line-height: 1.7;
   margin-top: 48px;
   padding-top: 32px;
@@ -290,7 +290,7 @@
 }
 .enroll-link-placeholder {
   margin-top: 16px;
-  font-size: 0.95rem;
+  font-size: var(--fs-support);
   color: var(--text-mid);
   font-weight: 400;
 }
@@ -346,7 +346,4 @@
 @media (min-width: 1025px) {
   .hero-subhead, .familiar-body, .work-list-body, .how-body-1, .how-body-2, .possible-body,
   .engagement-detail-item, .client-story p:not(.story-attribution) { font-size: 1.125rem; font-weight: 350; }
-  .hero-context { font-size: 0.84rem; }
-  .story-attribution { font-size: 0.9rem; }
-  .sponsor-link { font-size: 0.98rem; font-weight: 350; }
 }
