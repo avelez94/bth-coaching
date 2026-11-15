@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next'
+import { INDEXABLE, SITE_URL } from '@/lib/seo'
 
 export default function robots(): MetadataRoute.Robots {
+  // Preview and test copies ask every search engine to stay away
+  if (!INDEXABLE) return { rules: { userAgent: '*', disallow: '/' } }
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: '/enroll',
-    },
-    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mccrackencoaching.com'}/sitemap.xml`,
+    rules: { userAgent: '*', allow: '/', disallow: ['/admin', '/api/', '/enroll'] },
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   }
 }

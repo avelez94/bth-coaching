@@ -1,3 +1,4 @@
+import { TAGLINE } from './seo'
 // ============================================================
 // Editable page content: what John can change on each existing
 // page, grouped the way the live page is laid out.
@@ -62,7 +63,7 @@ export const PAGE_SCHEMA = {
         description: 'The large opening area with your headline and photo.',
         fields: [
           { key: 'hero.headline', label: 'Headline', type: 'textarea', default: "The challenge in your job is only part of what you're carrying." },
-          { key: 'hero.subhead', label: 'Supporting statement', type: 'textarea', default: 'I help leaders gain clarity and get results, without sacrificing everything else.' },
+          { key: 'hero.subhead', label: 'Supporting statement', type: 'textarea', default: TAGLINE, help: 'This is also the tagline used in search results and link previews.' },
           { key: 'hero.body', label: 'Short paragraph', type: 'textarea', default: 'Executive and leadership coaching backed by 37 years of building teams and leading people through high-stakes change, from Navy ships to large organizations.' },
           { key: 'hero.orgPrompt', label: 'Organization link: question', type: 'text', default: 'Hiring for your organization?' },
           { key: 'hero.orgLink', label: 'Organization link: link text', type: 'text', default: 'Start here →' },

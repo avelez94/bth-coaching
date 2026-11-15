@@ -1,26 +1,16 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { DESCRIPTION, INDEXABLE, SHARE_IMAGE, SHORT_NAME, SITE_NAME, SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Beyond the Horizon — Executive Coaching and Consulting',
-    template: '%s | Beyond the Horizon',
-  },
-  description: 'Executive coaching and consulting for leaders who are ready to navigate change, unlock potential, and create lasting impact. Led by John McCracken, retired U.S. Navy Captain and ICF certified coach.',
-  metadataBase: new URL('https://mccrackencoaching.com'),
-  robots: { index: true, follow: true },
-  openGraph: {
-    title: 'Beyond the Horizon — Executive Coaching and Consulting',
-    description: 'Executive coaching and consulting for leaders who are ready to navigate change, unlock potential, and create lasting impact.',
-    url: 'https://mccrackencoaching.com',
-    images: [
-      {
-        url: '/images/bth-og-image.png',
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SHORT_NAME}` },
+  description: DESCRIPTION,
+  applicationName: SITE_NAME,
+  // Only the real production site is indexed; preview and test copies are not
+  robots: INDEXABLE ? { index: true, follow: true } : { index: false, follow: false, googleBot: { index: false, follow: false } },
+  openGraph: { type: 'website', siteName: SITE_NAME, locale: 'en_US', title: SITE_NAME, description: DESCRIPTION, images: [SHARE_IMAGE] },
+  twitter: { card: 'summary_large_image', title: SITE_NAME, description: DESCRIPTION, images: [SHARE_IMAGE.url] },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
