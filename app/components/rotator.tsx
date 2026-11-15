@@ -13,8 +13,8 @@ export interface RotatorItem {
 // A quiet rotating window: one item at a time with a soft cross fade.
 // Every item sits in the same grid cell, so the section keeps the height of
 // the tallest item and nothing below it jumps. Rotation pauses while the
-// visitor hovers, focuses, or reads elsewhere (tab hidden or scrolled away),
-// and never runs on its own for visitors who prefer reduced motion.
+// visitor hovers, focuses, or reads elsewhere (tab hidden or scrolled away).
+// Visitors who prefer reduced motion get an instant swap instead of a fade.
 export default function Rotator({ items, label, tone = 'light' }: { items: RotatorItem[]; label: string; tone?: 'light' | 'dark' }) {
   const [i, setI] = useState(0)
   const [hold, setHold] = useState(false)
@@ -42,9 +42,10 @@ export default function Rotator({ items, label, tone = 'light' }: { items: Rotat
   const go = useCallback((d: number) => setI(x => (x + d + n) % n), [n])
 
   useEffect(() => {
-    if (n < 2 || hold || !visible || reduced) return
-    // About 200 words a minute, never less than 9 seconds
-    const ms = Math.max(9000, items[i].words * 300)
+    if (n < 2 || hold || !visible) return
+    // 8 to 15 seconds depending on length. With reduced motion the slides
+    // still advance, just without the fade (handled in CSS).
+    const ms = Math.min(15000, Math.max(8000, items[i].words * 120))
     const t = window.setTimeout(() => { if (!document.hidden) go(1) }, ms)
     return () => window.clearTimeout(t)
   }, [i, n, hold, visible, reduced, items, go])
