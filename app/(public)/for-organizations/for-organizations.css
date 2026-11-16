@@ -21,9 +21,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Lower crop point keeps John's head higher in the wide desktop frame.
-     On phones the frame matches the photo's shape, so nothing is cropped. */
-  object-position: center 36%;
+  /* Lower crop point keeps John's head higher in the wide desktop frame,
+     then 48px more so his head sits higher still. max() stops the shift at
+     the photo's bottom edge, so narrow frames never show a gap. On phones
+     the frame matches the photo's shape, so nothing is cropped. */
+  object-position: center max(calc(36% - 48px), 100%);
   display: block;
 }
 
