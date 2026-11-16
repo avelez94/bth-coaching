@@ -184,7 +184,7 @@ export function sprintPurchaseEmail(x: { gift: boolean; name: string; email: str
   ]
   const subject = x.gift ? `8 Pillar Sprint gift purchased by ${x.name || x.email}` : `New 8 Pillar Sprint registration: ${x.name || x.email}`
   const next = x.gift
-    ? `Next step: send the gift certificate to ${x.email || 'the buyer'} so they can pass it along. The recipient registers by the Sprint deadline.`
+    ? `The gift certificate is emailed to ${x.email || 'the buyer'} automatically. The recipient registers by the Sprint deadline.`
     : `Next step: send ${x.name ? x.name.split(' ')[0] : 'the participant'} the welcome details and the self-assessment.`
   const body = [p(`Stripe confirmed a payment for the <strong>8 Pillar Sprint</strong>.`), table(rows), p(esc(next)), p(`All Sprint purchases are listed in Admin, Sprint Purchases.`)].join('\n')
   const text = `Stripe confirmed a payment for the 8 Pillar Sprint.
@@ -194,6 +194,105 @@ ${textTable(rows)}
 ${next}
 
 All Sprint purchases are listed in Admin, Sprint Purchases.${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}
+
+// ------------------------------------------------------------
+// 8 Pillar Sprint gifts
+// ------------------------------------------------------------
+type Recipient = string | null  // the real recipient when this is a test send
+
+function giftBanner(real: Recipient): { html: string; text: string } {
+  if (real === null) return { html: '', text: '' }
+  const line = 'TEST MODE: Sprint gift test email. Outside the live site gift emails go only to the test inbox, never to real people.'
+  return {
+    html: `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:20px;font-weight:bold;">${esc(line)}<br><span style="font-weight:normal">Real recipient (not sent): ${esc(real || 'none')}</span></div>`,
+    text: `${line}\nReal recipient (not sent): ${real || 'none'}\n\n`,
+  }
+}
+
+const button = (href: string, label: string) =>
+  `<p style="margin:4px 0 22px;"><a href="${esc(href)}" style="display:inline-block;background:${C.navy};color:#ffffff;text-decoration:none;padding:12px 22px;font-size:14px;letter-spacing:0.5px;">${esc(label)}</a></p>`
+
+/** To the purchaser, with the certificate PDF attached */
+export function giftCertificateEmail(x: { purchaserName: string | null; code: string; link: string; registerBy: string; giftTerm: string }, footer: Footer, testRecipient: Recipient): Email {
+  const first = (x.purchaserName ?? '').trim().split(/\s+/)[0]
+  const t = giftBanner(testRecipient)
+  const subject = 'Your 8 Pillar Sprint gift certificate'
+  const rows: [string, string][] = [['Redemption code', x.code], ['Register by', x.registerBy]]
+  const body = [
+    p(first ? `Hi ${esc(first)},` : 'Hello,'),
+    p('Thank you for giving the <strong>8 Pillar Sprint</strong>. Your purchase is confirmed and your gift certificate is attached as a PDF.'),
+    p('<strong>To pass it along,</strong> forward this email or the attached certificate to the person you are giving it to, or print it and hand it to them. They use the link or code to claim their seat and complete their own registration.'),
+    table(rows),
+    button(x.link, 'Claim the Sprint seat'),
+    p(`<span style="font-size:13px;color:${C.muted};">Redemption link: <a href="${esc(x.link)}" style="color:${C.mid};word-break:break-all;">${esc(x.link)}</a></span>`),
+    p(`Please remind them to register by <strong>${esc(x.registerBy)}</strong>.`),
+    ...(x.giftTerm ? [p(esc(x.giftTerm))] : []),
+    p('If you have any questions, reply to this email.'),
+  ].join('\n')
+  const text = `${t.text}${first ? `Hi ${first},` : 'Hello,'}
+
+Thank you for giving the 8 Pillar Sprint. Your purchase is confirmed and your gift certificate is attached as a PDF.
+
+To pass it along, forward this email or the attached certificate to the person you are giving it to, or print it and hand it to them. They use the link or code to claim their seat and complete their own registration.
+
+${textTable(rows)}
+Redemption link: ${x.link}
+
+Please remind them to register by ${x.registerBy}.
+${x.giftTerm ? `\n${x.giftTerm}\n` : ''}
+If you have any questions, reply to this email.${textFooter(footer)}`
+  return { subject, html: layout({ preheader: 'Your gift certificate is attached.', body, footer, testBanner: t.html }), text }
+}
+
+/** To John when a gift is bought */
+export function giftAdminNoticeEmail(x: { name: string; email: string; amount: string; code: string; sessionRef: string }, footer: Footer): Email {
+  const rows: [string, string][] = [
+    ['Purchase', 'Gift'], ['Buyer', x.name || 'Not provided'], ['Email', x.email || 'Not provided'],
+    ['Paid', x.amount], ['Gift code', x.code], ['Stripe reference', x.sessionRef],
+  ]
+  const subject = `8 Pillar Sprint gift purchased by ${x.name || x.email}`
+  const lines = [
+    'Stripe confirmed a payment for an 8 Pillar Sprint gift.',
+    'The gift certificate was emailed to the buyer automatically. You do not need to send anything. When the recipient claims the gift, you will get another email with their details.',
+    'All gifts are listed in Admin, Sprint Purchases.',
+  ]
+  const body = [p(esc(lines[0])), table(rows), p(esc(lines[1])), p(esc(lines[2]))].join('\n')
+  const text = `${lines[0]}\n\n${textTable(rows)}\n\n${lines[1]}\n\n${lines[2]}${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}
+
+/** To the recipient after they redeem */
+export function giftRedeemedRecipientEmail(x: { name: string; purchaserName: string | null; details: [string, string][] }, footer: Footer, testRecipient: Recipient): Email {
+  const first = x.name.trim().split(/\s+/)[0]
+  const t = giftBanner(testRecipient)
+  const subject = 'You are registered for the 8 Pillar Sprint'
+  const from = x.purchaserName ? `, a gift from ${x.purchaserName}` : ''
+  const rows = x.details.filter(([k, v]) => k && v)
+  const l1 = `Your seat in the 8 Pillar Sprint is confirmed${from}.`
+  const l2 = 'I will be in touch before Week 1 with your welcome details and the self-assessment.'
+  const l3 = 'If you have any questions, reply to this email.'
+  const body = [p(`Hi ${esc(first)},`), p(esc(l1)), table(rows), p(esc(l2)), p(esc(l3)), p('John')].join('\n')
+  const text = `${t.text}Hi ${first},\n\n${l1}\n\n${textTable(rows)}\n\n${l2}\n\n${l3}\n\nJohn${textFooter(footer)}`
+  return { subject, html: layout({ preheader: l1, body, footer, testBanner: t.html }), text }
+}
+
+/** To John after a recipient redeems */
+export function giftRedeemedAdminEmail(x: { recipientName: string; recipientEmail: string; recipientPhone: string | null; purchaserName: string; purchaserEmail: string; code: string }, footer: Footer): Email {
+  const rows: [string, string][] = [
+    ['Participant', x.recipientName], ['Email', x.recipientEmail], ['Phone', x.recipientPhone || 'Not provided'],
+    ['Gift from', [x.purchaserName, x.purchaserEmail].filter(Boolean).join(', ') || 'Not provided'], ['Gift code', x.code],
+  ]
+  const first = x.recipientName.trim().split(/\s+/)[0] || 'the participant'
+  const subject = `8 Pillar Sprint gift redeemed: ${x.recipientName}`
+  const lines = [
+    'A Sprint gift was just claimed. The recipient registered with these details.',
+    `Next step: send ${first} the welcome details and the self-assessment.`,
+    'The gift now shows as Redeemed in Admin, Sprint Purchases, and cannot be claimed again.',
+  ]
+  const body = [p(esc(lines[0])), table(rows), p(esc(lines[1])), p(esc(lines[2]))].join('\n')
+  const text = `${lines[0]}\n\n${textTable(rows)}\n\n${lines[1]}\n\n${lines[2]}${textFooter(footer)}`
   return { subject, html: layout({ preheader: subject, body, footer }), text }
 }
 

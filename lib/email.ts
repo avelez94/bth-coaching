@@ -13,7 +13,8 @@ import type { SiteSettings } from './site-settings'
 //   RESEND_ADMIN_EMAIL     where John's notifications go (falls back to the
 //                          contact email in Admin > Site Settings)
 //   ENROLLMENT_TEST_EMAIL  Preview/local test mode only: every enrollment
-//                          email goes here instead of to real people
+//                          and Sprint gift email goes here instead of to
+//                          real people
 //
 // Nothing here refers to a Resend account, team or user. Moving Resend
 // to a different owner means a new API key in Vercel, nothing else.
@@ -27,6 +28,7 @@ import type { SiteSettings } from './site-settings'
 export type EmailKind =
   | 'enrollment_client' | 'enrollment_admin' | 'resend_copy'
   | 'payment_received' | 'sprint_purchase'
+  | 'gift_certificate' | 'gift_redeemed_recipient' | 'gift_redeemed_admin'
   | 'contact_admin' | 'contact_sender' | 'test'
 
 export interface Attachment { filename: string; content: Buffer }
@@ -72,6 +74,7 @@ export async function sendEmail(opts: {
   replyTo?: string
   attachments?: Attachment[]
   enrollmentId?: string | null
+  giftId?: string | null
   testMode?: boolean
 }): Promise<SendResult> {
   let result: SendResult
@@ -107,6 +110,7 @@ export async function sendEmail(opts: {
     await db().from('email_log').insert({
       kind: opts.kind,
       enrollment_id: opts.enrollmentId ?? null,
+      ...(opts.giftId ? { gift_id: opts.giftId } : {}),
       recipient: opts.to || null,
       subject: opts.subject,
       status: result.status,

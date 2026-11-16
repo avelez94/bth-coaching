@@ -32,7 +32,7 @@ export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY }: { book
 
   // Optional pages (Page Status in the admin) appear only while Active
   const sprint: Link[] = visible.sprint ? [{ label: OPTIONAL_PAGES.sprint.label, href: OPTIONAL_PAGES.sprint.path }] : []
-  const faq: Link[] = visible.faq ? [{ label: OPTIONAL_PAGES.faq.label, href: OPTIONAL_PAGES.faq.path }] : []
+  const faq: Link[] = [{ label: 'FAQ', href: '/faq' }]
 
   // Mobile menu keeps all individual links (no nested dropdown)
   const mobileLinks: Link[] = [

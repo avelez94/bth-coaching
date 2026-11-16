@@ -45,7 +45,7 @@ export default function Footer({ settings, visible = DEFAULT_VISIBILITY }: { set
     { label: 'Sample Engagements', href: '/sample-engagements' },
     { label: 'The 8 Pillars', href: '/the-8-pillars' },
     { label: 'About', href: '/about' },
-    ...opt('faq'),
+    { label: 'FAQ', href: '/faq' },
     { label: 'Contact', href: '/contact' },
   ]
 

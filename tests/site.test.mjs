@@ -8,12 +8,11 @@ const BASE = process.env.BASE_URL || 'http://localhost:3000'
 const PROD = process.env.EXPECT_INDEXABLE === '1'
 const SITE = (process.env.EXPECT_SITE_URL || 'https://mccrackencoaching.com').replace(/\/$/, '')
 // Optional pages (Page Status in the admin). Defaults match a fresh site:
-// Sprint Hidden, FAQ Active. Override with EXPECT_SPRINT / EXPECT_FAQ.
+// Sprint Hidden. Override with EXPECT_SPRINT.
 const OPTIONAL = {
   '/sprint': { active: (process.env.EXPECT_SPRINT || 'hidden') === 'active', redirect: '/leader-development', label: '8 Pillar Sprint' },
-  '/faq': { active: (process.env.EXPECT_FAQ || 'active') === 'active', redirect: '/contact', label: 'FAQ' },
 }
-const PAGES = ['/', '/executive-coaching', '/leader-development', '/for-organizations', '/sample-engagements', '/the-8-pillars', '/about', '/contact',
+const PAGES = ['/', '/executive-coaching', '/leader-development', '/for-organizations', '/sample-engagements', '/the-8-pillars', '/about', '/faq', '/contact',
   ...Object.entries(OPTIONAL).filter(([, o]) => o.active).map(([p]) => p)]
 const TAGLINE = 'I help leaders gain clarity and get results, without sacrificing everything else.'
 

@@ -8,7 +8,7 @@
 // ============================================================
 
 export type PageStatus = 'active' | 'hidden'
-export type OptionalPageKey = 'sprint' | 'faq'
+export type OptionalPageKey = 'sprint'
 
 export interface OptionalPage {
   label: string
@@ -29,13 +29,6 @@ export const OPTIONAL_PAGES: Record<OptionalPageKey, OptionalPage> = {
     hiddenRedirectLabel: 'the 8 Pillars Leadership page',
     // Hidden until John confirms the session time and switches it on
     defaultStatus: 'hidden',
-  },
-  faq: {
-    label: 'FAQ',
-    path: '/faq',
-    hiddenRedirect: '/contact',
-    hiddenRedirectLabel: 'the Contact page',
-    defaultStatus: 'active',
   },
 }
 

@@ -30,6 +30,17 @@ export interface CheckoutSession {
   payment_status: 'paid' | 'unpaid' | 'no_payment_required'
   mode: 'payment' | 'subscription' | 'setup'
   livemode: boolean
+  payment_intent?: string | null
+}
+
+/** The fields of a Charge (charge.refunded) this site uses */
+export interface StripeCharge {
+  id: string
+  payment_intent: string | null
+  amount: number
+  amount_refunded: number
+  refunded: boolean
+  livemode: boolean
 }
 
 export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i

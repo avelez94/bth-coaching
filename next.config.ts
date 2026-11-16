@@ -15,13 +15,22 @@ const nextConfig: NextConfig = {
       { source: '/enroll/:path*', headers: noindex },
       { source: '/enroll', headers: noindex },
       { source: '/api/:path*', headers: noindex },
+      // Sprint gift redemption: private links, never indexed, cached or
+      // passed on to other sites as a referrer
+      { source: '/sprint/redeem', headers: [
+        ...noindex,
+        { key: 'Referrer-Policy', value: 'no-referrer' },
+        { key: 'Cache-Control', value: 'private, no-store' },
+      ] },
       // Preview and test copies of the site: nothing is indexed
       ...(isProduction ? [] : [{ source: '/:path*', headers: noindex }]),
     ]
   },
-  // Fonts and logo read at runtime by the signed agreement PDF generator
+  // Fonts and logo read at runtime by the agreement and gift certificate PDFs
   outputFileTracingIncludes: {
     '/api/enroll/submit': ['./lib/pdf-assets/**/*'],
+    '/api/stripe/webhook': ['./lib/pdf-assets/**/*'],
+    '/api/admin/sprint-gifts': ['./lib/pdf-assets/**/*'],
   },
   async redirects() {
     return [

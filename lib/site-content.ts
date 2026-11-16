@@ -631,7 +631,7 @@ export const PAGE_SCHEMA = {
       { id: 'top', title: 'Top of page', description: 'The headline and introduction.', fields: [
         para('top.headline', 'Headline', 'A better path starts with a single conversation'),
         para('top.body', 'Introduction', "A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there."),
-        line('top.faqLink', 'FAQ link text', 'Frequently asked questions →', { help: 'Shown under the introduction while the FAQ page is Active.' }),
+        line('top.faqLink', 'FAQ link text', 'Frequently asked questions →', { help: 'Shown under the introduction.' }),
       ] },
       { id: 'form', title: 'Message form', description: 'What visitors see after sending a message.', fields: [
         line('form.success', 'Thank-you message', "Thanks, I'll respond within one business day."),

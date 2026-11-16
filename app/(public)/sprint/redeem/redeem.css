@@ -1,0 +1,58 @@
+/* ============================================================
+   SPRINT GIFT REDEMPTION
+   Matches the Sprint page: slate band, ivory body, DM Serif
+   headings, Inter text on the shared type scale.
+============================================================ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 13px 28px; font-size: var(--fs-button); letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: var(--gold-hover); }
+.btn-navy { background: var(--navy); color: var(--ivory); }
+.btn-navy:hover { background: var(--slate-mid); }
+.btn:disabled { opacity: 0.6; cursor: default; }
+
+.rd-hero { background: var(--slate); padding: calc(var(--nav-h) + 48px) 72px 56px; }
+.rd-inner { max-width: 1200px; margin: 0 auto; }
+.rd-narrow { max-width: 640px; }
+.rd-label { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ivory); margin-bottom: 14px; }
+.rd-h1 { font-family: 'DM Serif Display', serif; font-size: clamp(32px, 4vw, 52px); font-weight: 400; line-height: 1.12; color: var(--ivory); letter-spacing: -0.02em; }
+.rd-h2 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 2.6vw, 32px); font-weight: 400; line-height: 1.25; color: var(--text); margin-bottom: 14px; }
+.rd-h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; font-weight: 400; color: var(--text); margin-bottom: 10px; }
+
+.rd-body { background: var(--ivory); padding: 56px 72px 96px; }
+.rd-lead { font-size: var(--fs-body); line-height: 1.75; color: var(--text-mid); font-weight: 350; margin-bottom: 24px; }
+.rd-status { font-size: 1.125rem; line-height: 1.6; padding: 16px 20px; margin-bottom: 24px; border-left: 3px solid; background: var(--ivory-dark); }
+.rd-status-ok { border-color: var(--gold); color: var(--text); }
+.rd-status-error { border-color: var(--error); color: var(--text); }
+
+.rd-details { margin: 0 0 32px; border-top: 1px solid var(--rule-strong); }
+.rd-details > div { display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.rd-details dt { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding-top: 4px; }
+.rd-details dd { margin: 0; font-size: var(--fs-support); line-height: 1.6; color: var(--text); font-weight: 350; }
+
+.rd-form, .rd-code-form { margin-bottom: 32px; }
+.rd-field { margin-bottom: 26px; }
+.rd-field label { display: block; font-size: var(--fs-caption); color: var(--text); letter-spacing: 0.04em; margin-bottom: 8px; font-weight: 500; }
+.rd-field input {
+  width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(28,43,58,0.35); border-radius: 0;
+  color: var(--text); font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 350; padding: 10px 0; outline: none;
+  transition: border-color 0.2s; -webkit-appearance: none;
+}
+.rd-field input:focus { border-bottom-color: var(--slate); }
+.rd-field input::placeholder { color: rgba(86,101,122,0.7); }
+.rd-optional { font-size: var(--fs-label); color: var(--text-muted); font-weight: 400; }
+.rd-error { font-size: var(--fs-caption); color: var(--error); margin-bottom: 20px; line-height: 1.5; }
+.rd-submit { margin-top: 6px; }
+.rd-success { padding: 24px; background: var(--ivory-dark); border-left: 3px solid var(--gold); margin-bottom: 32px; }
+.rd-success p { font-size: var(--fs-body); line-height: 1.75; color: var(--text-mid); font-weight: 350; }
+.rd-terms { margin: 8px 0 28px; }
+.rd-terms-text { max-height: 260px; overflow: auto; padding: 16px; background: #fff; border: 1px solid var(--rule); font-size: var(--fs-caption); line-height: 1.7; white-space: pre-wrap; margin-bottom: 14px; }
+.rd-check { display: flex; gap: 10px; align-items: flex-start; font-size: var(--fs-support); color: var(--text); }
+.rd-help { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-muted); }
+.rd-help a { color: var(--slate-mid); }
+
+@media (max-width: 860px) {
+  .rd-hero { padding: calc(var(--nav-h) + 36px) 24px 40px; }
+  .rd-body { padding: 40px 24px 72px; }
+  .rd-details > div { grid-template-columns: 1fr; gap: 4px; }
+  .rd-submit, .rd-code-form .btn { width: 100%; }
+}
