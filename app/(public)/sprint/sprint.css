@@ -13,6 +13,8 @@
 .btn-outline-light:hover { background: rgba(247,244,237,0.1); }
 .btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(28,43,58,0.28); }
 .btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
+/* Clear keyboard focus on every background (same gold ring as the FAQ and testimonials) */
+.btn:focus-visible, .sp-link:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 .sp-btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 .sp-btn-row-center { justify-content: center; }
@@ -50,8 +52,8 @@
 
 /* ---------- quote (top and bottom of page) ---------- */
 .sp-quote { margin: 0 0 40px; max-width: 620px; }
-.sp-quote blockquote { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: rgba(247,244,237,0.9); }
-.sp-quote figcaption { margin-top: 8px; font-size: var(--fs-caption); letter-spacing: 0.04em; color: rgba(247,244,237,0.75); }
+.sp-quote blockquote { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--ivory); }
+.sp-quote figcaption { margin-top: 8px; font-size: var(--fs-caption); letter-spacing: 0.04em; color: var(--ivory); }
 .sp-quote-bottom { margin: 48px auto 0; text-align: center; }
 .sp-quote-bottom blockquote { color: var(--text-mid); }
 .sp-quote-bottom figcaption { color: var(--text-muted); }
@@ -66,7 +68,7 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(247,244,237,0.85);
+  color: var(--ivory);
   margin-bottom: 20px;
 }
 .sp-hero-headline {
@@ -79,10 +81,10 @@
   max-width: 900px;
 }
 .sp-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 48px; align-items: start; }
-.sp-hero-pillars { font-size: var(--fs-support); line-height: 1.8; color: rgba(247,244,237,0.88); font-weight: 350; padding-top: 22px; border-top: 1px solid rgba(247,244,237,0.25); }
+.sp-hero-pillars { font-size: var(--fs-support); line-height: 1.8; color: var(--ivory); font-weight: 350; padding-top: 22px; border-top: 1px solid rgba(247,244,237,0.25); }
 .sp-hero-pillars strong { font-weight: 500; color: var(--ivory); }
 .sp-hero-subhead { font-size: var(--fs-body); line-height: 1.82; color: var(--ivory); font-weight: 350; margin-bottom: 32px; }
-.sp-hero-when { margin-top: 20px; font-size: var(--fs-caption); line-height: 1.6; color: rgba(247,244,237,0.85); }
+.sp-hero-when { margin-top: 20px; font-size: var(--fs-caption); line-height: 1.6; color: var(--ivory); }
 
 /* ============================================================
    2. SOUND FAMILIAR
@@ -146,7 +148,7 @@
 .sp-gift-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
 .sp-gift .sp-terms { margin: 8px 0 36px; }
 .sp-on-dark, .sp-gift .sp-body { color: var(--ivory); }
-.sp-gift .sp-terms li { color: rgba(247,244,237,0.92); }
+.sp-gift .sp-terms li { color: var(--ivory); }
 .sp-gift .sp-terms li::before { background: var(--gold); }
 .sp-gift .sp-terms strong { color: var(--ivory); }
 
@@ -180,6 +182,7 @@
   .sp-section, .sp-gift { padding: 80px 48px; }
   .sp-rhythm { grid-template-columns: 1fr 1fr; }
   .sp-details-grid, .sp-gift-grid { grid-template-columns: 1fr; gap: 32px; }
+  .sp-gift-grid { gap: 0; } /* the heading's own margin is the gap */
   .sp-closing { padding: 64px 48px 72px; }
 }
 
