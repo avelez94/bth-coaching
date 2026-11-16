@@ -219,3 +219,16 @@
 @media (min-width: 1025px) {
   .sp-hero-subhead, .sp-body, .sp-points li { font-size: var(--fs-body); }
 }
+
+/* Two-column sections on desktop: the left heading stays in view while its
+   own section scrolls. Sticky stays inside the heading's grid, so it lets go
+   where that section's content ends and never reaches the next section.
+   Below 1025px the grids stack and nothing is sticky. */
+@media (min-width: 1025px) {
+  .sp-details-grid > .sp-h2,
+  .sp-gift-grid > .sp-h2 {
+    position: sticky;
+    top: calc(var(--nav-h) + 32px);
+    align-self: start;
+  }
+}
