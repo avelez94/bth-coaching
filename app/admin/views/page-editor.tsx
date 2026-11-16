@@ -3,8 +3,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { PAGE_SCHEMA, maxLength, type FieldDef, type PageContent, type PageDef, type PageKey } from '@/lib/site-content'
 import type { ViewProps } from '../page'
+import { OPTIONAL_PAGES, isOptionalPage, type OptionalPageKey, type PageStatus } from '@/lib/optional-pages'
 
-export default function PageEditor({ page, setDirty, toast }: { page: PageKey } & ViewProps) {
+export default function PageEditor({ page, setDirty, toast, status, onStatusChange }: {
+  page: PageKey
+  /** Only for optional pages: their current Active / Hidden status */
+  status?: PageStatus
+  onStatusChange?: (statuses: Record<OptionalPageKey, PageStatus>) => void
+} & ViewProps) {
   const def = PAGE_SCHEMA[page] as PageDef
   const [saved, setSaved] = useState<PageContent | null>(null)
   const [draft, setDraft] = useState<PageContent | null>(null)
@@ -109,7 +115,9 @@ export default function PageEditor({ page, setDirty, toast }: { page: PageKey } 
           {draft && (dirty
             ? <span className="status-pill unsaved">{changedKeys.length} unsaved {changedKeys.length === 1 ? 'change' : 'changes'}</span>
             : <span className="status-pill saved">All changes saved</span>)}
-          <a className="open-link" href={def.path} target="_blank" rel="noopener noreferrer">Open live page ↗</a>
+          {status === 'hidden'
+            ? <span className="open-link">Hidden from visitors</span>
+            : <a className="open-link" href={def.path} target="_blank" rel="noopener noreferrer">Open live page ↗</a>}
           {dirty && <button className="ghost-btn" onClick={discard}>Discard</button>}
           <button className="save-btn" onClick={save} disabled={!dirty || saving}>{saving ? 'Saving…' : 'Save Changes'}</button>
         </div>
@@ -121,6 +129,9 @@ export default function PageEditor({ page, setDirty, toast }: { page: PageKey } 
         <div className="editor-layout">
           <div className="editor-fields">
             <div className="fields-inner">
+              {isOptionalPage(page) && status && onStatusChange && (
+                <PageStatusControl page={page} status={status} onChange={onStatusChange} toast={toast} />
+              )}
               <p className="field-hint" style={{ marginBottom: 14 }}>
                 Click a section to open it. The preview on the right updates as you type. Nothing changes on your website until you press <strong>Save Changes</strong>.
               </p>
@@ -172,6 +183,48 @@ export default function PageEditor({ page, setDirty, toast }: { page: PageKey } 
         </div>
       )}
     </>
+  )
+}
+
+// Page Status: one switch, Active or Hidden. Saves immediately after a
+// confirmation. Never touches the page's text, photos, prices or links.
+function PageStatusControl({ page, status, onChange, toast }: {
+  page: OptionalPageKey; status: PageStatus
+  onChange: (statuses: Record<OptionalPageKey, PageStatus>) => void; toast: ViewProps['toast']
+}) {
+  const [busy, setBusy] = useState(false)
+  const info = OPTIONAL_PAGES[page]
+
+  async function choose(next: PageStatus) {
+    if (next === status || busy) return
+    const question = next === 'hidden'
+      ? `Hide the ${info.label} page?\n\nVisitors will no longer see it in the menu or footer, and anyone who opens ${info.path} will be sent to ${info.hiddenRedirectLabel}. Everything on the page stays saved here, and you can make it Active again at any time.`
+      : `Make the ${info.label} page Active?\n\nIt will appear in the menu and footer, and visitors will be able to open it right away.`
+    if (!window.confirm(question)) return
+    setBusy(true)
+    const res = await fetch('/api/admin/page-status', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ page, status: next }) })
+    const data = await res.json().catch(() => ({}))
+    setBusy(false)
+    if (!res.ok) { toast(data.error || 'Could not change the page status. Please try again.', true); return }
+    onChange(data.statuses)
+    toast(next === 'active' ? `${info.label} is now Active and visible on your website.` : `${info.label} is now Hidden. Visitors cannot open it.`)
+  }
+
+  return (
+    <div className={`page-status ${status === 'active' ? 'is-active' : 'is-hidden'}`} role="group" aria-labelledby="page-status-title">
+      <div className="page-status-head">
+        <span className="page-status-title" id="page-status-title">Page Status</span>
+        <span className="page-status-now">{status === 'active' ? 'Active: live on your website' : 'Hidden: not visible to visitors'}</span>
+      </div>
+      <div className="page-status-switch">
+        <button type="button" className="on-active" aria-pressed={status === 'active'} disabled={busy} onClick={() => choose('active')}>Active</button>
+        <button type="button" className="on-hidden" aria-pressed={status === 'hidden'} disabled={busy} onClick={() => choose('hidden')}>Hidden</button>
+      </div>
+      <p className="page-status-help">
+        Hidden pages stay saved in your dashboard but cannot be accessed by website visitors.
+        {status === 'hidden' && <> Anyone who opens {info.path} is sent to {info.hiddenRedirectLabel}. You can keep editing below.</>}
+      </p>
+    </div>
   )
 }
 

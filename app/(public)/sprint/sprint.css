@@ -1,0 +1,213 @@
+/* ============================================================
+   8 PILLAR SPRINT
+   Same design language as the program pages: slate hero, ivory
+   and ivory-dark sections, DM Serif headings, Inter body text
+   on the shared type scale in globals.css.
+============================================================ */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 13px 28px; font-size: var(--fs-button); letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; transition: all 0.22s ease; font-weight: 500; cursor: pointer; border: none; font-family: 'Inter', sans-serif; white-space: nowrap; }
+.btn-gold { background: var(--gold); color: var(--navy); }
+.btn-gold:hover { background: var(--gold-hover); }
+.btn-navy { background: var(--navy); color: var(--ivory); }
+.btn-navy:hover { background: var(--slate-mid); }
+.btn-outline-light { background: transparent; color: var(--ivory); border: 1px solid rgba(247,244,237,0.6); }
+.btn-outline-light:hover { background: rgba(247,244,237,0.1); }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(28,43,58,0.28); }
+.btn-outline:hover { background: var(--navy); color: var(--ivory); border-color: var(--navy); }
+
+.sp-btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.sp-btn-row-center { justify-content: center; }
+
+/* ---------- shared section shells ---------- */
+.sp-section { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
+.sp-tint { background: var(--ivory-dark); }
+.sp-inner { max-width: 1100px; margin: 0 auto; }
+.sp-narrow { max-width: 760px; margin: 0; }
+.sp-section > .sp-narrow { margin-left: max(0px, calc((100% - 1100px) / 2)); }
+
+.sp-h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 400;
+  line-height: 1.22;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 36px;
+}
+.sp-h2-small { font-size: clamp(22px, 2.4vw, 30px); max-width: 720px; }
+.sp-h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(19px, 1.6vw, 22px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.sp-body { font-size: var(--fs-body); line-height: 1.85; color: var(--text-mid); font-weight: 350; margin-bottom: 20px; }
+.sp-support { font-size: var(--fs-support); line-height: 1.75; color: var(--text-mid); font-weight: 350; }
+.sp-link { font-size: var(--fs-caption); color: var(--slate-mid); text-decoration: none; font-weight: 500; display: inline-flex; gap: 8px; transition: color 0.2s; }
+.sp-link:hover { color: var(--navy); }
+.sp-mobile-only { display: none; }
+
+/* ---------- quote (top and bottom of page) ---------- */
+.sp-quote { margin: 0 0 40px; max-width: 620px; }
+.sp-quote blockquote { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: rgba(247,244,237,0.9); }
+.sp-quote figcaption { margin-top: 8px; font-size: var(--fs-caption); letter-spacing: 0.04em; color: rgba(247,244,237,0.75); }
+.sp-quote-bottom { margin: 48px auto 0; text-align: center; }
+.sp-quote-bottom blockquote { color: var(--text-mid); }
+.sp-quote-bottom figcaption { color: var(--text-muted); }
+
+/* ============================================================
+   1. HERO
+============================================================ */
+.sp-hero { background: var(--slate); padding: calc(var(--nav-h) + 72px) 72px 100px; }
+.sp-hero-inner { max-width: 1200px; margin: 0 auto; }
+.sp-hero-label {
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(247,244,237,0.85);
+  margin-bottom: 20px;
+}
+.sp-hero-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(38px, 4.8vw, 64px);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ivory);
+  letter-spacing: -0.02em;
+  max-width: 900px;
+}
+.sp-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 48px; align-items: start; }
+.sp-hero-pillars { font-size: var(--fs-support); line-height: 1.8; color: rgba(247,244,237,0.88); font-weight: 350; padding-top: 22px; border-top: 1px solid rgba(247,244,237,0.25); }
+.sp-hero-pillars strong { font-weight: 500; color: var(--ivory); }
+.sp-hero-subhead { font-size: var(--fs-body); line-height: 1.82; color: var(--ivory); font-weight: 350; margin-bottom: 32px; }
+.sp-hero-when { margin-top: 20px; font-size: var(--fs-caption); line-height: 1.6; color: rgba(247,244,237,0.85); }
+
+/* ============================================================
+   2. SOUND FAMILIAR
+============================================================ */
+.sp-points { list-style: none; margin: 0 0 36px; display: grid; gap: 16px; }
+.sp-points li {
+  font-size: var(--fs-body); line-height: 1.75; color: var(--text); font-weight: 350;
+  padding-left: 22px; border-left: 2px solid var(--gold);
+}
+
+/* ============================================================
+   3. HOW IT WORKS + WEEK BY WEEK
+============================================================ */
+.sp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-bottom: 56px; }
+
+.sp-weeks { width: 100%; border-collapse: collapse; text-align: left; }
+.sp-weeks thead th {
+  font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-muted); padding: 0 16px 12px 0; border-bottom: 1px solid var(--rule-strong);
+}
+.sp-weeks td, .sp-weeks tbody th { padding: 18px 16px 18px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.sp-week-num { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.08em; color: var(--slate-mid); width: 72px; font-variant-numeric: tabular-nums; }
+.sp-week-date-cell { font-size: var(--fs-caption); color: var(--text-muted); white-space: nowrap; width: 96px; }
+.sp-week-pillar { font-family: 'DM Serif Display', serif; font-size: 1.0625rem; font-weight: 400; color: var(--text); width: 30%; }
+.sp-week-add { font-size: var(--fs-support); line-height: 1.65; color: var(--text-mid); font-weight: 350; }
+
+/* ============================================================
+   4. EVERY SESSION
+============================================================ */
+.sp-rhythm { list-style: none; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 32px; }
+.sp-rhythm li { border-top: 1px solid var(--rule-strong); padding-top: 18px; }
+.sp-step-num { display: block; font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.1em; color: var(--slate-mid); margin-bottom: 10px; }
+.sp-warmup { max-width: 760px; }
+.sp-leave { margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--rule); }
+.sp-leave-heading { font-size: clamp(22px, 2.2vw, 28px); margin-bottom: 20px; }
+.sp-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 48px; max-width: 1000px; }
+.sp-list li { position: relative; padding-left: 22px; font-size: var(--fs-support); line-height: 1.7; color: var(--text-mid); font-weight: 350; }
+.sp-list li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
+
+/* ============================================================
+   5. THE DETAILS
+============================================================ */
+.sp-details-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
+.sp-details { margin: 0; border-top: 1px solid var(--rule-strong); }
+.sp-detail-row { display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.sp-detail-row dt { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding-top: 4px; }
+.sp-detail-row dd { margin: 0; font-size: var(--fs-support); line-height: 1.65; color: var(--text); font-weight: 350; }
+
+/* ============================================================
+   6. REFUNDS / GIFT TERMS
+============================================================ */
+.sp-terms { list-style: none; display: grid; gap: 14px; margin: 0; }
+.sp-terms li { font-size: var(--fs-support); line-height: 1.75; color: var(--text-mid); font-weight: 350; padding-left: 22px; position: relative; }
+.sp-terms li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.sp-terms strong { font-weight: 500; color: var(--text); }
+
+/* ============================================================
+   7. GIFT
+============================================================ */
+.sp-gift { background: var(--slate); padding: 100px 72px; }
+.sp-gift-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
+.sp-gift .sp-terms { margin: 8px 0 36px; }
+.sp-on-dark, .sp-gift .sp-body { color: var(--ivory); }
+.sp-gift .sp-terms li { color: rgba(247,244,237,0.92); }
+.sp-gift .sp-terms li::before { background: var(--gold); }
+.sp-gift .sp-terms strong { color: var(--ivory); }
+
+/* ============================================================
+   9. NOTE
+============================================================ */
+.sp-note-section { padding-top: 72px; padding-bottom: 72px; }
+.sp-note-heading { margin-bottom: 12px; }
+
+/* ============================================================
+   10. CHERRY BLOSSOM + CLOSING
+============================================================ */
+.sp-blossom { width: 100%; height: 210px; overflow: hidden; position: relative; }
+.sp-blossom-img { width: 100%; height: 100%; object-fit: cover; object-position: center 60%; display: block; }
+.sp-closing { background: var(--ivory-dark); padding: 72px 72px 80px; border-top: 1px solid var(--rule); text-align: center; }
+.sp-closing-headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 400; line-height: 1.22; color: var(--text); letter-spacing: -0.01em;
+  margin: 0 auto 16px; max-width: 760px;
+}
+.sp-closing-body { font-size: var(--fs-body); line-height: 1.8; color: var(--text-mid); font-weight: 350; max-width: 620px; margin: 0 auto 32px; }
+.sp-closing-question { margin-top: 28px; font-size: var(--fs-caption); color: var(--text-mid); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 1024px) {
+  .sp-hero { padding: calc(var(--nav-h) + 56px) 48px 80px; }
+  .sp-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .sp-section, .sp-gift { padding: 80px 48px; }
+  .sp-rhythm { grid-template-columns: 1fr 1fr; }
+  .sp-details-grid, .sp-gift-grid { grid-template-columns: 1fr; gap: 32px; }
+  .sp-closing { padding: 64px 48px 72px; }
+}
+
+@media (max-width: 768px) {
+  .sp-two, .sp-list { grid-template-columns: 1fr; }
+  .sp-two { gap: 32px; }
+  /* Week table becomes a stacked list */
+  .sp-weeks thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .sp-weeks, .sp-weeks tbody, .sp-weeks tr, .sp-weeks td, .sp-weeks tbody th { display: block; width: auto; }
+  .sp-weeks tr { padding: 18px 0; border-bottom: 1px solid var(--rule); }
+  .sp-weeks td, .sp-weeks tbody th { padding: 0; border: 0; }
+  .sp-week-date-cell { display: none !important; }
+  .sp-mobile-only { display: inline; }
+  .sp-week-num { margin-bottom: 6px; }
+  .sp-week-pillar { margin-bottom: 4px; }
+}
+
+@media (max-width: 640px) {
+  .sp-hero { padding: calc(var(--nav-h) + 40px) 24px 64px; }
+  .sp-section, .sp-gift { padding: 64px 24px; }
+  .sp-rhythm { grid-template-columns: 1fr; gap: 24px; }
+  .sp-detail-row { grid-template-columns: 1fr; gap: 4px; }
+  .sp-closing { padding: 56px 24px 64px; }
+  .sp-blossom { height: 160px; }
+  /* Long button labels wrap instead of widening the page */
+  .btn { white-space: normal; max-width: 100%; min-height: 48px; text-align: center; line-height: 1.45; }
+}
+
+@media (min-width: 1025px) {
+  .sp-hero-subhead, .sp-body, .sp-points li { font-size: var(--fs-body); }
+}

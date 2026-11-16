@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Nav from './components/nav'
 import Footer from './components/footer'
-import { getSettings } from '@/lib/site-data'
+import { getPageVisibility, getSettings } from '@/lib/site-data'
 import './not-found.css'
 
 export const metadata: Metadata = {
@@ -12,10 +12,10 @@ export const metadata: Metadata = {
 
 // Shown with a real 404 status for any address that does not exist
 export default async function NotFound() {
-  const settings = await getSettings()
+  const [settings, visible] = await Promise.all([getSettings(), getPageVisibility()])
   return (
     <>
-      <Nav bookingUrl={settings.bookingFreeCallUrl} />
+      <Nav bookingUrl={settings.bookingFreeCallUrl} visible={visible} />
       <main className="nf">
         <div className="nf-inner">
           <p className="nf-label">Page not found</p>
@@ -27,7 +27,7 @@ export default async function NotFound() {
           </div>
         </div>
       </main>
-      <Footer settings={settings} />
+      <Footer settings={settings} visible={visible} />
     </>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { PROGRAM_KEYS, programLabel, usd, type ProgramKey, type ProgramPricing } from '@/lib/program-info'
+import { PROGRAM_KEYS, SPRINT_LABEL, programLabel, usd, type ProgramKey, type ProgramPricing, type SprintPricing } from '@/lib/program-info'
 import type { ViewProps } from '../page'
 
 // Form values are kept as text so John can type freely; converted on save.
@@ -41,9 +41,12 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
   const [agreementText, setAgreementText] = useState('')
   const [confirming, setConfirming] = useState<ProgramKey | null>(null)
   const [saving, setSaving] = useState(false)
+  const [sprint, setSprint] = useState<SprintPricing | null>(null)
+  const [sprintDirty, setSprintDirty] = useState(false)
 
   useEffect(() => {
     fetch('/api/admin/pricing').then(r => r.json()).then(d => {
+      setSprint(d.sprint)
       setSaved(d.pricing)
       setForms({ 'executive-coaching': toForm(d.pricing['executive-coaching']), '8-pillars': toForm(d.pricing['8-pillars']) })
     }).catch(() => toast('Pricing could not be loaded. Refresh to try again.', true))
@@ -56,7 +59,7 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
     if (!saved || !forms) return [] as ProgramKey[]
     return PROGRAM_KEYS.filter(k => JSON.stringify(toForm(saved[k])) !== JSON.stringify(forms[k]))
   }, [saved, forms])
-  useEffect(() => { setDirty(dirtyKeys.length > 0) }, [dirtyKeys, setDirty])
+  useEffect(() => { setDirty(dirtyKeys.length > 0 || sprintDirty) }, [dirtyKeys, sprintDirty, setDirty])
 
   function update(k: ProgramKey, field: keyof Form, v: string) {
     setForms(f => (f ? { ...f, [k]: { ...f[k], [field]: v } } : f))
@@ -103,10 +106,10 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
       <div className="main-topbar">
         <div>
           <div className="main-topbar-title">Pricing & Payments</div>
-          <div className="main-topbar-sub">Prices and Stripe payment links for both programs. This is the only place prices are set. Saving here updates the program pages, For Organizations, enrollment, and the signed agreement record.</div>
+          <div className="main-topbar-sub">Prices and Stripe payment links for every program. This is the only place prices are set. Saving here updates the program pages, For Organizations, the FAQ, enrollment, and the signed agreement record.</div>
         </div>
         <div className="save-bar">
-          {forms && (dirtyKeys.length ? <span className="status-pill unsaved">Unsaved changes</span> : <span className="status-pill saved">All changes saved</span>)}
+          {forms && (dirtyKeys.length || sprintDirty ? <span className="status-pill unsaved">Unsaved changes</span> : <span className="status-pill saved">All changes saved</span>)}
         </div>
       </div>
       <div className="page-wrap">
@@ -155,6 +158,7 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
             })}
           </div>
         )}
+        {sprint && <SprintCard saved={sprint} onSaved={setSprint} setCardDirty={setSprintDirty} toast={toast} />}
       </div>
 
       {confirming && forms && saved && (() => {
@@ -175,5 +179,87 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
         )
       })()}
     </>
+  )
+}
+
+// ------------------------------------------------------------
+// 8 Pillar Sprint: one price and two Stripe links. Both buttons on the
+// Sprint page go straight to Stripe (no agreement to sign).
+// ------------------------------------------------------------
+interface SprintForm { price: string; enrollUrl: string; giftUrl: string }
+const sprintForm = (p: SprintPricing): SprintForm => ({ price: String(p.priceCents / 100), enrollUrl: p.stripeEnrollUrl, giftUrl: p.stripeGiftUrl })
+
+function SprintCard({ saved, onSaved, setCardDirty, toast }: {
+  saved: SprintPricing; onSaved: (p: SprintPricing) => void; setCardDirty: (d: boolean) => void; toast: ViewProps['toast']
+}) {
+  const [f, setF] = useState<SprintForm>(sprintForm(saved))
+  const [confirming, setConfirming] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const next: SprintPricing = { priceCents: dollarsToCents(f.price), stripeEnrollUrl: f.enrollUrl.trim(), stripeGiftUrl: f.giftUrl.trim() }
+  const dirty = JSON.stringify(sprintForm(saved)) !== JSON.stringify(f)
+  useEffect(() => { setCardDirty(dirty) }, [dirty, setCardDirty])
+
+  const errs: string[] = []
+  if (!Number.isFinite(next.priceCents) || next.priceCents < 1000) errs.push('Enter a Sprint price of at least $10.')
+  if (!STRIPE_RE.test(next.stripeEnrollUrl)) errs.push('The enroll link must be a Stripe payment link (https://buy.stripe.com/...).')
+  if (!STRIPE_RE.test(next.stripeGiftUrl)) errs.push('The gift link must be a Stripe payment link (https://buy.stripe.com/...).')
+
+  const lines: string[] = []
+  const warnings: string[] = []
+  if (saved.priceCents !== next.priceCents) {
+    lines.push(`The Sprint will change from ${usd(saved.priceCents)} to ${usd(next.priceCents)} on the Sprint page and FAQ.`)
+    if (saved.stripeEnrollUrl === next.stripeEnrollUrl) warnings.push('Stripe will keep charging the old price for enrollment until you create a new payment link in Stripe and paste it here.')
+    if (saved.stripeGiftUrl === next.stripeGiftUrl) warnings.push('Stripe will keep charging the old price for gifts until you create a new payment link in Stripe and paste it here.')
+  }
+  if (saved.stripeEnrollUrl !== next.stripeEnrollUrl) lines.push('The Enroll in the Sprint buttons will open the new Stripe link.')
+  if (saved.stripeGiftUrl !== next.stripeGiftUrl) lines.push('The Give the Sprint as a gift buttons will open the new Stripe link.')
+
+  async function save() {
+    setSaving(true)
+    const res = await fetch('/api/admin/pricing', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ program: 'sprint', sprint: next }) })
+    const data = await res.json().catch(() => ({}))
+    setSaving(false); setConfirming(false)
+    if (!res.ok) { toast(data.error || 'Could not save. Please try again.', true); return }
+    onSaved(data.sprint); setF(sprintForm(data.sprint))
+    toast(`${SPRINT_LABEL} pricing saved. It is live on the website now.`)
+  }
+
+  return (
+    <div className="card" style={{ marginTop: 18, maxWidth: 640 }}>
+      <div className="card-title">{SPRINT_LABEL}</div>
+      <div className="card-sub">Now: {usd(saved.priceCents)} per person. Both Sprint buttons go straight to Stripe, with no agreement to sign.</div>
+      <div className="field">
+        <label className="field-label" htmlFor="sprint-price">Sprint price</label>
+        <div className="money"><span>$</span><input id="sprint-price" className="field-input" inputMode="decimal" value={f.price} onChange={e => setF({ ...f, price: e.target.value })} /></div>
+      </div>
+      <div className="field">
+        <label className="field-label" htmlFor="sprint-enroll">Enroll in the Sprint: Stripe link</label>
+        <span className="field-hint">The payment link for someone joining the Sprint themselves.</span>
+        <input id="sprint-enroll" className="field-input" value={f.enrollUrl} onChange={e => setF({ ...f, enrollUrl: e.target.value })} />
+      </div>
+      <div className="field">
+        <label className="field-label" htmlFor="sprint-gift">Give the Sprint as a gift: Stripe link</label>
+        <span className="field-hint">The payment link for someone buying the Sprint for another person.</span>
+        <input id="sprint-gift" className="field-input" value={f.giftUrl} onChange={e => setF({ ...f, giftUrl: e.target.value })} />
+      </div>
+      {dirty && errs.length > 0 && <div className="field-error" style={{ marginTop: 12 }}>{errs.map(e => <div key={e}>{e}</div>)}</div>}
+      <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
+        <button className="save-btn" disabled={!dirty || errs.length > 0} onClick={() => setConfirming(true)}>Review & Save</button>
+        {dirty && <button className="ghost-btn" onClick={() => setF(sprintForm(saved))}>Discard</button>}
+      </div>
+      {confirming && (
+        <div className="modal-back" role="dialog" aria-modal="true">
+          <div className="modal">
+            <h3>Confirm {SPRINT_LABEL} changes</h3>
+            <ul>{lines.map(l => <li key={l}>{l}</li>)}</ul>
+            {warnings.map(w => <div key={w} className="notice warn"><strong>Check:</strong> {w}</div>)}
+            <div className="modal-actions">
+              <button className="ghost-btn" onClick={() => setConfirming(false)} disabled={saving}>Go back</button>
+              <button className="save-btn" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save Changes'}</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }

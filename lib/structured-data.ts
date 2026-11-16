@@ -36,7 +36,7 @@ export function website(tagline: string) {
 }
 
 // A coaching program with the price shown on its page
-export function service(path: string, name: string, description: string, program: PublicProgramInfo) {
+export function service(path: string, name: string, description: string, program: Pick<PublicProgramInfo, 'fullPriceCents'>) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',

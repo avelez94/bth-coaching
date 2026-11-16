@@ -7,7 +7,14 @@ import assert from 'node:assert/strict'
 const BASE = process.env.BASE_URL || 'http://localhost:3000'
 const PROD = process.env.EXPECT_INDEXABLE === '1'
 const SITE = (process.env.EXPECT_SITE_URL || 'https://mccrackencoaching.com').replace(/\/$/, '')
-const PAGES = ['/', '/executive-coaching', '/leader-development', '/for-organizations', '/sample-engagements', '/the-8-pillars', '/about', '/contact']
+// Optional pages (Page Status in the admin). Defaults match a fresh site:
+// Sprint Hidden, FAQ Active. Override with EXPECT_SPRINT / EXPECT_FAQ.
+const OPTIONAL = {
+  '/sprint': { active: (process.env.EXPECT_SPRINT || 'hidden') === 'active', redirect: '/leader-development', label: '8 Pillar Sprint' },
+  '/faq': { active: (process.env.EXPECT_FAQ || 'active') === 'active', redirect: '/contact', label: 'FAQ' },
+}
+const PAGES = ['/', '/executive-coaching', '/leader-development', '/for-organizations', '/sample-engagements', '/the-8-pillars', '/about', '/contact',
+  ...Object.entries(OPTIONAL).filter(([, o]) => o.active).map(([p]) => p)]
 const TAGLINE = 'I help leaders gain clarity and get results, without sacrificing everything else.'
 
 const get = (path, opts = {}) => fetch(BASE + path, { redirect: 'manual', ...opts })
@@ -105,3 +112,19 @@ test('admin, enrollment and API are never indexed', async () => {
   }
   assert.match(headOf(await (await get('/admin')).text()), /noindex/)
 })
+
+for (const [path, o] of Object.entries(OPTIONAL)) {
+  test(`${path} is ${o.active ? 'Active: reachable and linked' : 'Hidden: redirected and unlinked'}`, async () => {
+    const r = await get(path)
+    const home = await (await get('/')).text()
+    const linked = home.includes(`href="${path}"`)
+    if (o.active) {
+      assert.equal(r.status, 200)
+      assert.ok(linked, 'linked from the menu and footer')
+    } else {
+      assert.ok([307, 308].includes(r.status), `status ${r.status}`)
+      assert.equal(new URL(r.headers.get('location'), BASE).pathname, o.redirect)
+      assert.ok(!linked, 'no public link to a hidden page')
+    }
+  })
+}

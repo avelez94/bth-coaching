@@ -8,12 +8,15 @@ interface Enrollment {
   program: string; payment_option: string; signed_at: string
   agreement_version: string; status: string; test_mode: boolean
   pdfUrl: string | null; pdfDownloadUrl: string | null
+  paid_at: string | null; amount_paid_cents: number | null
+  emails: { client?: string; admin?: string; error?: string } | null
 }
 
 const PROGRAM: Record<string, string> = { 'executive-coaching': 'Executive Coaching', '8-pillars': '8 Pillars Leadership Program' }
 const STATUS: Record<string, { label: string; color: string }> = {
   pending_payment: { label: 'Awaiting payment', color: '#fbbf24' },
   paid: { label: 'Paid', color: '#4ade80' },
+  payment_failed: { label: 'Payment failed', color: '#f87171' },
   abandoned: { label: 'Not completed', color: 'rgba(255,255,255,0.4)' },
   test: { label: 'Test', color: '#ffc107' },
 }
@@ -48,7 +51,7 @@ export default function SignedView({ toast }: ViewProps) {
       <div className="main-topbar">
         <div>
           <div className="main-topbar-title">Signed Agreements</div>
-          <div className="main-topbar-sub">Every agreement a client has signed online. These are permanent records and cannot be edited.</div>
+          <div className="main-topbar-sub">Every agreement a client has signed online. These are permanent records and cannot be edited. Payment shows Paid only after Stripe confirms it.</div>
         </div>
         <div className="save-bar"><button className="ghost-btn" onClick={load}>Refresh</button></div>
       </div>
@@ -60,7 +63,7 @@ export default function SignedView({ toast }: ViewProps) {
             <div className="table-wrap">
               <table className="table">
                 <thead>
-                  <tr><th>Client name</th><th>Email</th><th>Program</th><th>Payment option</th><th>Date signed</th><th>Version</th><th>Status</th><th>Signed PDF</th></tr>
+                  <tr><th>Client name</th><th>Email</th><th>Program</th><th>Payment option</th><th>Date signed</th><th>Version</th><th>Payment</th><th>Emails</th><th>Signed PDF</th></tr>
                 </thead>
                 <tbody>
                   {rows.map(e => {
@@ -73,7 +76,18 @@ export default function SignedView({ toast }: ViewProps) {
                         <td>{e.payment_option === 'full' ? 'Paid in full' : 'Monthly installments'}</td>
                         <td style={{ whiteSpace: 'nowrap' }}>{signedOn(e.signed_at)}</td>
                         <td>{e.agreement_version}</td>
-                        <td style={{ color: st.color, whiteSpace: 'nowrap' }}>{st.label}</td>
+                        <td style={{ color: st.color, whiteSpace: 'nowrap' }}>
+                          {st.label}
+                          {e.status === 'paid' && e.amount_paid_cents != null && <div className="muted" style={{ fontSize: 11 }}>${(e.amount_paid_cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2 })}{e.paid_at ? `, ${signedOn(e.paid_at)}` : ''}</div>}
+                        </td>
+                        <td style={{ whiteSpace: 'nowrap', fontSize: 12 }} title={e.emails?.error ?? ''}>
+                          {!e.emails ? <span className="muted">None recorded</span> : (
+                            <>
+                              <div style={{ color: e.emails.client === 'sent' ? '#4ade80' : '#f87171' }}>Client: {e.emails.client === 'sent' ? 'sent' : 'not sent'}</div>
+                              <div style={{ color: e.emails.admin === 'sent' ? '#4ade80' : '#f87171' }}>You: {e.emails.admin === 'sent' ? 'sent' : 'not sent'}</div>
+                            </>
+                          )}
+                        </td>
                         <td>
                           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                             {e.pdfUrl ? <a className="ghost-btn" href={e.pdfUrl} target="_blank" rel="noopener noreferrer">View</a> : <span className="muted">Not available</span>}

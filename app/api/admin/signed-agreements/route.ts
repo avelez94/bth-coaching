@@ -33,12 +33,31 @@ export async function GET(req: NextRequest) {
       agreement_id,
       pdf_path,
       status,
-      test_mode
+      test_mode,
+      paid_at,
+      amount_paid_cents,
+      amount_due_today_cents,
+      price_total_cents
     `)
     .order('signed_at', { ascending: false })
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  // Latest delivery result of each enrollment's two emails
+  const ids = (data || []).map(e => e.id)
+  const { data: logs } = ids.length
+    ? await supabaseAdmin.from('email_log').select('enrollment_id, kind, status, error, created_at')
+        .in('enrollment_id', ids).in('kind', ['enrollment_client', 'enrollment_admin']).order('created_at', { ascending: true })
+    : { data: [] as { enrollment_id: string; kind: string; status: string; error: string | null }[] }
+  const emailStatus = new Map<string, { client?: string; admin?: string; error?: string }>()
+  for (const l of logs ?? []) {
+    const cur = emailStatus.get(l.enrollment_id) ?? {}
+    if (l.kind === 'enrollment_client') cur.client = l.status
+    if (l.kind === 'enrollment_admin') cur.admin = l.status
+    if (l.status !== 'sent' && l.error) cur.error = l.error
+    emailStatus.set(l.enrollment_id, cur)
   }
 
   // Generate signed PDF download URLs for records that have a pdf_path
@@ -55,7 +74,7 @@ export async function GET(req: NextRequest) {
         pdfUrl = view.data?.signedUrl ?? null
         pdfDownloadUrl = download.data?.signedUrl ?? null
       }
-      return { ...enrollment, pdfUrl, pdfDownloadUrl }
+      return { ...enrollment, pdfUrl, pdfDownloadUrl, email: enrollment.email, emails: emailStatus.get(enrollment.id) ?? null }
     })
   )
 

@@ -9,8 +9,10 @@ import SchedulingView from './views/scheduling'
 import SettingsView from './views/site-settings'
 import AgreementView from './views/agreement'
 import SignedView from './views/signed-agreements'
+import SprintPurchasesView from './views/sprint-purchases'
+import { isOptionalPage, type OptionalPageKey, type PageStatus } from '@/lib/optional-pages'
 
-type ViewKey = PageKey | 'pricing' | 'scheduling' | 'settings' | 'agreement' | 'signed'
+type ViewKey = PageKey | 'pricing' | 'scheduling' | 'settings' | 'agreement' | 'signed' | 'sprint-purchases'
 
 // Sidebar: plain-language groups. Website pages appear in the order of the
 // site's own navigation. Pages not yet connected to the editor are shown
@@ -19,10 +21,12 @@ const WEBSITE_PAGES: { key: string; label: string }[] = [
   { key: 'home', label: 'Home' },
   { key: 'executive-coaching', label: 'Executive Coaching' },
   { key: 'leader-development', label: '8 Pillars Leadership' },
+  { key: 'sprint', label: '8 Pillar Sprint' },
   { key: 'for-organizations', label: 'For Organizations' },
   { key: 'sample-engagements', label: 'Sample Engagements' },
   { key: 'the-8-pillars', label: 'The 8 Pillars' },
   { key: 'about', label: 'About' },
+  { key: 'faq', label: 'FAQ' },
   { key: 'contact', label: 'Contact' },
 ]
 const BUSINESS: { key: ViewKey; label: string }[] = [
@@ -33,6 +37,7 @@ const BUSINESS: { key: ViewKey; label: string }[] = [
 const ENROLLMENT: { key: ViewKey; label: string }[] = [
   { key: 'agreement', label: 'Coaching Agreement' },
   { key: 'signed', label: 'Signed Agreements' },
+  { key: 'sprint-purchases', label: 'Sprint Purchases' },
 ]
 
 export interface ViewProps {
@@ -47,10 +52,17 @@ export default function AdminPanel() {
   const [view, setView] = useState<ViewKey>('home')
   const [dirty, setDirty] = useState(false)
   const [toastMsg, setToastMsg] = useState<{ text: string; err: boolean } | null>(null)
+  const [statuses, setStatuses] = useState<Record<OptionalPageKey, PageStatus> | null>(null)
 
   useEffect(() => {
     fetch('/api/admin/auth').then(r => setAuthed(r.ok)).catch(() => setAuthed(false))
   }, [])
+
+  // Page Status (Active / Hidden) for the optional pages, shown in the sidebar
+  useEffect(() => {
+    if (!authed) return
+    fetch('/api/admin/page-status').then(r => (r.ok ? r.json() : null)).then(d => d && setStatuses(d.statuses)).catch(() => {})
+  }, [authed])
 
   // Warn before closing the tab with unsaved changes
   useEffect(() => {
@@ -120,6 +132,7 @@ export default function AdminPanel() {
               <button key={p.key} className={`nav-item ${view === p.key ? 'active' : ''}`} onClick={() => go(p.key as ViewKey)}>
                 <span>{p.label}</span>
                 {!isPage(p.key) && <span className="muted" style={{ fontSize: 10 }}>soon</span>}
+                {isOptionalPage(p.key) && statuses?.[p.key] === 'hidden' && <span className="tag hidden-tag">Hidden</span>}
               </button>
             ))}
           </div>
@@ -146,7 +159,11 @@ export default function AdminPanel() {
         </nav>
 
         <div className="main-area">
-          {isPage(view) && <PageEditor key={view} page={view} {...props} />}
+          {isPage(view) && (
+            <PageEditor key={view} page={view} {...props}
+              status={isOptionalPage(view) && statuses ? statuses[view] : undefined}
+              onStatusChange={setStatuses} />
+          )}
           {!isPage(view) && WEBSITE_PAGES.some(p => p.key === view) && (
             <div className="page-wrap">
               <div className="card">
@@ -160,6 +177,7 @@ export default function AdminPanel() {
           {view === 'settings' && <SettingsView {...props} />}
           {view === 'agreement' && <AgreementView {...props} />}
           {view === 'signed' && <SignedView {...props} />}
+          {view === 'sprint-purchases' && <SprintPurchasesView {...props} />}
         </div>
       </div>
       {toastMsg && <div className={`toast ${toastMsg.err ? 'err' : ''}`} role="status">{toastMsg.text}</div>}

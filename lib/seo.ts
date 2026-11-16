@@ -46,6 +46,11 @@ export const PUBLIC_PAGES = {
     title: '8 Pillars Leadership Program',
     description: 'A ten month development and coaching program for new leaders, stretched leaders, and anyone ready to become the leader they want to be, and the one their team needs.',
   },
+  'sprint': {
+    path: '/sprint',
+    title: '8 Pillar Sprint',
+    description: 'Eight weeks. Eight pillars. One framework built on what you value most. A small-group program for leaders, and anyone ready to strengthen their foundation, to start the year with clarity.',
+  },
   'for-organizations': {
     path: '/for-organizations',
     title: 'For Organizations',
@@ -65,6 +70,11 @@ export const PUBLIC_PAGES = {
     path: '/about',
     title: 'About John McCracken',
     description: 'I help leaders gain clarity and get results, in every part of their lives. Thirty seven years of leadership, the setbacks as well as the successes, and professional coach training, all focused on the results you want.',
+  },
+  'faq': {
+    path: '/faq',
+    title: 'Frequently Asked Questions',
+    description: 'Coaching is a partnership where you set the agenda and I help you think it through. Answers about the programs, confidentiality, sessions, and payment.',
   },
   'contact': {
     path: '/contact',

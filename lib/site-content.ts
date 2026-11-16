@@ -51,6 +51,74 @@ const para = (key: string, label: string, def: string, extra: Partial<FieldDef> 
 const photo = (key: string, label: string, def: string, image: ImageSpec, help?: string): FieldDef => ({ key, label, type: 'image', default: def, image, help })
 const PRICE_NOTE = 'The price shown in this section comes from Pricing & Payments.'
 
+// ------------------------------------------------------------
+// FAQ copy (from John's FAQ page document). Each answer opens
+// under its question. Program answers end with an investment line
+// built from Pricing & Payments, so prices are never typed twice.
+// ------------------------------------------------------------
+const FORMAT_HELP = 'To make words bold, put two asterisks on each side, like **this**. Start a line with a hyphen and a space to make a bulleted list.'
+const LINK_HELP = 'To link words, put them in square brackets followed by the web address in round brackets, like [ICF](https://coachingfederation.org).'
+const FAQ_SPARE = 2
+
+export type FaqProgram = 'executive-coaching' | '8-pillars' | 'sprint'
+interface FaqItem { q: string; a: string; program?: FaqProgram; sources?: string }
+
+const SRC = {
+  deHaan: 'https://scienceforwork.com/blog/workplace-coaching-what-does-the-evidence-say-and-does-it-work/',
+  jones: 'https://research.aston.ac.uk/en/publications/the-effectiveness-of-workplace-coaching-a-meta-analysis-of-learni/',
+  theeboom: 'https://instituteofcoaching.org/resources/does-coaching-work-meta-analysis-effects-coaching-individual-level-outcomes-organizational',
+  icfRelease: 'https://prnewswire.com/news-releases/professional-coaching-continues-to-satisfy-consumers-106028668.html',
+  icfOverview: 'https://coachingfederation.org/blog/coaching-statistics-the-roi-of-coaching-in-2024/',
+}
+
+export const FAQ_SECTIONS: { id: string; heading: string; items: FaqItem[] }[] = [
+  { id: 'coaching', heading: 'About coaching', items: [
+    { q: 'What is coaching?', a: `Coaching is a partnership where you set the agenda and I help you think it through. The International Coaching Federation defines it as partnering with clients in a thought-provoking and creative process that inspires them to maximize their personal and professional potential. In practice, I ask questions that help you see your situation clearly, test your assumptions, and decide what to do next. You leave every session with a commitment you chose.` },
+    { q: 'How is coaching different from therapy, consulting, or mentoring?', a: `- **Therapy** focuses on mental health and healing the past. Coaching looks forward, at your goals and the actions that get you there. It isn't a substitute for therapy, and if something comes up that a therapist would serve better, I'll tell you.
+- **Consulting** gives you answers. Coaching helps you find your own, so the solution fits your situation and you own it.
+- **Mentoring** passes on the mentor's path. I bring 37 years of leadership experience, but I share it only when it serves your goals, not as a template.` },
+    { q: 'Who do you work with?', a: `Senior leaders and executives, new leaders stepping into larger roles, leaders whose teams have stalled, and organizations that want to invest in their people.` },
+    { q: 'Does coaching actually work?', a: `The research says yes, with a consistent, moderate positive effect. A 2023 meta-analysis of 37 randomized controlled trials found coaching improved well-being, professional skills, and goal attainment compared with control groups (de Haan & Nilsson). Earlier meta-analyses found positive effects on performance, work attitudes, coping, and the ability to set and pursue goals (Theeboom et al., 2014; Jones et al., 2016). Results still depend on the work you put in, and no coach can guarantee an outcome.`,
+      sources: `Sources: [de Haan & Nilsson, 2023](${SRC.deHaan}) · [Theeboom et al., 2014](${SRC.theeboom}) · [Jones et al., 2016](${SRC.jones})` },
+    { q: 'What is the return on a coaching investment?', a: `In the International Coaching Federation's Global Coaching Client Study, conducted by PricewaterhouseCoopers, companies reported a median return of about seven times their investment in coaching, and individuals about 3.4 times. Those figures are self-reported and come from an industry-commissioned study, so treat them as directional rather than precise. For organizations, the more practical comparison is usually this: the cost of coaching a capable leader through a hard stretch against the cost of replacing them, in recruiting, onboarding, and lost momentum. Coaching also shapes culture: leaders who are coached tend to bring the same habits of reflection and development to their own teams.`,
+      sources: `Sources: [ICF 2010 release](${SRC.icfRelease}) · [ICF ROI overview](${SRC.icfOverview})` },
+  ] },
+  { id: 'programs', heading: 'The programs', items: [
+    { q: 'What can I expect from the 8 Pillars Leadership Program?', program: '8-pillars', a: `Ten months of leadership development and coaching built around the 8 Pillars, the areas of life that shape how well you lead. Month 1 is an 8 Pillars assessment and a half-day kickoff, in person or virtual, where you define what success looks like for you. In months 2 through 9 we take one pillar a month, with two sessions: a structured pillar session that uses a focused set of questions, and an open coaching session where you set the agenda. Month 10 is for review and integration, and you leave with commitments you've defined and a plan for what's next.` },
+    { q: 'What can I expect from the 8 Pillar Sprint?', program: 'sprint', a: `An eight-week group program in which you build a one-page personal framework, one pillar per week, anchored in your own values. It meets on eight Tuesday evenings, January 12 to March 2, 2027, for 75 minutes by video, with 6 to 12 participants. Before Week 1 you complete a short self-assessment and receive a one-page snapshot of where you stand across the 8 Pillars. Each session follows the same rhythm: look back at last week's commitment, work through one pillar, reflect with a partner, and set one small commitment to test that week. You finish with your completed framework and a second self-assessment to see what moved. The Sprint is facilitated group learning, not one-on-one coaching.` },
+    { q: 'Can I give the Sprint as a gift?', a: `Yes. You'll receive a gift certificate to pass along, and the recipient registers by January 5 and decides whether to join. As the giver, you won't see their self-assessment, attendance, or anything discussed in the sessions. Gifts can be fully refunded or transferred until January 5, 2027.` },
+    { q: 'How is the Sprint different from the 8 Pillars Leadership Program?', a: `The Sprint is eight weeks in a small group, and you leave with a personal framework. The 8 Pillars Leadership Program is ten months of intensive one-on-one work, where you put that framework into practice with a coach and make the change last.` },
+    { q: 'What can I expect from Executive Coaching?', program: 'executive-coaching', a: `Six months, twelve one-hour sessions about every two weeks, starting with an 8 Pillars whole-person assessment. You bring what matters most, and we work through it together: your values, perspectives, what's within your control or influence, and an action plan. Each session ends with a commitment you define, and the final session covers reflection, integration, and a plan for what's next.` },
+    { q: 'How do I choose the right program?', a: `If you have a specific challenge in front of you and want focused support, Executive Coaching fits. If you want to build a stronger foundation across your whole life and leadership, the 8 Pillars Leadership Program fits. If you want a structured start in a small group, the 8 Pillar Sprint fits. If you're not sure, that's what the free 15-minute call is for. We'll figure it out together, and there's no pressure to commit.` },
+    { q: 'Can my organization sponsor my coaching?', a: `Yes. Many clients are sponsored by their employer. Organizations can also run the 8 Pillars program for a group of leaders or build a custom program. See [For Organizations](/for-organizations), or schedule a 30-minute organizational consultation.` },
+  ] },
+  { id: 'working', heading: 'Working together', items: [
+    { q: 'How do I get started?', a: `Schedule a free 15-minute call. We'll talk about where you are, where you want to go, and whether we're the right fit. If we are, you can enroll online or I'll send you the details by email.` },
+    { q: 'What are your credentials?', a: `I'm an Associate Certified Coach (ACC) with the International Coaching Federation, and I completed American University's Leadership Coaching for Organizational Performance (LCOP) program, an ICF Level 2 accredited program. I follow the ICF Code of Ethics. I also bring 30 years of Navy leadership, including command, and seven years as a senior defense civilian.` },
+    { q: 'Is what I share confidential?', a: `Yes. What you share stays between us, under the ICF Code of Ethics, with narrow exceptions such as a risk of harm to you or others. When an organization sponsors your coaching, we agree up front, in writing, on what general information the sponsor receives, such as attendance and overall progress. The content of our conversations stays with you.` },
+    { q: 'Where and how do sessions happen?', a: `By Microsoft Teams, Zoom, or phone, whichever works best for you. I work with clients in the Washington, DC area and virtually anywhere.` },
+    { q: 'What if I need to reschedule?', a: `Give me at least 24 hours' notice and we'll find a new time at no charge. If I have to cancel, I'll schedule a makeup session at no cost to you.` },
+    { q: 'Can I reach you between sessions?', a: `Yes, by email, text, or voicemail. I typically respond within one to two business days.` },
+    { q: 'How does payment work?', a: `You can pay in full or in monthly installments, by card or bank transfer, through Stripe's secure checkout. I never see or store your card or bank details. Sponsored programs are invoiced to the organization.` },
+    { q: "What if it isn't working?", a: `Either of us can end the engagement at any time with written notice. Any remaining installments are canceled, and fees paid for sessions not yet held are refunded. The full terms are in the Coaching Agreement.` },
+    { q: "What if something comes up that coaching can't address?", a: `I'll tell you, and help you find the right kind of professional. Coaching is not psychotherapy, counseling, or medical, legal, or financial advice. If you're working with a therapist, I encourage you to let them know you're also working with a coach.` },
+  ] },
+]
+
+export const FAQ_SOURCES: string[] = [
+  `de Haan, E. & Nilsson, V. O. (2023). What can we know about the effectiveness of coaching? A meta-analysis based only on randomized controlled trials. *Academy of Management Learning & Education.* Summary: [ScienceForWork](${SRC.deHaan})`,
+  `Jones, R. J., Woods, S. A. & Guillaume, Y. R. F. (2016). [The effectiveness of workplace coaching: a meta-analysis of learning and performance outcomes from coaching](${SRC.jones}). *Journal of Occupational and Organizational Psychology*, 89(2), 249 to 277.`,
+  `Theeboom, T., Beersma, B. & van Vianen, A. (2014). [Does coaching work? A meta-analysis on the effects of coaching on individual level outcomes in an organizational context](${SRC.theeboom}). *The Journal of Positive Psychology*, 9(1).`,
+  `International Coaching Federation, Global Coaching Client Study (PricewaterhouseCoopers): median ROI of 7x for companies and about 3.4x for individuals, as reported in [ICF's 2010 release](${SRC.icfRelease}) and [ICF's ROI overview](${SRC.icfOverview}).`,
+]
+
+/** Which FAQ answers end with a program's investment line */
+export function faqProgramFor(fieldKey: string): FaqProgram | undefined {
+  const m = fieldKey.match(/^(\w+)\.(\d+)\.a$/)
+  if (!m) return undefined
+  return FAQ_SECTIONS.find(s => s.id === m[1])?.items[Number(m[2]) - 1]?.program
+}
+
 export const PAGE_SCHEMA = {
   home: {
     label: 'Home',
@@ -563,6 +631,7 @@ export const PAGE_SCHEMA = {
       { id: 'top', title: 'Top of page', description: 'The headline and introduction.', fields: [
         para('top.headline', 'Headline', 'A better path starts with a single conversation'),
         para('top.body', 'Introduction', "A free 15-minute call. No pitch, no pressure. Just a direct conversation about where you are, where you want to go, and whether we're the right fit to get you there."),
+        line('top.faqLink', 'FAQ link text', 'Frequently asked questions →', { help: 'Shown under the introduction while the FAQ page is Active.' }),
       ] },
       { id: 'form', title: 'Message form', description: 'What visitors see after sending a message.', fields: [
         line('form.success', 'Thank-you message', "Thanks, I'll respond within one business day."),
@@ -573,6 +642,170 @@ export const PAGE_SCHEMA = {
       ] },
       { id: 'closing', title: 'Closing statement', description: 'Your closing message above your signature.', fields: [
         para('closing.body', 'Statement', "I believe setbacks don't define people; what they do next does. Thirty-seven years of leading, and sometimes failing, taught me that lasting results come from developing the whole person, not just the work version of who they are. If that's the growth you want for yourself or your team, let's take 15 minutes to chart a path forward."),
+      ] },
+    ],
+  },
+  sprint: {
+    label: '8 Pillar Sprint',
+    path: '/sprint',
+    description: 'The 8 Pillar Sprint program page. The price and both Stripe links come from Pricing & Payments.',
+    sections: [
+      { id: 'hero', title: 'Top of page', description: 'The quote, headline, the Eight Pillars, and the two buttons.', fields: [
+        para('hero.quote', 'Quote', '“The winds and waves are always on the side of the ablest navigators.”', { help: 'Shown at the top of the page and again at the very bottom.' }),
+        line('hero.quoteBy', 'Quote author', 'Edward Gibbon'),
+        line('hero.label', 'Small label above headline', 'Set Your Course'),
+        para('hero.headline', 'Headline', 'Eight weeks. Eight pillars. One framework built on what you value most.'),
+        line('hero.pillarsLead', 'Eight Pillars lead in', 'The Eight Pillars:', { optional: true }),
+        para('hero.pillars', 'The Eight Pillars', 'Your Values; Professional Excellence; Physical Health; Financial Stewardship; Fortitude; Equanimity; Relational, and Environmental Harmony. Together creating, the foundation, tools, and plan to get the most from yourself whatever the weather of life.'),
+        para('hero.subhead', 'Supporting statement', "A small-group program for leaders, and anyone ready to strengthen their foundation, to start the year with clarity. Each week you take on one of the 8 Pillars and add one piece to a single-page framework you'll carry into the years ahead."),
+        line('btn.enroll', 'Enroll button text', 'Enroll in the Sprint', { help: 'Used on every Enroll button on this page. It opens the Stripe enroll link from Pricing & Payments.' }),
+        line('btn.gift', 'Gift button text', 'Give the Sprint as a gift', { help: 'Used on every gift button on this page. It opens the Stripe gift link from Pricing & Payments.' }),
+        para('hero.when', 'Line under the buttons (dates and time)', 'Eight Tuesdays, January 12 to March 2, 2027, 7:00 to 8:15 PM ET. Limited to 12 participants.'),
+      ] },
+      { id: 'familiar', title: 'Sound familiar?', description: 'Two short points and two paragraphs.', fields: [
+        line('familiar.heading', 'Heading', 'Sound familiar?'),
+        para('familiar.point1', 'Point 1', "You've set goals before. A few weeks later, work or life pulled you back into the same patterns, and the goals didn't survive the first hard week."),
+        para('familiar.point2', 'Point 2', 'You want to be more present for the things you value most in life but seem to lack the time or tools to make it a reality.'),
+        para('familiar.body1', 'Paragraph 1', "The problem usually isn't willpower or time management. Goals that sit on top of your life, instead of growing out of what you value, don't hold up under pressure. And the pressure rarely comes from one place. It comes from your work, your health, your relationship with money, and the people who matter most, all at once, cumulatively it can become overwhelming and blow you off course."),
+        para('familiar.body2', 'Paragraph 2', 'The 8 Pillar Sprint gives you eight weeks to build something sturdier, and learn how to trim your sails to make the most progress given the wind and the waves of life. You get a clear picture of what you value, and a practical plan for keeping to it no matter the weather.'),
+      ] },
+      { id: 'how', title: 'How it works', description: 'The self-assessment and the eight weeks.', fields: [
+        line('how.heading', 'Heading', 'How it works'),
+        line('how.before.title', 'Before Week 1: title', 'Before Week 1: see where you stand.'),
+        para('how.before.body', 'Before Week 1: text', "A 15-minute self-assessment gives you a one-page snapshot across all 8 Pillars, with your strongest and most stretched areas marked. Only you and I see it, and there's no overall score."),
+        line('how.weeks.title', 'Eight weeks: title', 'Eight weeks, eight pillars.'),
+        para('how.weeks.body', 'Eight weeks: text', 'Weeks 1 to 4 build your foundation. Weeks 5 and 6 test it under pressure. Weeks 7 and 8 bring in the people and places that shape your days.'),
+      ] },
+      { id: 'weeks', title: 'Week by week', description: 'The table of dates, pillars, and what each week adds.', fields: [
+        line('weeks.col.week', 'Column heading: week', 'Week'),
+        line('weeks.col.date', 'Column heading: date', 'Date'),
+        line('weeks.col.pillar', 'Column heading: pillar', 'Pillar'),
+        line('weeks.col.add', 'Column heading: what you add', 'What you add to your framework'),
+        ...([
+          ['Jan 12', 'Values, Ethical & Moral Compass', 'Your top three values in your own words, and how they should shape your decisions and relationships'],
+          ['Jan 19', 'Professional Excellence', "One growth edge in your skills or leadership, and how you'll develop it"],
+          ['Jan 26', 'Physical Health & Readiness', "Your routine for resetting when stress builds, and when you'd reach for outside help"],
+          ['Feb 2', 'Financial Stewardship', 'How financial pressure shows up for you, and how you want to decide when it does'],
+          ['Feb 9', 'Cognitive Fortitude', 'Your plan for staying with your values when things get hard'],
+          ['Feb 16', 'Emotional Equanimity', 'Your early-warning sign for strong emotion, and your reset'],
+          ['Feb 23', 'Relational Harmony', "One relationship, one change you'll try, and the shared result you want"],
+          ['Mar 2', 'Environmental Harmony', 'One change to your space, routines, or circle that protects what you value, then your finished framework'],
+        ] as const).flatMap(([date, pillar, add], i) => [
+          line(`week.${i + 1}.date`, `Week ${i + 1}: date`, date),
+          line(`week.${i + 1}.pillar`, `Week ${i + 1}: pillar`, pillar),
+          para(`week.${i + 1}.add`, `Week ${i + 1}: what you add`, add),
+        ]),
+      ] },
+      { id: 'rhythm', title: 'Every session', description: 'The four steps of each session, the warmup sheet, and what you leave with.', fields: [
+        line('rhythm.heading', 'Heading', 'Every session follows the same rhythm (75 minutes):'),
+        line('rhythm.1.title', 'Step 1 title', 'Look back.'),
+        para('rhythm.1.body', 'Step 1 text', "What happened with last week's commitment. No judgment, just what you learned."),
+        line('rhythm.2.title', 'Step 2 title', 'Work the pillar.'),
+        para('rhythm.2.body', 'Step 2 text', "Research-grounded content and exercises for that week's pillar, shaped by the group's self-assessments. Develop a written approach and commitment(s) incorporating the Pillar into your life."),
+        line('rhythm.3.title', 'Step 3 title', 'Reflect with a partner.'),
+        para('rhythm.3.body', 'Step 3 text', 'A short conversation in pairs (optional). You can always stay in the main room if you prefer.'),
+        line('rhythm.4.title', 'Step 4 title', 'Practice.'),
+        para('rhythm.4.body', 'Step 4 text', 'One specific “if this happens, I’ll do that” commitment, small enough to test in a week.'),
+        para('rhythm.warmup', 'Warmup sheet note', 'A short warmup sheet arrives a few days before each session, about 10 minutes so everyone shows up in a similar mindset, and you maximize the value of your time.'),
+        line('leave.heading', 'What you leave with: heading', 'What you leave with'),
+        para('leave.1', 'Item 1', 'A one-page personal framework built on your own values, covering all 8 Pillars'),
+        para('leave.2', 'Item 2', 'Eight commitments tested in real life, so you know what works for you'),
+        para('leave.3', 'Item 3', "A before-and-after look at your self-assessment, showing what moved and what didn't"),
+        para('leave.4', 'Item 4', 'A next-step page with options for what comes after'),
+        para('leave.5', 'Item 5', 'One 30-minute one-on-one session with John, to catch up on a missed week or go deeper on your framework'),
+      ] },
+      { id: 'details', title: 'The details', description: 'Dates, time, format, and investment. ' + PRICE_NOTE, fields: [
+        line('details.heading', 'Heading', 'The details'),
+        line('details.dates.label', 'Dates: label', 'Dates'),
+        line('details.dates', 'Dates', 'Eight Tuesdays, January 12 to March 2, 2027'),
+        line('details.time.label', 'Time: label', 'Time'),
+        line('details.time', 'Time', '7:00 to 8:15 PM Eastern'),
+        line('details.format.label', 'Format: label', 'Format'),
+        line('details.format', 'Format', 'Live by video, Microsoft Teams'),
+        line('details.size.label', 'Group size: label', 'Group size'),
+        line('details.size', 'Group size', 'Up to 12 participants'),
+        line('details.prep.label', 'Preparation: label', 'Preparation'),
+        para('details.prep', 'Preparation', 'A 15-minute self-assessment before Week 1, and a 10- to 15-minute worksheet before each session'),
+        line('details.investment.label', 'Investment: label', 'Investment'),
+        line('details.investment.suffix', 'Words after the price', 'per person', { help: 'The price itself comes from Pricing & Payments.' }),
+        line('details.register.label', 'Register by: label', 'Register by'),
+        line('details.register', 'Register by', 'January 5, 2027'),
+      ] },
+      { id: 'refunds', title: 'Refunds and cancellations', description: 'The five refund terms. Each starts with a few words in bold.', fields: [
+        line('refunds.heading', 'Heading', 'Refunds and cancellations'),
+        ...([
+          ['Until January 5, 2027:', 'full refund, or transfer your seat to someone else.'],
+          ['After January 5:', 'fees are non-refundable.'],
+          ['If fewer than 6 people register,', "the Sprint still runs. You'll have the choice to continue with a smaller group or take a full refund."],
+          ['Missed sessions', "aren't refunded. You'll receive a one-page summary after every session, and you can use your one-on-one session to catch up."],
+          ['Gifts', 'follow the same terms. Any refund goes to the person who paid.'],
+        ] as const).flatMap(([lead, text], i) => [
+          line(`refund.${i + 1}.lead`, `Term ${i + 1}: words in bold`, lead),
+          para(`refund.${i + 1}.text`, `Term ${i + 1}: rest of the sentence`, text),
+        ]),
+      ] },
+      { id: 'gift', title: 'Give the Sprint as a gift', description: 'How gifts work, with the gift button.', fields: [
+        line('gift.heading', 'Heading', 'Give the Sprint as a gift'),
+        para('gift.body1', 'Paragraph 1', 'Know someone who wants to maximize their performance despite multiple challenges? Give them eight weeks to build a framework of their own.'),
+        para('gift.body2', 'Paragraph 2', "When you buy the Sprint as a gift, you'll receive a gift certificate by email to pass along. Your recipient registers by January 5 and decides for themselves whether to join. The choice is theirs, which is part of what makes it work."),
+        line('gift.1.lead', 'Point 1: words in bold', 'Their privacy is protected.'),
+        para('gift.1.text', 'Point 1: rest', "You won't see their self-assessment, attendance, or anything discussed in the sessions."),
+        line('gift.2.lead', 'Point 2: words in bold', 'If they decide not to join,'),
+        para('gift.2.text', 'Point 2: rest', 'the refund terms above apply.'),
+      ] },
+      { id: 'next', title: 'What comes next', description: 'The programs that follow the Sprint.', fields: [
+        line('next.heading', 'Heading', 'What comes next'),
+        para('next.body', 'Paragraph', "Eight weeks builds the framework. Living it takes longer. If you want to go further, the 8 Pillars Leadership Program gives you ten months of one-on-one work to put your framework into practice and make the change last. One-on-one Executive Coaching is also available. Neither is required, and you'll never get a sales pitch during the sessions. Sprint graduates receive 20% off either program when they enroll within 30 days of the final session."),
+        line('next.link', 'Link text', 'See the 8 Pillars Leadership Program →'),
+      ] },
+      { id: 'note', title: 'A note on what this is', description: 'What the Sprint is and is not.', fields: [
+        line('note.heading', 'Heading', 'A note on what this is'),
+        para('note.body', 'Paragraph', "The 8 Pillar Sprint is facilitated group learning, not one-on-one coaching, therapy, or financial or legal advice. In Week 1 the group agrees on how we'll work together: share your own experience, not other people's, and how anonymized information either stays in the room or may be shared. Sessions are not recorded. If you miss a week, you'll receive a one-page summary of that pillar, and you can use your one-on-one session to catch up."),
+      ] },
+      { id: 'closing', title: 'Closing', description: 'The cherry blossom photo, closing words, both buttons, and the call link.', fields: [
+        photo('closing.image', 'Sprint Closing Photo', '/images/18Sitewide.jpeg', LANDSCAPE_4x3, 'Shown as a band above the closing buttons.'),
+        line('closing.headline', 'Headline', 'Start the year with a framework that holds.'),
+        para('closing.body', 'Text', "Eight weeks, a small group, and a single page that captures what you value and how you'll keep it."),
+        line('closing.question', 'Question before the call link', 'Questions first?'),
+        line('closing.call', 'Call link text', 'Schedule a free 15-minute call →', { help: 'Opens your free call booking page from Scheduling.' }),
+      ] },
+    ],
+  },
+  faq: {
+    label: 'FAQ',
+    path: '/faq',
+    description: 'Frequently asked questions. Each question opens to show its answer. Program prices in the answers come from Pricing & Payments.',
+    sections: [
+      { id: 'top', title: 'Top of page', description: 'The page heading.', fields: [
+        line('top.label', 'Small label', 'FAQ'),
+        line('top.heading', 'Heading', 'Frequently asked questions'),
+        line('investment.label', 'Word before program prices', 'Investment', { help: 'Answers about each program end with this word and the price from Pricing & Payments.' }),
+        line('investment.sprintSuffix', 'Words after the Sprint price', 'per person'),
+      ] },
+      ...FAQ_SECTIONS.map(sec => ({
+        id: sec.id,
+        title: sec.heading,
+        description: 'The section heading and its questions. Leave a question blank to hide it. The empty slots at the end let you add a new question.',
+        fields: [
+          line(`${sec.id}.heading`, 'Section heading', sec.heading),
+          ...[...sec.items, ...Array.from({ length: FAQ_SPARE }, () => ({ q: '', a: '' }))].flatMap((it, i) => {
+            const n = i + 1
+            const priced = 'program' in it && it.program
+            return [
+              line(`${sec.id}.${n}.q`, `Question ${n}`, it.q, { optional: true }),
+              para(`${sec.id}.${n}.a`, `Answer ${n}`, it.a, {
+                optional: true,
+                help: (priced ? 'The investment line is added automatically from Pricing & Payments. ' : '') + FORMAT_HELP,
+              }),
+              ...('sources' in it ? [para(`${sec.id}.${n}.sources`, `Answer ${n}: source links`, it.sources as string, { optional: true, help: 'Small links shown under the answer. ' + LINK_HELP })] : []),
+            ]
+          }),
+        ],
+      })),
+      { id: 'sources', title: 'Sources', description: 'The research cited in the answers, listed at the bottom of the page.', fields: [
+        line('sources.heading', 'Heading', 'Sources'),
+        ...FAQ_SOURCES.map((src, i) => para(`sources.${i + 1}`, `Source ${i + 1}`, src, { optional: true, help: LINK_HELP })),
+        ...Array.from({ length: 2 }, (_, i) => para(`sources.${FAQ_SOURCES.length + i + 1}`, `Source ${FAQ_SOURCES.length + i + 1}`, '', { optional: true, help: LINK_HELP })),
       ] },
     ],
   },

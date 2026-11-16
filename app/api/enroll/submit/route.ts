@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { Resend } from 'resend'
 import { generateAgreementPDF } from '@/lib/generate-agreement-pdf'
-import { isProgramKey } from '@/lib/program-info'
+import { isProgramKey, withReference } from '@/lib/program-info'
 import { getActiveAgreement, getPrograms, getSettings } from '@/lib/site-data'
+import { adminRecipient, sendEmail, type Attachment } from '@/lib/email'
+import { enrollmentAdminEmail, enrollmentClientEmail, type EnrollmentSummary } from '@/lib/email-templates'
 
 // Admin client — bypasses RLS, used server-side only
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
   try {
@@ -50,6 +49,14 @@ export async function POST(req: NextRequest) {
     }
     if (!['full', 'installment'].includes(paymentOption)) {
       return NextResponse.json({ error: 'Invalid payment option.' }, { status: 400 })
+    }
+    if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+      return NextResponse.json({ error: 'Please enter a valid email address.' }, { status: 400 })
+    }
+    for (const v of [firstName, lastName, phone, organization, role]) {
+      if (v != null && (typeof v !== 'string' || v.length > 200)) {
+        return NextResponse.json({ error: 'One of the fields is too long.' }, { status: 400 })
+      }
     }
     // Current pricing and Stripe links from Admin > Pricing & Payments
     const [programs, settings] = await Promise.all([getPrograms(), getSettings()])
@@ -173,77 +180,57 @@ export async function POST(req: NextRequest) {
 
     const enrollmentId = enrollment.id
 
-    // 5. Send emails via Resend
+    // 5. Emails, through lib/email (addresses come from environment
+    //    variables and Site Settings, never from code). Both carry the
+    //    signed PDF. In test mode both go to ENROLLMENT_TEST_EMAIL only;
+    //    if that is not set, nothing is sent (the attempt is logged).
+    //    A failed email is logged and never undoes the enrollment.
     const programLabel = programConfig.label
-
-    // In test mode: both emails are routed to ENROLLMENT_TEST_EMAIL only.
-    // If that env var is missing in test mode, we skip email delivery entirely
-    // rather than falling back to John's address or the client's address.
-    // Production behavior is completely unchanged.
-    const testEmailRecipient = process.env.ENROLLMENT_TEST_EMAIL ?? null
-    const testPrefix = isTestMode ? '[TEST] ' : ''
-    const testBanner = isTestMode
-      ? `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:16px;border-radius:4px;font-weight:bold">
-           TEST MODE: This is a test enrollment. No real payment will be processed.<br/>
-           <span style="font-weight:normal">Production recipient (not sent): ${email}</span>
-         </div>`
-      : ''
-
+    const testEmailRecipient = process.env.ENROLLMENT_TEST_EMAIL?.trim() || null
     const shouldSendEmail = isTestMode ? testEmailRecipient !== null : true
+    const summary: EnrollmentSummary = {
+      enrollmentId, firstName, lastName, email, phone, organization, role, programLabel,
+      paymentLabel: paymentOption === 'full' ? `Pay in full, ${programConfig.fullPrice}` : programConfig.installmentNote,
+      totalPrice: programConfig.totalCost,
+      amountToday: paymentOption === 'full' ? programConfig.fullPrice : programConfig.installmentAmount,
+      signedAtDisplay,
+      agreementVersion: activeAgreementVersion,
+    }
+    const attachments: Attachment[] = [{
+      filename: `Coaching Services Agreement (${firstName} ${lastName}).pdf`.replace(/[^\w ().,'-]/g, ''),
+      content: Buffer.from(pdfBytes),
+    }]
+    const footer = { contactEmail: settings.contactEmail, phone: settings.phone }
+    const testNote = isTestMode ? email : undefined
+    const clientMail = enrollmentClientEmail(summary, footer, testNote)
+    const adminMail = enrollmentAdminEmail(summary, footer, testNote)
 
     if (!shouldSendEmail) {
-      // ENROLLMENT_TEST_EMAIL is not configured — skip email delivery silently.
-      // The test confirmation screen will note that email was suppressed.
       console.warn(`[TEST MODE] ENROLLMENT_TEST_EMAIL is not set. Skipping email delivery for enrollment ${enrollmentId}.`)
     }
-
-    // Admin notification
-    if (shouldSendEmail) await resend.emails.send({
-      from: 'BTH Coaching <noreply@mccrackencoaching.com>',
-      to: isTestMode ? testEmailRecipient! : 'john@mccrackencoaching.com',
-      subject: `${testPrefix}New Enrollment: ${firstName} ${lastName} — ${programLabel}`,
-      html: `
-        ${testBanner}
-        <p>A new enrollment has been submitted.</p>
-        <table style="border-collapse:collapse;width:100%;max-width:560px">
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Name</td><td style="padding:8px;border:1px solid #ddd">${firstName} ${lastName}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Email</td><td style="padding:8px;border:1px solid #ddd">${email}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Phone</td><td style="padding:8px;border:1px solid #ddd">${phone || 'Not provided'}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Organization</td><td style="padding:8px;border:1px solid #ddd">${organization || 'Not provided'}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Role</td><td style="padding:8px;border:1px solid #ddd">${role || 'Not provided'}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Program</td><td style="padding:8px;border:1px solid #ddd">${programLabel}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Payment</td><td style="padding:8px;border:1px solid #ddd">${paymentOption === 'full' ? 'Full payment' : 'Installment plan'}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Signed at</td><td style="padding:8px;border:1px solid #ddd">${signedAtDisplay}</td></tr>
-          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Enrollment ID</td><td style="padding:8px;border:1px solid #ddd">${enrollmentId}</td></tr>
-          ${isTestMode ? `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:#856404">Test record</td><td style="padding:8px;border:1px solid #ddd;color:#856404">Yes — test_mode=true in database</td></tr>` : ''}
-        </table>
-        <p style="margin-top:16px;color:#666;font-size:12px">The signed agreement PDF is stored in Supabase Storage at: ${storagePath}</p>
-      `,
-    }).catch(e => console.error('Admin email error:', e))
-
-    // Confirmation email to client (or to test recipient in test mode)
-    if (shouldSendEmail) await resend.emails.send({
-      from: 'John McCracken <john@mccrackencoaching.com>',
-      to: isTestMode ? testEmailRecipient! : email,
-      subject: `${testPrefix}Your enrollment in ${programLabel} — next step`,
-      html: `
-        ${testBanner}
-        <p>Dear ${firstName},</p>
-        <p>Thank you for completing your enrollment agreement for the <strong>${programLabel}</strong>.</p>
-        <p>Your signed agreement has been recorded. The next step is to complete your payment to confirm your spot.</p>
-        <p>If you have any questions before completing payment, reply to this email or reach out directly.</p>
-        <p>Looking forward to working with you.</p>
-        <br/>
-        <p>John McCracken<br/>Beyond the Horizon Executive Coaching<br/>mccrackencoaching.com</p>
-        <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
-        <p style="font-size:11px;color:#999">Enrollment ID: ${enrollmentId}<br/>Agreement version: ${activeAgreementVersion}<br/>Signed: ${signedAtDisplay}</p>
-      `,
-    }).catch(e => console.error('Client email error:', e))
+    const [clientResult, adminResult] = await Promise.all([
+      sendEmail({
+        kind: 'enrollment_client', enrollmentId, testMode: isTestMode, attachments,
+        to: isTestMode ? (testEmailRecipient ?? '') : email,
+        replyTo: settings.contactEmail,
+        ...clientMail,
+      }),
+      sendEmail({
+        kind: 'enrollment_admin', enrollmentId, testMode: isTestMode, attachments,
+        to: isTestMode ? (testEmailRecipient ?? '') : adminRecipient(settings),
+        replyTo: email,
+        ...adminMail,
+      }),
+    ])
 
     // 6. Resolve Stripe payment link from centralized program config.
     // In test mode: return testMode:true and testStripeDestination (domain only, not the full link).
     // The client will show a test confirmation screen instead of redirecting.
-    const resolvedStripeLink = programConfig.stripeLinks[paymentOption as 'full' | 'installment'] ?? ''
+    // The enrollment ID rides along as Stripe's client_reference_id, so the
+    // payment webhook can mark exactly this enrollment as paid. Reaching
+    // Stripe does not mark anything paid.
+    const baseStripeLink = programConfig.stripeLinks[paymentOption as 'full' | 'installment'] ?? ''
+    const resolvedStripeLink = baseStripeLink ? withReference(baseStripeLink, enrollmentId, email) : ''
 
     if (isTestMode) {
       // Build a human-readable routing label that confirms which of the four
@@ -268,6 +255,7 @@ export async function POST(req: NextRequest) {
         testPaymentOption: paymentOption === 'full' ? 'Pay in Full' : `${programConfig.installmentCount} Monthly Payments of ${programConfig.installmentAmount}`,
         testEmailRecipient: testEmailRecipient ?? null,
         testEmailSuppressed: !shouldSendEmail,
+        testEmailResults: { client: clientResult.status, admin: adminResult.status },
       })
     }
 

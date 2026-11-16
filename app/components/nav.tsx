@@ -3,8 +3,11 @@
 import { useEffect, useRef, useState } from 'react'
 import './nav.css'
 import ScheduleButton from './schedule-button'
+import { DEFAULT_VISIBILITY, OPTIONAL_PAGES, type PageVisibility } from '@/lib/optional-pages'
 
-export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
+type Link = { label: string; href: string }
+
+export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY }: { bookingUrl?: string; visible?: PageVisibility }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
@@ -27,21 +30,28 @@ export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Optional pages (Page Status in the admin) appear only while Active
+  const sprint: Link[] = visible.sprint ? [{ label: OPTIONAL_PAGES.sprint.label, href: OPTIONAL_PAGES.sprint.path }] : []
+  const faq: Link[] = visible.faq ? [{ label: OPTIONAL_PAGES.faq.label, href: OPTIONAL_PAGES.faq.path }] : []
+
   // Mobile menu keeps all individual links (no nested dropdown)
-  const mobileLinks = [
+  const mobileLinks: Link[] = [
     { label: 'Home', href: '/' },
     { label: 'Executive Coaching', href: '/executive-coaching' },
     { label: 'Leader Development', href: '/leader-development' },
+    ...sprint,
     { label: 'For Organizations', href: '/for-organizations' },
     { label: 'Sample Engagements', href: '/sample-engagements' },
     { label: 'The 8 Pillars', href: '/the-8-pillars' },
     { label: 'About', href: '/about' },
+    ...faq,
     { label: 'Contact', href: '/contact' },
   ]
 
-  const serviceLinks = [
+  const serviceLinks: Link[] = [
     { label: 'Executive Coaching', href: '/executive-coaching' },
     { label: 'Leader Development', href: '/leader-development' },
+    ...sprint,
     { label: 'For Organizations', href: '/for-organizations' },
     { label: 'Sample Engagements', href: '/sample-engagements' },
     { label: 'divider', href: '' },
@@ -85,6 +95,7 @@ export default function Nav({ bookingUrl }: { bookingUrl?: string }) {
             </div>
 
             <a href="/about" className="nav-link">About</a>
+            {faq.map(l => <a key={l.href} href={l.href} className="nav-link">{l.label}</a>)}
             <a href="/contact" className="nav-link">Contact</a>
           </div>
 

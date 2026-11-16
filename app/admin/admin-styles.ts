@@ -114,6 +114,26 @@ export const ADMIN_STYLES = `
   .tag { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; }
   .tag.active { background: #C9A23A; color: #0D1B2A; }
   .tag.test { background: #ffc107; color: #1a1a1a; }
+  .tag.hidden-tag { background: rgba(251,191,36,0.14); color: #fbbf24; font-size: 9px; padding: 2px 6px; }
+
+  /* Page Status (Active / Hidden) for optional pages */
+  .page-status { border: 1px solid rgba(255,255,255,0.1); padding: 14px 16px 16px; margin-bottom: 18px; }
+  .page-status.is-active { border-color: rgba(74,222,128,0.4); background: rgba(74,222,128,0.05); }
+  .page-status.is-hidden { border-color: rgba(251,191,36,0.45); background: rgba(251,191,36,0.06); }
+  .page-status-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .page-status-title { font-size: 13px; font-weight: 600; color: #fff; }
+  .page-status-now { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+  .is-active .page-status-now { color: #4ade80; }
+  .is-hidden .page-status-now { color: #fbbf24; }
+  .page-status-switch { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(255,255,255,0.15); }
+  .page-status-switch button { background: none; border: 0; color: rgba(255,255,255,0.6); padding: 9px 12px; font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .page-status-switch button + button { border-left: 1px solid rgba(255,255,255,0.15); }
+  .page-status-switch button:hover:not(:disabled) { color: #fff; background: rgba(255,255,255,0.04); }
+  .page-status-switch button[aria-pressed="true"].on-active { background: #4ade80; color: #0D1B2A; }
+  .page-status-switch button[aria-pressed="true"].on-hidden { background: #fbbf24; color: #0D1B2A; }
+  .page-status-switch button:disabled { cursor: default; }
+  .page-status-switch button:focus-visible { outline: 2px solid #C9A23A; outline-offset: 2px; }
+  .page-status-help { font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.55; margin-top: 10px; }
   .doc-preview { background: #F7F4ED; color: #263746; font-family: Georgia, serif; font-size: 13px; line-height: 1.7; padding: 28px 32px; max-height: 520px; overflow-y: auto; white-space: pre-wrap; }
   .doc-preview .chg { background: rgba(251,191,36,0.25); display: block; margin: 0 -8px; padding: 0 8px; border-left: 3px solid #d97706; }
   .steps { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }

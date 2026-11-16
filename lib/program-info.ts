@@ -26,6 +26,57 @@ export interface ProgramPricing {
   stripeInstallmentUrl: string
 }
 
+// ------------------------------------------------------------
+// 8 Pillar Sprint: one price, two Stripe links (for yourself,
+// or as a gift). No installment plan and no coaching agreement:
+// both buttons go straight to Stripe Checkout.
+// ------------------------------------------------------------
+export interface SprintPricing {
+  priceCents: number
+  stripeEnrollUrl: string
+  stripeGiftUrl: string
+}
+
+export const DEFAULT_SPRINT_PRICING: SprintPricing = {
+  priceCents: 45000,
+  stripeEnrollUrl: 'https://buy.stripe.com/eVq6oH9Pv3f70w784A3sI05',
+  stripeGiftUrl: 'https://buy.stripe.com/4gM14n4vbaHz3Ij4So3sI04',
+}
+
+export const SPRINT_LABEL = '8 Pillar Sprint'
+
+// Tags added to the Sprint Stripe links so the payment webhook can tell
+// a purchase for yourself from a gift. Not secret.
+export const SPRINT_REFERENCE = { self: 'sprint_self', gift: 'sprint_gift' } as const
+
+// Public Sprint info for the page: price and the two checkout links
+export interface PublicSprintInfo {
+  price: string                // "$450"
+  priceCents: number
+  enrollUrl: string
+  giftUrl: string
+}
+
+export function withReference(url: string, ref: string, email?: string): string {
+  try {
+    const u = new URL(url)
+    u.searchParams.set('client_reference_id', ref)
+    if (email) u.searchParams.set('prefilled_email', email)
+    return u.toString()
+  } catch {
+    return url
+  }
+}
+
+export function sprintPublic(p: SprintPricing): PublicSprintInfo {
+  return {
+    price: usd(p.priceCents),
+    priceCents: p.priceCents,
+    enrollUrl: withReference(p.stripeEnrollUrl, SPRINT_REFERENCE.self),
+    giftUrl: withReference(p.stripeGiftUrl, SPRINT_REFERENCE.gift),
+  }
+}
+
 // Display-ready program info, safe to send to the browser (no Stripe links)
 export interface PublicProgramInfo {
   label: string

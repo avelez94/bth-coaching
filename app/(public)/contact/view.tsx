@@ -6,7 +6,7 @@ import ScheduleButton from '../../components/schedule-button'
 import { telHref } from '@/lib/site-settings'
 import type { ViewProps } from '@/lib/view-props'
 
-export default function ContactView({ c, booking, contact }: ViewProps) {
+export default function ContactView({ c, booking, contact, visible }: ViewProps) {
   const email = contact?.email ?? 'john@mccrackencoaching.com'
   const phone = contact?.phone ?? '703-705-2225'
   const location = contact?.location ?? 'Washington, DC area | Virtual worldwide'
@@ -55,6 +55,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
               </ScheduleButton>
             </div>
             <p className="contact-body">{c['top.body']}</p>
+            {visible?.faq && <a href="/faq" className="contact-faq-link">{c['top.faqLink']}</a>}
           </div>
 
           {/* ===== FORM + CONTACT MODULE ===== */}

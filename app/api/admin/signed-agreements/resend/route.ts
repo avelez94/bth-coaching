@@ -1,78 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
-import { Resend } from 'resend'
 import { verifyAdminToken } from '@/lib/admin-auth'
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { db, getSettings } from '@/lib/site-data'
+import { emailSetupProblems, sendEmail } from '@/lib/email'
+import { resendCopyEmail } from '@/lib/email-templates'
+import { isProgramKey, programLabel, SPRINT_LABEL } from '@/lib/program-info'
 
 // POST /api/admin/signed-agreements/resend
-// Resends a signed agreement copy to the client
-// Body: { enrollmentId }
+// Emails the client a copy of their signed agreement, attached exactly as
+// it was stored at signing. Body: { enrollmentId }
 export async function POST(req: NextRequest) {
   if (!verifyAdminToken(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { enrollmentId } = await req.json()
+  const { enrollmentId } = await req.json().catch(() => ({}))
   if (!enrollmentId) {
     return NextResponse.json({ error: 'enrollmentId is required.' }, { status: 400 })
   }
 
-  const { data: enrollment, error } = await supabaseAdmin
-    .from('enrollments')
-    .select('*')
-    .eq('id', enrollmentId)
-    .single()
-
+  const { data: enrollment, error } = await db().from('enrollments').select('*').eq('id', enrollmentId).single()
   if (error || !enrollment) {
     return NextResponse.json({ error: 'Enrollment not found.' }, { status: 404 })
   }
 
-  const programLabels: Record<string, string> = {
-    'executive-coaching': 'Executive Coaching',
-    '8-pillars': '8 Pillars Leadership Program',
-  }
-  const programLabel = programLabels[enrollment.program] || enrollment.program
-
-  if (!process.env.RESEND_API_KEY) {
-    return NextResponse.json({ error: 'Email sending is not set up yet, so the copy could not be sent. Use Download PDF and email it yourself for now.' }, { status: 503 })
+  if (emailSetupProblems().length) {
+    return NextResponse.json({ error: 'Email sending is not set up yet, so the copy could not be sent. Use Download and email it yourself for now.' }, { status: 503 })
   }
 
-  // Attach the signed PDF exactly as it was stored at signing
-  let attachments: { filename: string; content: Buffer }[] | undefined
+  let attachment: { filename: string; content: Buffer } | null = null
   if (enrollment.pdf_path) {
-    const { data: file } = await supabaseAdmin.storage.from('signed-agreements').download(enrollment.pdf_path)
-    if (file) attachments = [{ filename: 'Coaching Services Agreement.pdf', content: Buffer.from(await file.arrayBuffer()) }]
+    const { data: file } = await db().storage.from('signed-agreements').download(enrollment.pdf_path)
+    if (file) attachment = { filename: 'Coaching Services Agreement.pdf', content: Buffer.from(await file.arrayBuffer()) }
   }
-  if (!attachments) {
+  if (!attachment) {
     return NextResponse.json({ error: 'The signed PDF for this client could not be found, so nothing was sent.' }, { status: 404 })
   }
 
-  const signedOn = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(new Date(enrollment.signed_at))
-
-  const { error: sendError } = await resend.emails.send({
-    attachments,
-    from: 'John McCracken <john@mccrackencoaching.com>',
-    to: enrollment.email,
-    subject: `Your signed agreement for ${programLabel} (resent)`,
-    html: `
-      <p>Dear ${enrollment.first_name},</p>
-      <p>As requested, attached is a copy of your signed Coaching Services Agreement for the <strong>${programLabel}</strong>.</p>
-      <p>Your agreement was signed on ${new Date(enrollment.signed_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.</p>
-      <p>If you have any questions, reply to this email.</p>
-      <br/>
-      <p>John McCracken<br/>Beyond the Horizon Executive Coaching<br/>mccrackencoaching.com</p>
-      <hr style="margin:24px 0;border:none;border-top:1px solid #eee"/>
-      <p style="font-size:11px;color:#999">Enrollment ID: ${enrollment.id}<br/>Agreement version: ${enrollment.agreement_version}<br/>Signed: ${signedOn}</p>
-    `,
+  const settings = await getSettings()
+  const label = isProgramKey(enrollment.program) ? programLabel(enrollment.program) : enrollment.program === 'sprint' ? SPRINT_LABEL : enrollment.program
+  const signedOn = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(enrollment.signed_at))
+  const mail = resendCopyEmail(
+    { firstName: enrollment.first_name, programLabel: label, signedOn, agreementVersion: enrollment.agreement_version, enrollmentId: enrollment.id },
+    { contactEmail: settings.contactEmail, phone: settings.phone },
+  )
+  const result = await sendEmail({
+    kind: 'resend_copy', enrollmentId: enrollment.id, testMode: enrollment.test_mode,
+    to: enrollment.email, replyTo: settings.contactEmail, attachments: [attachment], ...mail,
   })
-  if (sendError) {
-    return NextResponse.json({ error: 'The email could not be sent. Email sending may not be fully set up yet.' }, { status: 502 })
+  if (result.status !== 'sent') {
+    return NextResponse.json({ error: `The email could not be sent (${result.error ?? 'unknown error'}). Nothing was changed.` }, { status: 502 })
   }
-
   return NextResponse.json({ success: true })
 }

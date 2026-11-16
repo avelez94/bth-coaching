@@ -2,12 +2,16 @@ import 'server-only'
 import { connection } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import {
-  DEFAULT_PRICING, PROGRAM_KEYS, buildProgramConfig,
-  type ProgramConfig, type ProgramKey, type ProgramPricing,
+  DEFAULT_PRICING, DEFAULT_SPRINT_PRICING, PROGRAM_KEYS, buildProgramConfig,
+  type ProgramConfig, type ProgramKey, type ProgramPricing, type SprintPricing,
 } from './program-info'
 import { DEFAULT_SETTINGS, SETTING_KEYS, type SiteSettings } from './site-settings'
 import { PAGE_DEFAULTS, type PageKey } from './site-content'
 import { AGREEMENT_HASH, AGREEMENT_TEXT, AGREEMENT_VERSION } from './agreement'
+import {
+  DEFAULT_VISIBILITY, OPTIONAL_PAGES, OPTIONAL_PAGE_KEYS, statusSettingKey,
+  type OptionalPageKey, type PageStatus, type PageVisibility,
+} from './optional-pages'
 
 // ============================================================
 // Server-only loaders for everything John edits in the admin.
@@ -65,6 +69,49 @@ export async function getPricing(): Promise<Record<ProgramKey, ProgramPricing>> 
   return out
 }
 
+// Page Status (Active / Hidden) for every optional page. Read on the
+// server for each request, so a change in the admin applies at once.
+export async function getPageStatuses(): Promise<Record<OptionalPageKey, PageStatus>> {
+  await connection()
+  const out = Object.fromEntries(OPTIONAL_PAGE_KEYS.map(k => [k, OPTIONAL_PAGES[k].defaultStatus])) as Record<OptionalPageKey, PageStatus>
+  try {
+    const { data, error } = await db().from('site_settings').select('key, value')
+      .in('key', OPTIONAL_PAGE_KEYS.map(statusSettingKey))
+    if (error || !data) return out
+    for (const k of OPTIONAL_PAGE_KEYS) {
+      const v = data.find(r => r.key === statusSettingKey(k))?.value
+      if (v === 'active' || v === 'hidden') out[k] = v
+    }
+  } catch { /* fall back to defaults */ }
+  return out
+}
+
+export async function getPageVisibility(): Promise<PageVisibility> {
+  try {
+    const st = await getPageStatuses()
+    return Object.fromEntries(OPTIONAL_PAGE_KEYS.map(k => [k, st[k] === 'active'])) as PageVisibility
+  } catch {
+    return DEFAULT_VISIBILITY
+  }
+}
+
+export async function isPageActive(key: OptionalPageKey): Promise<boolean> {
+  return (await getPageStatuses())[key] === 'active'
+}
+
+export async function getSprintPricing(): Promise<SprintPricing> {
+  await connection()
+  try {
+    const { data } = await db().from('program_pricing').select('*').eq('program_key', 'sprint').maybeSingle()
+    if (data) return {
+      priceCents: data.full_price_cents,
+      stripeEnrollUrl: data.stripe_full_url,
+      stripeGiftUrl: data.stripe_gift_url ?? DEFAULT_SPRINT_PRICING.stripeGiftUrl,
+    }
+  } catch { /* fall back to defaults */ }
+  return DEFAULT_SPRINT_PRICING
+}
+
 export async function getPrograms(): Promise<Record<ProgramKey, ProgramConfig>> {
   const pricing = await getPricing()
   return {
@@ -114,14 +161,18 @@ export async function getActiveAgreement(): Promise<ActiveAgreement> {
 // Everything an editable page view needs: its content, booking links,
 // display prices (no Stripe links), and contact details.
 export async function getViewProps(page: PageKey): Promise<import('./view-props').ViewProps> {
-  const [c, programs, settings, se] = await Promise.all([
+  const [c, programs, settings, se, sprint, visible] = await Promise.all([
     getPageContent(page), getPrograms(), getSettings(),
     page === 'home' ? getPageContent('sample-engagements') : Promise.resolve(null),
+    page === 'sprint' || page === 'faq' ? getSprintPricing() : Promise.resolve(null),
+    getPageVisibility(),
   ])
-  const { toPublic } = await import('./program-info')
+  const { toPublic, sprintPublic } = await import('./program-info')
   return {
     c,
     ...(se ? { engagements: engagementPreviews(se) } : {}),
+    ...(sprint ? { sprint: sprintPublic(sprint) } : {}),
+    visible,
     programs: { 'executive-coaching': toPublic(programs['executive-coaching']), '8-pillars': toPublic(programs['8-pillars']) },
     booking: { free: settings.bookingFreeCallUrl, org: settings.bookingOrgConsultUrl },
     contact: { email: settings.contactEmail, phone: settings.phone, location: settings.location },

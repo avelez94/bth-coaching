@@ -1,0 +1,130 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { db, getSettings } from '@/lib/site-data'
+import { adminRecipient, sendEmail } from '@/lib/email'
+import { paymentReceivedEmail, sprintPurchaseEmail } from '@/lib/email-templates'
+import { SPRINT_REFERENCE, isProgramKey, programLabel, usd } from '@/lib/program-info'
+import { UUID, verifyStripeSignature, type CheckoutSession } from '@/lib/stripe-webhook'
+
+// ============================================================
+// POST /api/stripe/webhook
+//
+// The only thing that marks an enrollment Paid. Reaching Stripe or
+// coming back from it never does. Stripe calls this after Checkout:
+//   checkout.session.completed                card payments (and $0 checkouts)
+//   checkout.session.async_payment_succeeded  bank payments that clear later
+//   checkout.session.async_payment_failed     bank payments that fail
+//
+// Each enrollment's Stripe link carries its enrollment ID as
+// client_reference_id; the Sprint links carry sprint_self or sprint_gift.
+// Requests without a valid Stripe signature are rejected.
+// Safe to receive the same event more than once.
+// ============================================================
+
+const HANDLED = new Set(['checkout.session.completed', 'checkout.session.async_payment_succeeded', 'checkout.session.async_payment_failed'])
+
+export async function POST(req: NextRequest) {
+  const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim()
+  if (!secret) {
+    console.error('[stripe] STRIPE_WEBHOOK_SECRET is not set; payment confirmations cannot be received.')
+    return NextResponse.json({ error: 'Webhook not configured.' }, { status: 503 })
+  }
+
+  const raw = await req.text()
+  if (!verifyStripeSignature(raw, req.headers.get('stripe-signature'), secret)) {
+    return NextResponse.json({ error: 'Invalid signature.' }, { status: 400 })
+  }
+
+  let event: { id: string; type: string; livemode: boolean; data: { object: CheckoutSession } }
+  try { event = JSON.parse(raw) } catch { return NextResponse.json({ error: 'Bad payload.' }, { status: 400 }) }
+  if (!HANDLED.has(event.type)) return NextResponse.json({ received: true, ignored: event.type })
+
+  // A Stripe test mode payment never marks a real enrollment paid on the live site
+  if (!event.livemode && process.env.VERCEL_ENV === 'production') {
+    return NextResponse.json({ received: true, ignored: 'test mode event on production' })
+  }
+
+  const s = event.data.object
+  const failed = event.type === 'checkout.session.async_payment_failed'
+  const paid = !failed && (s.payment_status === 'paid' || s.payment_status === 'no_payment_required')
+  const paymentStatus = failed ? 'failed' : s.payment_status
+  const ref = s.client_reference_id ?? ''
+  const kind = UUID.test(ref) ? 'enrollment' : ref === SPRINT_REFERENCE.self ? 'sprint_self' : ref === SPRINT_REFERENCE.gift ? 'sprint_gift' : 'other'
+  const email = s.customer_details?.email ?? s.customer_email ?? null
+  const name = s.customer_details?.name ?? null
+
+  try {
+    // 1. Record the payment (one row per Checkout Session)
+    const { data: before } = await db().from('stripe_payments').select('payment_status').eq('stripe_session_id', s.id).maybeSingle()
+    const { error: upsertError } = await db().from('stripe_payments').upsert({
+      stripe_session_id: s.id,
+      stripe_event_id: event.id,
+      kind,
+      enrollment_id: kind === 'enrollment' ? ref : null,
+      client_reference_id: ref || null,
+      customer_email: email,
+      customer_name: name,
+      amount_total_cents: s.amount_total,
+      currency: s.currency,
+      payment_status: paymentStatus,
+      mode: s.mode,
+      livemode: s.livemode,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'stripe_session_id' })
+    if (upsertError) {
+      // An enrollment ID that does not exist (deleted record) still gets recorded without the link
+      if (kind === 'enrollment' && upsertError.code === '23503') {
+        await db().from('stripe_payments').upsert({
+          stripe_session_id: s.id, stripe_event_id: event.id, kind: 'other', client_reference_id: ref, customer_email: email,
+          customer_name: name, amount_total_cents: s.amount_total, currency: s.currency, payment_status: paymentStatus,
+          mode: s.mode, livemode: s.livemode, updated_at: new Date().toISOString(),
+        }, { onConflict: 'stripe_session_id' })
+        return NextResponse.json({ received: true, note: 'unknown enrollment' })
+      }
+      throw upsertError
+    }
+    const newlyPaid = paid && before?.payment_status !== 'paid' && before?.payment_status !== 'no_payment_required'
+
+    const settings = await getSettings()
+    const footer = { contactEmail: settings.contactEmail, phone: settings.phone }
+
+    // 2. Coaching enrollment: mark paid (or failed) and tell John once
+    if (kind === 'enrollment') {
+      if (failed) {
+        await db().from('enrollments').update({ status: 'payment_failed' }).eq('id', ref).eq('status', 'pending_payment')
+      } else if (paid) {
+        const { data: updated, error } = await db().from('enrollments')
+          .update({ status: 'paid', paid_at: new Date().toISOString(), stripe_checkout_session_id: s.id, amount_paid_cents: s.amount_total })
+          .eq('id', ref).in('status', ['pending_payment', 'payment_failed', 'abandoned'])
+          .select('id, first_name, last_name, email, program, payment_option, price_installment_count, price_installment_cents, price_total_cents')
+        if (error) throw error
+        const e = updated?.[0]
+        if (e) {
+          const label = isProgramKey(e.program) ? programLabel(e.program) : e.program
+          await sendEmail({
+            kind: 'payment_received', enrollmentId: e.id, to: adminRecipient(settings), replyTo: e.email,
+            ...paymentReceivedEmail({
+              name: `${e.first_name} ${e.last_name}`, email: e.email, programLabel: label,
+              amount: usd(s.amount_total ?? 0),
+              paymentLabel: e.payment_option === 'full' ? 'Pay in full' : `${e.price_installment_count} monthly payments of ${usd(e.price_installment_cents ?? 0)}`,
+              enrollmentId: e.id,
+            }, footer),
+          })
+        }
+      }
+    }
+
+    // 3. Sprint purchase: tell John once (for a gift, he sends the certificate)
+    if ((kind === 'sprint_self' || kind === 'sprint_gift') && newlyPaid) {
+      await sendEmail({
+        kind: 'sprint_purchase', to: adminRecipient(settings), ...(email ? { replyTo: email } : {}),
+        ...sprintPurchaseEmail({ gift: kind === 'sprint_gift', name: name ?? '', email: email ?? '', amount: usd(s.amount_total ?? 0), sessionRef: s.id }, footer),
+      })
+    }
+
+    return NextResponse.json({ received: true })
+  } catch (err) {
+    // A 500 makes Stripe retry later, so a brief database problem loses nothing
+    console.error('[stripe] webhook processing failed:', err)
+    return NextResponse.json({ error: 'Processing failed.' }, { status: 500 })
+  }
+}

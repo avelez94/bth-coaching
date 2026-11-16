@@ -1,6 +1,7 @@
 import './footer.css'
 import ScheduleButton from './schedule-button'
 import { telHref, type SiteSettings } from '@/lib/site-settings'
+import { DEFAULT_VISIBILITY, OPTIONAL_PAGES, type PageVisibility } from '@/lib/optional-pages'
 
 const IconMail = () => (
   <svg className="footer-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -32,15 +33,19 @@ const IconInstagram = () => (
   </svg>
 )
 
-export default function Footer({ settings }: { settings: SiteSettings }) {
+export default function Footer({ settings, visible = DEFAULT_VISIBILITY }: { settings: SiteSettings; visible?: PageVisibility }) {
+  // Optional pages (Page Status in the admin) appear only while Active
+  const opt = (k: keyof PageVisibility) => (visible[k] ? [{ label: OPTIONAL_PAGES[k].label, href: OPTIONAL_PAGES[k].path }] : [])
   const links = [
     { label: 'Home', href: '/' },
     { label: 'Executive Coaching', href: '/executive-coaching' },
     { label: 'Leader Development', href: '/leader-development' },
+    ...opt('sprint'),
     { label: 'For Organizations', href: '/for-organizations' },
     { label: 'Sample Engagements', href: '/sample-engagements' },
     { label: 'The 8 Pillars', href: '/the-8-pillars' },
     { label: 'About', href: '/about' },
+    ...opt('faq'),
     { label: 'Contact', href: '/contact' },
   ]
 

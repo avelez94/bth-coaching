@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import type { PageContent, PageKey } from '@/lib/site-content'
 import type { SiteSettings } from '@/lib/site-settings'
 import type { ViewProps } from '@/lib/view-props'
+import type { PageVisibility } from '@/lib/optional-pages'
 
 // Each view is loaded on its own so only that page's stylesheet is present,
 // matching the live page exactly (several pages share class names).
@@ -17,6 +18,8 @@ const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
   })),
   'executive-coaching': dynamic(() => import('@/app/(public)/executive-coaching/view')),
   'leader-development': dynamic(() => import('@/app/(public)/leader-development/view')),
+  sprint: dynamic(() => import('@/app/(public)/sprint/view')),
+  faq: dynamic(() => import('@/app/(public)/faq/view')),
   'for-organizations': dynamic(() => import('@/app/(public)/for-organizations/view')),
   'sample-engagements': dynamic(() => import('@/app/(public)/sample-engagements/view')),
   'the-8-pillars': dynamic(() => import('@/app/(public)/the-8-pillars/view')),
@@ -24,7 +27,7 @@ const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
   contact: dynamic(() => import('@/app/(public)/contact/view')),
 }
 
-export default function PreviewClient({ page, base, settings }: { page: PageKey; base: ViewProps; settings: SiteSettings }) {
+export default function PreviewClient({ page, base, settings, visible }: { page: PageKey; base: ViewProps; settings: SiteSettings; visible: PageVisibility }) {
   const [content, setContent] = useState<PageContent>(base.c)
 
   useEffect(() => {
@@ -46,9 +49,9 @@ export default function PreviewClient({ page, base, settings }: { page: PageKey;
       {/* The preview frame is taller than a laptop screen. Keep the Home top
           section at the height it has on a typical laptop (88% of ~820px). */}
       {page === 'home' && <style>{`.hero { min-height: min(88vh, 722px) !important; }`}</style>}
-      <Nav bookingUrl={settings.bookingFreeCallUrl} />
+      <Nav bookingUrl={settings.bookingFreeCallUrl} visible={visible} />
       <main><View {...base} c={content} /></main>
-      <Footer settings={settings} />
+      <Footer settings={settings} visible={visible} />
     </>
   )
 }
