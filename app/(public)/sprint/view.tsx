@@ -141,18 +141,18 @@ export default function SprintView({ c, booking, sprint }: ViewProps) {
       {/* ===== 5. THE DETAILS ===== */}
       <section className="sp-section sp-details-section">
         <div className="sp-inner sp-details-grid">
+          <h2 className="sp-h2">{c['details.heading']}</h2>
           <div>
-            <h2 className="sp-h2">{c['details.heading']}</h2>
-            {enroll('btn btn-navy')}
+            <dl className="sp-details">
+              {details.map(([label, value]) => (
+                <div key={label} className="sp-detail-row">
+                  <dt>{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="sp-details-cta">{enroll('btn btn-navy')}</div>
           </div>
-          <dl className="sp-details">
-            {details.map(([label, value]) => (
-              <div key={label} className="sp-detail-row">
-                <dt>{label}</dt>
-                <dd>{value}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 

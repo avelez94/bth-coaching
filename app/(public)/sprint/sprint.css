@@ -18,6 +18,9 @@
 
 .sp-btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 .sp-btn-row-center { justify-content: center; }
+/* Closing: both buttons share the width of the longer label */
+.sp-closing .sp-btn-row { display: inline-grid; grid-template-columns: 1fr 1fr; }
+.sp-closing .sp-btn-row .btn { width: 100%; }
 
 /* ---------- shared section shells ---------- */
 .sp-section { background: var(--ivory); padding: 100px 72px; border-top: 1px solid var(--rule); }
@@ -51,9 +54,9 @@
 .sp-mobile-only { display: none; }
 
 /* ---------- quote (top and bottom of page) ---------- */
-.sp-quote { margin: 0 0 40px; max-width: 620px; }
+.sp-quote { margin: 0 0 28px; max-width: 620px; }
 .sp-quote blockquote { font-family: 'DM Serif Display', serif; font-style: italic; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; color: var(--ivory); }
-.sp-quote figcaption { margin-top: 8px; font-size: var(--fs-caption); letter-spacing: 0.04em; color: var(--ivory); }
+.sp-quote figcaption { margin-top: 4px; font-size: var(--fs-caption); letter-spacing: 0.04em; color: var(--ivory); }
 .sp-quote-bottom { margin: 48px auto 0; text-align: center; }
 .sp-quote-bottom blockquote { color: var(--text-mid); }
 .sp-quote-bottom figcaption { color: var(--text-muted); }
@@ -61,7 +64,7 @@
 /* ============================================================
    1. HERO
 ============================================================ */
-.sp-hero { background: var(--slate); padding: calc(var(--nav-h) + 72px) 72px 100px; }
+.sp-hero { background: var(--slate); padding: calc(var(--nav-h) + 48px) 72px 80px; }
 .sp-hero-inner { max-width: 1200px; margin: 0 auto; }
 .sp-hero-label {
   font-size: var(--fs-label);
@@ -69,7 +72,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ivory);
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 .sp-hero-headline {
   font-family: 'DM Serif Display', serif;
@@ -78,13 +81,13 @@
   line-height: 1.1;
   color: var(--ivory);
   letter-spacing: -0.02em;
-  max-width: 900px;
+  max-width: 1100px; /* two lines on laptops, same type size */
 }
-.sp-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 48px; align-items: start; }
-.sp-hero-pillars { font-size: var(--fs-support); line-height: 1.8; color: var(--ivory); font-weight: 350; padding-top: 22px; border-top: 1px solid rgba(247,244,237,0.25); }
+.sp-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; margin-top: 32px; align-items: start; }
+.sp-hero-pillars { font-size: var(--fs-support); line-height: 1.8; color: var(--ivory); font-weight: 350; padding-top: 18px; border-top: 1px solid rgba(247,244,237,0.25); }
 .sp-hero-pillars strong { font-weight: 500; color: var(--ivory); }
-.sp-hero-subhead { font-size: var(--fs-body); line-height: 1.82; color: var(--ivory); font-weight: 350; margin-bottom: 32px; }
-.sp-hero-when { margin-top: 20px; font-size: var(--fs-caption); line-height: 1.6; color: var(--ivory); }
+.sp-hero-subhead { font-size: var(--fs-body); line-height: 1.75; color: var(--ivory); font-weight: 350; margin-bottom: 24px; }
+.sp-hero-when { margin-top: 14px; font-size: var(--fs-caption); line-height: 1.6; color: var(--ivory); }
 
 /* ============================================================
    2. SOUND FAMILIAR
@@ -129,6 +132,7 @@
 ============================================================ */
 .sp-details-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
 .sp-details { margin: 0; border-top: 1px solid var(--rule-strong); }
+.sp-details-cta { margin-top: 28px; }
 .sp-detail-row { display: grid; grid-template-columns: 150px 1fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
 .sp-detail-row dt { font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); padding-top: 4px; }
 .sp-detail-row dd { margin: 0; font-size: var(--fs-support); line-height: 1.65; color: var(--text); font-weight: 350; }
@@ -201,7 +205,8 @@
 }
 
 @media (max-width: 640px) {
-  .sp-hero { padding: calc(var(--nav-h) + 40px) 24px 64px; }
+  .sp-hero { padding: calc(var(--nav-h) + 32px) 24px 56px; }
+  .sp-closing .sp-btn-row { grid-template-columns: 1fr; }
   .sp-section, .sp-gift { padding: 64px 24px; }
   .sp-rhythm { grid-template-columns: 1fr; gap: 24px; }
   .sp-detail-row { grid-template-columns: 1fr; gap: 4px; }

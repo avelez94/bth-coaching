@@ -41,21 +41,24 @@
 .faq-item[open] .faq-icon::after { transform: scaleY(0); }
 
 .faq-a { padding: 0 38px 26px 0; }
-.faq-a-p { font-size: var(--fs-body); line-height: 1.82; color: var(--text-mid); font-weight: 350; margin-bottom: 14px; }
+/* Answers: one step below the questions (500, --text), one step above sources */
+.faq-a-p { font-size: var(--fs-body); line-height: 1.82; color: #2F4256; font-weight: 400; margin-bottom: 14px; }
 .faq-a-p:last-child { margin-bottom: 0; }
 .faq-a-ul { list-style: none; display: grid; gap: 12px; margin-bottom: 14px; }
-.faq-a-ul li { position: relative; padding-left: 20px; font-size: var(--fs-body); line-height: 1.8; color: var(--text-mid); font-weight: 350; }
+.faq-a-ul li { position: relative; padding-left: 20px; font-size: var(--fs-body); line-height: 1.8; color: #2F4256; font-weight: 400; }
 .faq-a-ul li::before { content: ''; position: absolute; left: 0; top: 0.8em; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
 .faq-a strong { font-weight: 500; color: var(--text); }
 .faq-a a, .faq-sources a, .faq-source-list a { color: var(--slate-mid); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .faq-a a:hover, .faq-sources a:hover, .faq-source-list a:hover { color: var(--navy); }
 .faq-price { color: var(--text); }
-.faq-sources { margin-top: 14px; font-size: var(--fs-caption); line-height: 1.7; color: var(--text-muted); }
+.faq-sources { margin-top: 14px; font-size: var(--fs-caption); line-height: 1.7; color: var(--text-mid); font-weight: 400; }
 
 .faq-sources-section { padding-top: 56px; padding-bottom: 72px; }
 .faq-sources-heading { font-size: clamp(22px, 2.2vw, 28px); position: static; }
 .faq-source-list { list-style: none; display: grid; gap: 14px; }
-.faq-source-list li { font-size: var(--fs-caption); line-height: 1.7; color: var(--text-mid); font-weight: 350; }
+.faq-source-list { max-width: 820px; }
+.faq-source-list li { font-size: 0.9375rem; line-height: 1.75; color: var(--text-mid); font-weight: 400; }
+.faq-sources a, .faq-source-list a { font-weight: 500; }
 
 @media (max-width: 1024px) {
   .faq-hero { padding: calc(var(--nav-h) + 56px) 48px 48px; }
