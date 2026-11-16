@@ -325,3 +325,10 @@
 @media (min-width: 1025px) {
   .hero-subhead, .familiar-body, .way-body, .how-step-body, .outcomes-body, .why-body { font-size: 1.125rem; font-weight: 350; }
 }
+
+/* Phones: long button labels wrap to a second line instead of pushing the
+   page wider than the screen. Short labels still fit on one line, and the
+   minimum height keeps the tap target the same as before. */
+@media (max-width: 640px) {
+  .btn { white-space: normal; max-width: 100%; min-height: 48px; justify-content: center; text-align: center; line-height: 1.45; }
+}
