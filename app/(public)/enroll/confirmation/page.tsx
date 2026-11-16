@@ -57,8 +57,7 @@ export default function ConfirmationPage() {
           </h1>
 
           <p className="confirm-subhead">
-            Your agreement has been signed and recorded.
-            {data?.programLabel && ` A confirmation email is on its way, and John will be in touch once your payment is received.`}
+            Your agreement has been signed. Once Stripe confirms your payment, your enrollment is complete and a confirmation email with your signed agreement is sent to you.
           </p>
 
           <div className="confirm-what-next">
@@ -67,7 +66,7 @@ export default function ConfirmationPage() {
               <li className="confirm-step-item">
                 <div className="confirm-step-num">1</div>
                 <div>
-                  <strong>Check your inbox.</strong> A confirmation email with your signed agreement details has been sent to the email address you provided.
+                  <strong>Check your inbox.</strong> Your confirmation email, with your signed agreement attached, arrives as soon as Stripe confirms your payment, usually within a few minutes.
                 </div>
               </li>
               <li className="confirm-step-item">

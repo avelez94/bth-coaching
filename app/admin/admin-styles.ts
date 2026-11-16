@@ -114,6 +114,7 @@ export const ADMIN_STYLES = `
   .tag { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; }
   .tag.active { background: #C9A23A; color: #0D1B2A; }
   .tag.test { background: #ffc107; color: #1a1a1a; }
+  .section-heading { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
   .tag.hidden-tag { background: rgba(251,191,36,0.14); color: #fbbf24; font-size: 9px; padding: 2px 6px; }
 
   /* Page Status (Active / Hidden) for optional pages */

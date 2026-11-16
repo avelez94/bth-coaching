@@ -3,8 +3,7 @@ import { createClient } from '@supabase/supabase-js'
 import { generateAgreementPDF } from '@/lib/generate-agreement-pdf'
 import { isProgramKey, withReference } from '@/lib/program-info'
 import { getActiveAgreement, getPrograms, getSettings } from '@/lib/site-data'
-import { adminRecipient, sendEmail, type Attachment } from '@/lib/email'
-import { enrollmentAdminEmail, enrollmentClientEmail, type EnrollmentSummary } from '@/lib/email-templates'
+import { ENROLLMENT_EMAIL_COLUMNS, sendCompletionEmails, type EnrollmentRow } from '@/lib/enrollment-emails'
 
 // Admin client — bypasses RLS, used server-side only
 const supabaseAdmin = createClient(
@@ -64,21 +63,6 @@ export async function POST(req: NextRequest) {
 
     const signedAt = new Date()
 
-    // Format signedAt in Eastern Time for display in emails and PDF.
-    // The ISO timestamp is stored in the database; this is display only.
-    // Intl.DateTimeFormat with timeZone 'America/New_York' automatically
-    // handles EST/EDT — no manual offset math needed.
-    const signedAtDisplay = new Intl.DateTimeFormat('en-US', {
-      timeZone: 'America/New_York',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZoneName: 'short',
-    }).format(signedAt)
-    // e.g. "November 13, 2026 at 10:52 PM EST"
 
     // 0. The agreement new clients sign is the active version in
     //    Admin > Coaching Agreement (falls back to lib/agreement.ts).
@@ -129,16 +113,20 @@ export async function POST(req: NextRequest) {
       })
 
     if (uploadError) {
+      // The stored PDF is what the client and John receive once payment is
+      // confirmed, so stop here (before Stripe) rather than take a payment
+      // without it.
       console.error('PDF upload error:', uploadError)
-      // Don't block enrollment if storage fails — record still goes in
+      return NextResponse.json({ error: 'Your signed agreement could not be saved. Please try again in a moment.' }, { status: 500 })
     }
 
-    // 3. Create signed download URL (1-hour window for confirmation page)
+    // 3. Test mode only: a short-lived link to the PDF for the test screen.
+    //    In production the client receives the PDF by email after payment.
     let pdfDownloadUrl: string | null = null
-    if (!uploadError) {
+    if (isTestMode) {
       const { data: signedUrl } = await supabaseAdmin.storage
         .from('signed-agreements')
-        .createSignedUrl(storagePath, 31536000) // 1 year
+        .createSignedUrl(storagePath, 3600)
       pdfDownloadUrl = signedUrl?.signedUrl ?? null
     }
 
@@ -161,10 +149,11 @@ export async function POST(req: NextRequest) {
         agreement_hash: activeAgreementHash,
         agreement_id: activeAgreementId,
         agreement_content_snapshot: activeAgreementContent,
-        pdf_path: uploadError ? null : storagePath,
+        pdf_path: storagePath,
         status: isTestMode ? 'test' : 'pending_payment',
         test_mode: isTestMode,
-        // Price at the moment of signing; later price changes never alter this record
+        // Awaiting payment until the Stripe webhook confirms it. Price at the
+        // moment of signing; later price changes never alter this record
         price_total_cents: programConfig.fullPriceCents,
         price_installment_cents: programConfig.installmentAmountCents,
         price_installment_count: programConfig.installmentCount,
@@ -180,48 +169,23 @@ export async function POST(req: NextRequest) {
 
     const enrollmentId = enrollment.id
 
-    // 5. Emails, through lib/email (addresses come from environment
-    //    variables and Site Settings, never from code). Both carry the
-    //    signed PDF. In test mode both go to ENROLLMENT_TEST_EMAIL only;
-    //    if that is not set, nothing is sent (the attempt is logged).
-    //    A failed email is logged and never undoes the enrollment.
+    // 5. No emails here in production. The client's confirmation and
+    //    John's notice (both with the signed PDF) are sent by the Stripe
+    //    webhook after payment is verified, so an abandoned checkout sends
+    //    nothing. Test mode never reaches Stripe, so it sends those same
+    //    completion emails now, to ENROLLMENT_TEST_EMAIL only (skipped and
+    //    logged if that is not set).
     const programLabel = programConfig.label
     const testEmailRecipient = process.env.ENROLLMENT_TEST_EMAIL?.trim() || null
-    const shouldSendEmail = isTestMode ? testEmailRecipient !== null : true
-    const summary: EnrollmentSummary = {
-      enrollmentId, firstName, lastName, email, phone, organization, role, programLabel,
-      paymentLabel: paymentOption === 'full' ? `Pay in full, ${programConfig.fullPrice}` : programConfig.installmentNote,
-      totalPrice: programConfig.totalCost,
-      amountToday: paymentOption === 'full' ? programConfig.fullPrice : programConfig.installmentAmount,
-      signedAtDisplay,
-      agreementVersion: activeAgreementVersion,
+    let testEmailResults: { client: string; admin: string } | null = null
+    if (isTestMode) {
+      if (!testEmailRecipient) console.warn(`[TEST MODE] ENROLLMENT_TEST_EMAIL is not set. Skipping email delivery for enrollment ${enrollmentId}.`)
+      const { data: row } = await supabaseAdmin.from('enrollments').select(ENROLLMENT_EMAIL_COLUMNS).eq('id', enrollmentId).single()
+      if (row) {
+        const r = await sendCompletionEmails(row as unknown as EnrollmentRow, { testMode: true, pdf: pdfBytes })
+        testEmailResults = { client: r.client.status, admin: r.admin.status }
+      }
     }
-    const attachments: Attachment[] = [{
-      filename: `Coaching Services Agreement (${firstName} ${lastName}).pdf`.replace(/[^\w ().,'-]/g, ''),
-      content: Buffer.from(pdfBytes),
-    }]
-    const footer = { contactEmail: settings.contactEmail, phone: settings.phone }
-    const testNote = isTestMode ? email : undefined
-    const clientMail = enrollmentClientEmail(summary, footer, testNote)
-    const adminMail = enrollmentAdminEmail(summary, footer, testNote)
-
-    if (!shouldSendEmail) {
-      console.warn(`[TEST MODE] ENROLLMENT_TEST_EMAIL is not set. Skipping email delivery for enrollment ${enrollmentId}.`)
-    }
-    const [clientResult, adminResult] = await Promise.all([
-      sendEmail({
-        kind: 'enrollment_client', enrollmentId, testMode: isTestMode, attachments,
-        to: isTestMode ? (testEmailRecipient ?? '') : email,
-        replyTo: settings.contactEmail,
-        ...clientMail,
-      }),
-      sendEmail({
-        kind: 'enrollment_admin', enrollmentId, testMode: isTestMode, attachments,
-        to: isTestMode ? (testEmailRecipient ?? '') : adminRecipient(settings),
-        replyTo: email,
-        ...adminMail,
-      }),
-    ])
 
     // 6. Resolve Stripe payment link from centralized program config.
     // In test mode: return testMode:true and testStripeDestination (domain only, not the full link).
@@ -254,8 +218,8 @@ export async function POST(req: NextRequest) {
         testProgramLabel: programLabel,
         testPaymentOption: paymentOption === 'full' ? 'Pay in Full' : `${programConfig.installmentCount} Monthly Payments of ${programConfig.installmentAmount}`,
         testEmailRecipient: testEmailRecipient ?? null,
-        testEmailSuppressed: !shouldSendEmail,
-        testEmailResults: { client: clientResult.status, admin: adminResult.status },
+        testEmailSuppressed: !testEmailRecipient,
+        testEmailResults,
       })
     }
 

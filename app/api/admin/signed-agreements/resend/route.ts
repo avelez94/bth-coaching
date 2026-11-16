@@ -23,6 +23,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Enrollment not found.' }, { status: 404 })
   }
 
+  // Only a completed (paid) agreement is sent. Test records (Preview only)
+  // are allowed so the flow can be tested without a real payment.
+  if (enrollment.status !== 'paid' && enrollment.status !== 'test') {
+    return NextResponse.json({ error: 'This agreement is awaiting payment, so it is not complete yet. A copy can be sent once Stripe confirms the payment.' }, { status: 409 })
+  }
+
   if (emailSetupProblems().length) {
     return NextResponse.json({ error: 'Email sending is not set up yet, so the copy could not be sent. Use Download and email it yourself for now.' }, { status: 503 })
   }

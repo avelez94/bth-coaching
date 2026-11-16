@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db, getSettings } from '@/lib/site-data'
 import { adminRecipient, sendEmail } from '@/lib/email'
-import { paymentReceivedEmail, sprintPurchaseEmail } from '@/lib/email-templates'
-import { SPRINT_REFERENCE, isProgramKey, programLabel, usd } from '@/lib/program-info'
+import { sprintPurchaseEmail } from '@/lib/email-templates'
+import { SPRINT_REFERENCE, usd } from '@/lib/program-info'
+import { ENROLLMENT_EMAIL_COLUMNS, sendCompletionEmails, type EnrollmentRow } from '@/lib/enrollment-emails'
 import { UUID, verifyStripeSignature, type CheckoutSession } from '@/lib/stripe-webhook'
 
 // ============================================================
 // POST /api/stripe/webhook
 //
-// The only thing that marks an enrollment Paid. Reaching Stripe or
-// coming back from it never does. Stripe calls this after Checkout:
+// The only thing that marks an enrollment Paid (completed) and the only
+// thing that sends its completion emails. Reaching Stripe or coming back
+// from it never does. Stripe calls this after Checkout:
 //   checkout.session.completed                card payments (and $0 checkouts)
 //   checkout.session.async_payment_succeeded  bank payments that clear later
 //   checkout.session.async_payment_failed     bank payments that fail
@@ -87,7 +89,10 @@ export async function POST(req: NextRequest) {
     const settings = await getSettings()
     const footer = { contactEmail: settings.contactEmail, phone: settings.phone }
 
-    // 2. Coaching enrollment: mark paid (or failed) and tell John once
+    // 2. Coaching enrollment: on verified payment, mark it Paid (completed),
+    //    store the payment, and only then email the client their signed
+    //    agreement and John his paid enrollment notice. The status filter
+    //    makes this happen once, however often Stripe repeats the event.
     if (kind === 'enrollment') {
       if (failed) {
         await db().from('enrollments').update({ status: 'payment_failed' }).eq('id', ref).eq('status', 'pending_payment')
@@ -95,21 +100,10 @@ export async function POST(req: NextRequest) {
         const { data: updated, error } = await db().from('enrollments')
           .update({ status: 'paid', paid_at: new Date().toISOString(), stripe_checkout_session_id: s.id, amount_paid_cents: s.amount_total })
           .eq('id', ref).in('status', ['pending_payment', 'payment_failed', 'abandoned'])
-          .select('id, first_name, last_name, email, program, payment_option, price_installment_count, price_installment_cents, price_total_cents')
+          .select(ENROLLMENT_EMAIL_COLUMNS)
         if (error) throw error
-        const e = updated?.[0]
-        if (e) {
-          const label = isProgramKey(e.program) ? programLabel(e.program) : e.program
-          await sendEmail({
-            kind: 'payment_received', enrollmentId: e.id, to: adminRecipient(settings), replyTo: e.email,
-            ...paymentReceivedEmail({
-              name: `${e.first_name} ${e.last_name}`, email: e.email, programLabel: label,
-              amount: usd(s.amount_total ?? 0),
-              paymentLabel: e.payment_option === 'full' ? 'Pay in full' : `${e.price_installment_count} monthly payments of ${usd(e.price_installment_cents ?? 0)}`,
-              enrollmentId: e.id,
-            }, footer),
-          })
-        }
+        const e = updated?.[0] as EnrollmentRow | undefined
+        if (e) await sendCompletionEmails(e, { testMode: false })
       }
     }
 

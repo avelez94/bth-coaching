@@ -57,9 +57,9 @@ const textTable = (rows: [string, string][]) => rows.map(([k, v]) => `${k}: ${v}
 const textFooter = (f: Footer) => `\n\nJohn McCracken\nBeyond the Horizon Executive Coaching & Consulting\n${f.contactEmail} · ${f.phone} · ${SITE_HOST}`
 
 export function testBannerHtml(realRecipient: string): string {
-  return `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:20px;font-weight:bold;">TEST MODE: this is a test enrollment. No real payment is taken.<br><span style="font-weight:normal">Real recipient (not sent): ${esc(realRecipient)}</span></div>`
+  return `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:20px;font-weight:bold;">TEST MODE: this is a test enrollment. No real payment was taken; in production this email is sent only after Stripe confirms payment.<br><span style="font-weight:normal">Real recipient (not sent): ${esc(realRecipient)}</span></div>`
 }
-export const testBannerText = (realRecipient: string) => `TEST MODE: this is a test enrollment. No real payment is taken.\nReal recipient (not sent): ${realRecipient}\n\n`
+export const testBannerText = (realRecipient: string) => `TEST MODE: this is a test enrollment. No real payment was taken; in production this email is sent only after Stripe confirms payment.\nReal recipient (not sent): ${realRecipient}\n\n`
 
 // ------------------------------------------------------------
 // Enrollment: to the client, with the signed agreement attached
@@ -84,34 +84,34 @@ export function enrollmentClientEmail(e: EnrollmentSummary, footer: Footer, test
   const rows: [string, string][] = [
     ['Program', e.programLabel],
     ['Payment option', e.paymentLabel],
-    ['Due today', e.amountToday],
-    ['Signed', e.signedAtDisplay],
+    ['Paid today', e.amountToday],
+    ['Agreement signed', e.signedAtDisplay],
     ['Agreement version', e.agreementVersion],
   ]
-  const subject = `${test ? '[TEST] ' : ''}Your signed agreement for ${e.programLabel}`
+  const subject = `${test ? '[TEST] ' : ''}Your enrollment in ${e.programLabel} is confirmed`
   const body = [
     p(`Dear ${esc(e.firstName)},`),
-    p(`Thank you for enrolling in <strong>${esc(e.programLabel)}</strong>. Your signed Coaching Services Agreement is attached to this email for your records.`),
+    p(`Thank you for enrolling in <strong>${esc(e.programLabel)}</strong>. Your payment has been received and your enrollment is confirmed. Your signed Coaching Services Agreement is attached to this email for your records.`),
     table(rows),
-    p(`<strong>Next step:</strong> if you have not finished checkout yet, please complete your payment through Stripe to confirm your place. Stripe sends your receipt. Once your payment is received, I will contact you to schedule your first session.`),
+    p(`<strong>Next step:</strong> I will contact you to schedule your first session. Stripe sends your payment receipt separately.`),
     p(`If you have any questions, just reply to this email.`),
     p(`John McCracken`),
     `<p style="margin:16px 0 0;font-size:11px;color:${C.muted};">Reference: ${esc(e.enrollmentId)}</p>`,
   ].join('\n')
   const text = `${test ? testBannerText(test) : ''}Dear ${e.firstName},
 
-Thank you for enrolling in ${e.programLabel}. Your signed Coaching Services Agreement is attached to this email for your records.
+Thank you for enrolling in ${e.programLabel}. Your payment has been received and your enrollment is confirmed. Your signed Coaching Services Agreement is attached to this email for your records.
 
 ${textTable(rows)}
 
-Next step: if you have not finished checkout yet, please complete your payment through Stripe to confirm your place. Stripe sends your receipt. Once your payment is received, I will contact you to schedule your first session.
+Next step: I will contact you to schedule your first session. Stripe sends your payment receipt separately.
 
 If you have any questions, just reply to this email.
 
 John McCracken
 
 Reference: ${e.enrollmentId}${textFooter(footer)}`
-  return { subject, html: layout({ preheader: `Your signed agreement for ${e.programLabel}`, body, footer, testBanner: test ? testBannerHtml(test) : undefined }), text }
+  return { subject, html: layout({ preheader: `Your enrollment in ${e.programLabel} is confirmed`, body, footer, testBanner: test ? testBannerHtml(test) : undefined }), text }
 }
 
 // ------------------------------------------------------------
@@ -127,22 +127,26 @@ export function enrollmentAdminEmail(e: EnrollmentSummary, footer: Footer, test?
     ['Program', e.programLabel],
     ['Payment option', e.paymentLabel],
     ['Program price', e.totalPrice],
-    ['Due today', e.amountToday],
-    ['Signed', e.signedAtDisplay],
+    ['Paid today', e.amountToday],
+    ['Agreement signed', e.signedAtDisplay],
     ['Agreement version', e.agreementVersion],
     ['Reference', e.enrollmentId],
   ]
-  const subject = `${test ? '[TEST] ' : ''}New enrollment: ${e.firstName} ${e.lastName}, ${e.programLabel}`
+  const subject = `${test ? '[TEST] ' : ''}New paid enrollment: ${e.firstName} ${e.lastName}, ${e.programLabel}`
+  const first = esc(e.firstName)
   const body = [
-    p(`<strong>${esc(e.firstName)} ${esc(e.lastName)}</strong> signed the Coaching Services Agreement for <strong>${esc(e.programLabel)}</strong> and was sent to Stripe to pay.`),
+    p(`<strong>${first} ${esc(e.lastName)}</strong> enrolled in <strong>${esc(e.programLabel)}</strong>. Stripe confirmed the payment.`),
     table(rows),
-    p(`The signed agreement is attached and saved in Admin, Signed Agreements. Payment is <strong>not confirmed yet</strong>. You will get a separate email when Stripe confirms the payment, and the record will show Paid.`),
+    p(`The signed agreement is attached and now shows as Completed in Admin, Signed Agreements.`),
+    p(`Next step: contact ${first} to schedule the first session.`),
   ].join('\n')
-  const text = `${test ? testBannerText(test) : ''}${e.firstName} ${e.lastName} signed the Coaching Services Agreement for ${e.programLabel} and was sent to Stripe to pay.
+  const text = `${test ? testBannerText(test) : ''}${e.firstName} ${e.lastName} enrolled in ${e.programLabel}. Stripe confirmed the payment.
 
 ${textTable(rows)}
 
-The signed agreement is attached and saved in Admin, Signed Agreements. Payment is not confirmed yet. You will get a separate email when Stripe confirms the payment, and the record will show Paid.${textFooter(footer)}`
+The signed agreement is attached and now shows as Completed in Admin, Signed Agreements.
+
+Next step: contact ${e.firstName} to schedule the first session.${textFooter(footer)}`
   return { subject, html: layout({ preheader: `${e.firstName} ${e.lastName} enrolled in ${e.programLabel}`, body, footer, testBanner: test ? testBannerHtml(test) : undefined }), text }
 }
 
@@ -168,28 +172,6 @@ John McCracken
 
 Agreement version ${x.agreementVersion} · Reference: ${x.enrollmentId}${textFooter(footer)}`
   return { subject, html: layout({ preheader: `Your signed agreement for ${x.programLabel}`, body, footer }), text }
-}
-
-// ------------------------------------------------------------
-// Stripe confirmed a payment: to John
-// ------------------------------------------------------------
-export function paymentReceivedEmail(x: { name: string; email: string; programLabel: string; amount: string; paymentLabel: string; enrollmentId: string }, footer: Footer): Email {
-  const rows: [string, string][] = [
-    ['Client', x.name], ['Email', x.email], ['Program', x.programLabel],
-    ['Payment option', x.paymentLabel], ['Paid today', x.amount], ['Reference', x.enrollmentId],
-  ]
-  const subject = `Payment received: ${x.name}, ${x.programLabel}`
-  const body = [
-    p(`Stripe confirmed payment for <strong>${esc(x.name)}</strong>. The enrollment now shows Paid in Admin, Signed Agreements.`),
-    table(rows),
-    p(`Next step: contact ${esc(x.name.split(' ')[0])} to schedule the first session.`),
-  ].join('\n')
-  const text = `Stripe confirmed payment for ${x.name}. The enrollment now shows Paid in Admin, Signed Agreements.
-
-${textTable(rows)}
-
-Next step: contact ${x.name.split(' ')[0]} to schedule the first session.${textFooter(footer)}`
-  return { subject, html: layout({ preheader: subject, body, footer }), text }
 }
 
 // ------------------------------------------------------------
