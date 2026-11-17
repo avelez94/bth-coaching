@@ -8,7 +8,9 @@ interface Purchase {
   customer_name: string | null; customer_email: string | null
   amount_total_cents: number | null; payment_status: string; livemode: boolean
   amount_refunded_cents: number | null; refunded_at: string | null
+  participant: { name: string; email: string; phone: string | null; terms_version: string | null } | null
 }
+interface Awaiting { id: string; created_at: string; name: string; email: string; phone: string | null; status: 'pending_payment' | 'payment_failed' }
 
 type GiftStatus = 'purchased' | 'redeemed' | 'refunded' | 'cancelled'
 interface Gift {
@@ -35,7 +37,9 @@ const BADGE: Record<GiftStatus, { label: string; bg: string; fg: string; help: s
 // Gifts are created automatically when Stripe confirms a gift payment.
 export default function SprintPurchasesView({ toast }: ViewProps) {
   const [rows, setRows] = useState<Purchase[] | null>(null)
+  const [awaiting, setAwaiting] = useState<Awaiting[]>([])
   const [gifts, setGifts] = useState<Gift[] | null>(null)
+  const [deadline, setDeadline] = useState<{ redeemBy: string; closed: boolean } | null>(null)
   const [open, setOpen] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [version, setVersion] = useState(0)
@@ -44,11 +48,11 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
     let cancelled = false
     fetch('/api/admin/sprint-purchases')
       .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then(d => { if (!cancelled) setRows(d.purchases) })
+      .then(d => { if (!cancelled) { setRows(d.purchases); setAwaiting(d.awaiting ?? []) } })
       .catch(() => { if (!cancelled) { toast('Sprint purchases could not be loaded. Refresh to try again.', true); setRows([]) } })
     fetch('/api/admin/sprint-gifts')
       .then(r => (r.ok ? r.json() : Promise.reject()))
-      .then(d => { if (!cancelled) setGifts(d.gifts) })
+      .then(d => { if (!cancelled) { setGifts(d.gifts); setDeadline({ redeemBy: d.redeemBy, closed: d.redemptionClosed }) } })
       .catch(() => { if (!cancelled) { toast('Sprint gifts could not be loaded. Refresh to try again.', true); setGifts([]) } })
     return () => { cancelled = true }
   }, [toast, version])
@@ -96,6 +100,7 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
         <h2 className="section-heading">Gifts {gifts && <span className="muted">({gifts.length})</span>}</h2>
         <p className="field-hint" style={{ marginBottom: 12 }}>
           When Stripe confirms a gift payment, a gift certificate with its own code and link is emailed to the buyer automatically. The recipient uses it to register. Each gift can be claimed once.
+          {deadline && <> Gifts can be claimed until {deadline.redeemBy} at 11:59 PM Eastern{deadline.closed ? ' (that date has passed)' : ''}. You can change this date under Pricing.</>}
         </p>
         {gifts === null && <p className="muted">Loading…</p>}
         {gifts && gifts.length === 0 && <div className="card"><p className="card-sub" style={{ margin: 0 }}>No gifts yet. They appear here as soon as Stripe confirms a gift payment.</p></div>}
@@ -106,7 +111,10 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
                 <thead><tr><th>Purchased</th><th>Buyer</th><th>Gift code</th><th>Status</th><th>Recipient</th><th>Redeemed</th><th>Stripe reference</th><th></th></tr></thead>
                 <tbody>
                   {gifts.map(g => {
-                    const b = BADGE[g.status]
+                    // Unused after the deadline: kept on record, but the link no longer works
+                    const b = g.status === 'purchased' && deadline?.closed
+                      ? { ...BADGE.purchased, label: 'Not claimed', help: `Paid, but not claimed by ${deadline.redeemBy}. The link no longer works. The payment and any refund stay on record.` }
+                      : BADGE[g.status]
                     const isOpen = open === g.id
                     return (
                       <Fragment key={g.id}>
@@ -167,7 +175,7 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
           <div className="card" style={{ padding: 0 }}>
             <div className="table-wrap">
               <table className="table">
-                <thead><tr><th>Date</th><th>Type</th><th>Buyer</th><th>Email</th><th>Paid</th><th>Status</th></tr></thead>
+                <thead><tr><th>Date</th><th>Type</th><th>Buyer or participant</th><th>Email</th><th>Paid</th><th>Status</th></tr></thead>
                 <tbody>
                   {rows.map(p => {
                     const paid = p.payment_status === 'paid' || p.payment_status === 'no_payment_required'
@@ -177,8 +185,11 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
                       <tr key={p.id}>
                         <td style={{ whiteSpace: 'nowrap' }}>{when(p.created_at)}</td>
                         <td>{p.kind === 'sprint_gift' ? <span className="tag active">Gift</span> : 'For themselves'} {!p.livemode && <span className="tag test">Test</span>}</td>
-                        <td style={{ fontWeight: 600, color: '#fff' }}>{p.customer_name ?? 'Not provided'}</td>
-                        <td>{p.customer_email ? <a className="open-link" href={`mailto:${p.customer_email}`}>{p.customer_email}</a> : 'Not provided'}</td>
+                        <td style={{ fontWeight: 600, color: '#fff' }}>
+                          {p.participant?.name ?? p.customer_name ?? 'Not provided'}
+                          {p.participant?.phone && <div className="muted" style={{ fontSize: 11, fontWeight: 400 }}>{p.participant.phone}</div>}
+                        </td>
+                        {(() => { const e = p.participant?.email ?? p.customer_email; return <td>{e ? <a className="open-link" href={`mailto:${e}`}>{e}</a> : 'Not provided'}</td> })()}
                         <td>{money(p.amount_total_cents)}</td>
                         <td style={{ color }}>{label}</td>
                       </tr>
@@ -188,6 +199,34 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
               </table>
             </div>
           </div>
+        )}
+
+        {/* ===== Registered, not paid ===== */}
+        {awaiting.length > 0 && (
+          <>
+            <h2 className="section-heading" style={{ marginTop: 36 }}>Registered, payment not confirmed <span className="muted">({awaiting.length})</span></h2>
+            <p className="field-hint" style={{ marginBottom: 12 }}>
+              These people filled in the Sprint registration but Stripe has not confirmed a payment, so they are not enrolled. Someone who pays later moves to the list above automatically.
+            </p>
+            <div className="card" style={{ padding: 0 }}>
+              <div className="table-wrap">
+                <table className="table">
+                  <thead><tr><th>Registered</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead>
+                  <tbody>
+                    {awaiting.map(a => (
+                      <tr key={a.id}>
+                        <td style={{ whiteSpace: 'nowrap' }}>{when(a.created_at)}</td>
+                        <td style={{ fontWeight: 600, color: '#fff' }}>{a.name}</td>
+                        <td><a className="open-link" href={`mailto:${a.email}`}>{a.email}</a></td>
+                        <td>{a.phone ?? 'Not provided'}</td>
+                        <td style={{ color: a.status === 'payment_failed' ? '#f87171' : '#fbbf24' }}>{a.status === 'payment_failed' ? 'Payment failed' : 'Awaiting payment'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </>

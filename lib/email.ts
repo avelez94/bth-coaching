@@ -28,7 +28,7 @@ import type { SiteSettings } from './site-settings'
 export type EmailKind =
   | 'enrollment_client' | 'enrollment_admin' | 'resend_copy'
   | 'payment_received' | 'sprint_purchase'
-  | 'gift_certificate' | 'gift_redeemed_recipient' | 'gift_redeemed_admin'
+  | 'gift_certificate' | 'gift_redeemed_recipient' | 'gift_redeemed_admin' | 'sprint_registered'
   | 'contact_admin' | 'contact_sender' | 'test'
 
 export interface Attachment { filename: string; content: Buffer }

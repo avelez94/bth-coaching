@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   try {
     const r = await redeemGift(token, { name, email, phone: phone || null, termsVersion: SPRINT_PARTICIPANT_TERMS?.version ?? null })
     if (!r.ok) {
-      const status = r.state === 'invalid' ? 404 : 409
+      const status = r.state === 'invalid' ? 404 : r.state === 'closed' ? 410 : 409
       return fail(REDEEM_MESSAGE[r.state], status, r.state)
     }
     // The gift is already Redeemed; email problems never undo that

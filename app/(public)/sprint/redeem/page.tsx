@@ -72,6 +72,14 @@ export default async function Redeem({ searchParams }: { searchParams: Search })
             </>
           )}
 
+          {state.state === 'closed' && (
+            <>
+              <p className="rd-status rd-status-error" role="alert">{REDEEM_MESSAGE.closed}</p>
+              <p className="rd-lead">The last day to claim a Sprint gift was {state.closedOn}. If you have questions about this gift, John is glad to help.</p>
+              {contact}
+            </>
+          )}
+
           {(state.state === 'redeemed' || state.state === 'refunded' || state.state === 'cancelled') && (
             <>
               <p className="rd-status rd-status-error" role="alert">{REDEEM_MESSAGE[state.state]}</p>
@@ -91,7 +99,7 @@ export default async function Redeem({ searchParams }: { searchParams: Search })
                     <div><dt>{c['details.dates.label']}</dt><dd>{c['details.dates']}</dd></div>
                     <div><dt>{c['details.time.label']}</dt><dd>{c['details.time']}</dd></div>
                     <div><dt>{c['details.format.label']}</dt><dd>{c['details.format']}</dd></div>
-                    <div><dt>{c['details.register.label']}</dt><dd>{c['details.register']}</dd></div>
+                    <div><dt>Claim this gift by</dt><dd>{state.redeemBy}</dd></div>
                   </dl>
                   <p className="rd-lead">Enter your details to claim your seat and complete your registration.</p>
                 </>

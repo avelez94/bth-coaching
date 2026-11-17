@@ -177,10 +177,12 @@ Agreement version ${x.agreementVersion} · Reference: ${x.enrollmentId}${textFoo
 // ------------------------------------------------------------
 // Sprint purchase (for yourself or as a gift): to John
 // ------------------------------------------------------------
-export function sprintPurchaseEmail(x: { gift: boolean; name: string; email: string; amount: string; sessionRef: string }, footer: Footer): Email {
+export function sprintPurchaseEmail(x: { gift: boolean; name: string; email: string; phone?: string | null; amount: string; sessionRef: string }, footer: Footer): Email {
   const rows: [string, string][] = [
-    ['Purchase', x.gift ? 'Gift' : 'For themselves'], ['Buyer', x.name || 'Not provided'],
-    ['Email', x.email || 'Not provided'], ['Paid', x.amount], ['Stripe reference', x.sessionRef],
+    ['Purchase', x.gift ? 'Gift' : 'For themselves'], [x.gift ? 'Buyer' : 'Participant', x.name || 'Not provided'],
+    ['Email', x.email || 'Not provided'],
+    ...(x.gift ? [] : [['Phone', x.phone || 'Not provided'] as [string, string]]),
+    ['Paid', x.amount], ['Stripe reference', x.sessionRef],
   ]
   const subject = x.gift ? `8 Pillar Sprint gift purchased by ${x.name || x.email}` : `New 8 Pillar Sprint registration: ${x.name || x.email}`
   const next = x.gift
@@ -204,7 +206,7 @@ type Recipient = string | null  // the real recipient when this is a test send
 
 function giftBanner(real: Recipient): { html: string; text: string } {
   if (real === null) return { html: '', text: '' }
-  const line = 'TEST MODE: Sprint gift test email. Outside the live site gift emails go only to the test inbox, never to real people.'
+  const line = 'TEST MODE: Sprint test email. Outside the live site Sprint emails go only to the test inbox, never to real people.'
   return {
     html: `<div style="background:#fff3cd;border:2px solid #ffc107;padding:12px 16px;margin-bottom:20px;font-weight:bold;">${esc(line)}<br><span style="font-weight:normal">Real recipient (not sent): ${esc(real || 'none')}</span></div>`,
     text: `${line}\nReal recipient (not sent): ${real || 'none'}\n\n`,
@@ -271,6 +273,20 @@ export function giftRedeemedRecipientEmail(x: { name: string; purchaserName: str
   const from = x.purchaserName ? `, a gift from ${x.purchaserName}` : ''
   const rows = x.details.filter(([k, v]) => k && v)
   const l1 = `Your seat in the 8 Pillar Sprint is confirmed${from}.`
+  const l2 = 'I will be in touch before Week 1 with your welcome details and the self-assessment.'
+  const l3 = 'If you have any questions, reply to this email.'
+  const body = [p(`Hi ${esc(first)},`), p(esc(l1)), table(rows), p(esc(l2)), p(esc(l3)), p('John')].join('\n')
+  const text = `${t.text}Hi ${first},\n\n${l1}\n\n${textTable(rows)}\n\n${l2}\n\n${l3}\n\nJohn${textFooter(footer)}`
+  return { subject, html: layout({ preheader: l1, body, footer, testBanner: t.html }), text }
+}
+
+/** To someone who registered and paid for the Sprint themselves */
+export function sprintRegisteredEmail(x: { name: string; details: [string, string][] }, footer: Footer, testRecipient: Recipient): Email {
+  const first = x.name.trim().split(/\s+/)[0]
+  const t = giftBanner(testRecipient)
+  const subject = 'You are registered for the 8 Pillar Sprint'
+  const rows = x.details.filter(([k, v]) => k && v)
+  const l1 = 'Your payment is confirmed and your seat in the 8 Pillar Sprint is reserved.'
   const l2 = 'I will be in touch before Week 1 with your welcome details and the self-assessment.'
   const l3 = 'If you have any questions, reply to this email.'
   const body = [p(`Hi ${esc(first)},`), p(esc(l1)), table(rows), p(esc(l2)), p(esc(l3)), p('John')].join('\n')

@@ -1,11 +1,11 @@
 import 'server-only'
-import { db, getPageContent, getSettings } from './site-data'
+import { db, getPageContent, getSettings, getSprintPricing } from './site-data'
 import { adminRecipient, sendEmail, type SendResult } from './email'
 import { giftCertificateEmail, giftAdminNoticeEmail, giftRedeemedAdminEmail, giftRedeemedRecipientEmail } from './email-templates'
 import { generateGiftCertificatePDF, type CertificateContent } from './gift-certificate-pdf'
 import { generateCode, generateToken, redeemPath, type GiftStatus } from './sprint-gift-codes'
 import { SITE_URL } from './seo'
-import { usd } from './program-info'
+import { formatEasternDate, giftRedemptionClosed, usd } from './program-info'
 
 // ============================================================
 // 8 Pillar Sprint gifts.
@@ -132,14 +132,15 @@ export async function sendCertificateOnce(gift: GiftRow, origin: string): Promis
 }
 
 async function certificateContent(gift: GiftRow, origin: string, testMode: boolean): Promise<CertificateContent> {
-  const [c, settings] = await Promise.all([getPageContent('sprint'), getSettings()])
+  const [c, settings, sprint] = await Promise.all([getPageContent('sprint'), getSettings(), getSprintPricing()])
   const term = (n: number) => [c[`refund.${n}.lead` as keyof typeof c], c[`refund.${n}.text` as keyof typeof c]].filter(Boolean).join(' ')
   return {
     purchaserName: gift.purchaser_name,
     recipientName: null,
     code: gift.code,
     link: redeemUrl(origin, gift.token),
-    registerBy: c['details.register'],
+    // The gift redemption deadline (Admin > Pricing), which is what the redemption page enforces
+    registerBy: formatEasternDate(sprint.giftRedeemBy),
     dates: c['details.dates'],
     time: c['details.time'],
     format: c['details.format'],
@@ -195,7 +196,8 @@ async function notifyJohnOfGift(gift: GiftRow) {
 export type PublicGiftState =
   | { state: 'invalid' }
   | { state: 'redeemed' | 'refunded' | 'cancelled' }
-  | { state: 'valid'; code: string; purchaserFirstName: string | null }
+  | { state: 'closed'; closedOn: string }
+  | { state: 'valid'; code: string; purchaserFirstName: string | null; redeemBy: string }
 
 /** What the redemption page may show. Never returns anyone's email or the recipient. */
 export async function publicGiftState(by: { token?: string; code?: string }): Promise<PublicGiftState & { token?: string }> {
@@ -204,7 +206,11 @@ export async function publicGiftState(by: { token?: string; code?: string }): Pr
   if (error) throw error
   if (!data) return { state: 'invalid' }
   if (data.status !== 'purchased') return { state: data.status as 'redeemed' | 'refunded' | 'cancelled' }
-  return { state: 'valid', code: data.code, purchaserFirstName: firstName(data.purchaser_name), token: data.token }
+  // An unused gift after the deadline: kept as it is (Purchased, with its
+  // payment and refund record), but it can no longer be redeemed
+  const { giftRedeemBy } = await getSprintPricing()
+  if (giftRedemptionClosed(giftRedeemBy)) return { state: 'closed', closedOn: formatEasternDate(giftRedeemBy) }
+  return { state: 'valid', code: data.code, purchaserFirstName: firstName(data.purchaser_name), redeemBy: formatEasternDate(giftRedeemBy), token: data.token }
 }
 
 const firstName = (n: string | null) => (n ?? '').trim().split(/\s+/)[0] || null
@@ -217,7 +223,13 @@ export interface Registration { name: string; email: string; phone: string | nul
  * simultaneous attempts exactly one succeeds, and a Redeemed, Refunded or
  * Cancelled gift can never be redeemed.
  */
-export async function redeemGift(token: string, reg: Registration): Promise<{ ok: true; gift: GiftRow } | { ok: false; state: 'invalid' | 'redeemed' | 'refunded' | 'cancelled' }> {
+export async function redeemGift(token: string, reg: Registration): Promise<{ ok: true; gift: GiftRow } | { ok: false; state: 'invalid' | 'redeemed' | 'refunded' | 'cancelled' | 'closed' }> {
+  // Past the redemption deadline nothing changes; the page explains why
+  const { giftRedeemBy } = await getSprintPricing()
+  if (giftRedemptionClosed(giftRedeemBy)) {
+    const s = await publicGiftState({ token })
+    return { ok: false, state: s.state === 'valid' ? 'closed' : s.state }
+  }
   const now = new Date().toISOString()
   const { data, error } = await db().from('sprint_gifts').update({
     status: 'redeemed', redeemed_at: now, updated_at: now,

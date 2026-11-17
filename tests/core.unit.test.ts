@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { verifyStripeSignature } from '../lib/stripe-webhook'
-import { withReference, sprintPublic, DEFAULT_SPRINT_PRICING } from '../lib/program-info'
+import { withReference, sprintPublic, DEFAULT_SPRINT_PRICING, sprintSelfReference, sprintRegistrationId, endOfDayEastern, easternDate, formatEasternDate, giftRedemptionClosed } from '../lib/program-info'
 import { PAGE_SCHEMA, PAGE_DEFAULTS, faqProgramFor } from '../lib/site-content'
 import { OPTIONAL_PAGES, OPTIONAL_PAGE_KEYS } from '../lib/optional-pages'
 import { enrollmentClientEmail, contactAdminEmail, esc } from '../lib/email-templates'
@@ -27,8 +27,27 @@ test('Stripe links carry the reference that the webhook matches on', () => {
   assert.equal(u.searchParams.get('prefilled_email'), 'a+b@example.com')
   const s = sprintPublic(DEFAULT_SPRINT_PRICING)
   assert.equal(s.price, '$450')
-  assert.equal(new URL(s.enrollUrl).searchParams.get('client_reference_id'), 'sprint_self')
+  // Joining yourself starts with the registration page, which sends you to
+  // Stripe with your registration as the reference
+  assert.equal(s.enrollUrl, '/sprint/register')
+  const reg = '0b8c9b8e-1111-4222-8333-444455556666'
+  const self = new URL(withReference(DEFAULT_SPRINT_PRICING.stripeEnrollUrl, sprintSelfReference(reg), 'p@example.com'))
+  assert.equal(self.searchParams.get('client_reference_id'), `sprint_self_${reg}`)
+  assert.equal(sprintRegistrationId(self.searchParams.get('client_reference_id')), reg)
+  assert.equal(sprintRegistrationId('sprint_self'), null)
+  assert.equal(sprintRegistrationId('sprint_gift'), null)
   assert.equal(new URL(s.giftUrl).searchParams.get('client_reference_id'), 'sprint_gift')
+})
+
+test('gift deadline is 11:59 PM Eastern, in both standard and daylight time', () => {
+  assert.equal(DEFAULT_SPRINT_PRICING.giftRedeemBy, '2027-01-10T23:59:59-05:00')
+  assert.equal(endOfDayEastern('2027-01-10'), '2027-01-10T23:59:59-05:00')
+  assert.equal(endOfDayEastern('2027-07-04'), '2027-07-04T23:59:59-04:00')
+  assert.equal(endOfDayEastern('2027-02-30'), null)
+  assert.equal(easternDate(endOfDayEastern('2027-01-10')!), '2027-01-10')
+  assert.equal(formatEasternDate(DEFAULT_SPRINT_PRICING.giftRedeemBy), 'January 10, 2027')
+  assert.equal(giftRedemptionClosed(DEFAULT_SPRINT_PRICING.giftRedeemBy, new Date('2027-01-11T04:59:59Z')), false)
+  assert.equal(giftRedemptionClosed(DEFAULT_SPRINT_PRICING.giftRedeemBy, new Date('2027-01-11T05:00:00Z')), true)
 })
 
 test('optional pages are editable pages with a safe redirect', () => {

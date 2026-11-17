@@ -28,19 +28,57 @@ export interface ProgramPricing {
 
 // ------------------------------------------------------------
 // 8 Pillar Sprint: one price, two Stripe links (for yourself,
-// or as a gift). No installment plan and no coaching agreement:
-// both buttons go straight to Stripe Checkout.
+// or as a gift). No installment plan and no coaching agreement.
+// Joining yourself: a short registration on /sprint/register, then
+// Stripe. A gift: straight to Stripe; the recipient registers later
+// on /sprint/redeem, by the gift redemption deadline.
 // ------------------------------------------------------------
 export interface SprintPricing {
   priceCents: number
   stripeEnrollUrl: string
   stripeGiftUrl: string
+  /** Last moment a gift can be redeemed (ISO time; 11:59:59 PM Eastern on the chosen day) */
+  giftRedeemBy: string
 }
 
 export const DEFAULT_SPRINT_PRICING: SprintPricing = {
   priceCents: 45000,
   stripeEnrollUrl: 'https://buy.stripe.com/eVq6oH9Pv3f70w784A3sI05',
   stripeGiftUrl: 'https://buy.stripe.com/4gM14n4vbaHz3Ij4So3sI04',
+  giftRedeemBy: '2027-01-10T23:59:59-05:00',
+}
+
+// ---------- Eastern Time dates (safe in the browser and on the server) ----------
+const EASTERN = 'America/New_York'
+
+/** "2027-01-10" for an instant, as the calendar date in Eastern Time */
+export function easternDate(iso: string): string {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: EASTERN, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(iso))
+  const v = (t: string) => parts.find(p => p.type === t)?.value ?? ''
+  return `${v('year')}-${v('month')}-${v('day')}`
+}
+
+/** 11:59:59 PM Eastern on a calendar date ("2027-01-10"), as an ISO time with the right offset (EST or EDT) */
+export function endOfDayEastern(date: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null
+  const noonUtc = new Date(`${date}T12:00:00Z`)
+  if (Number.isNaN(noonUtc.getTime()) || noonUtc.toISOString().slice(0, 10) !== date) return null
+  const name = new Intl.DateTimeFormat('en-US', { timeZone: EASTERN, timeZoneName: 'shortOffset' })
+    .formatToParts(noonUtc).find(p => p.type === 'timeZoneName')?.value ?? 'GMT-5'
+  const m = name.match(/GMT([+-])(\d{1,2})(?::(\d{2}))?/)
+  const off = m ? `${m[1]}${m[2].padStart(2, '0')}:${m[3] ?? '00'}` : '-05:00'
+  return `${date}T23:59:59${off}`
+}
+
+/** "January 10, 2027" */
+export function formatEasternDate(iso: string): string {
+  return new Intl.DateTimeFormat('en-US', { timeZone: EASTERN, month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(iso))
+}
+
+/** True once the gift redemption deadline has passed */
+export function giftRedemptionClosed(redeemBy: string, now = new Date()): boolean {
+  const t = new Date(redeemBy).getTime()
+  return Number.isFinite(t) && now.getTime() > t
 }
 
 export const SPRINT_LABEL = '8 Pillar Sprint'
@@ -68,11 +106,20 @@ export function withReference(url: string, ref: string, email?: string): string 
   }
 }
 
+// Self purchase: registration first, then Stripe with this reference
+export const SPRINT_REGISTER_PATH = '/sprint/register'
+export const sprintSelfReference = (registrationId: string) => `${SPRINT_REFERENCE.self}_${registrationId}`
+/** The registration ID inside a self purchase reference, or null */
+export function sprintRegistrationId(ref: string | null | undefined): string | null {
+  const m = (ref ?? '').match(/^sprint_self_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i)
+  return m ? m[1].toLowerCase() : null
+}
+
 export function sprintPublic(p: SprintPricing): PublicSprintInfo {
   return {
     price: usd(p.priceCents),
     priceCents: p.priceCents,
-    enrollUrl: withReference(p.stripeEnrollUrl, SPRINT_REFERENCE.self),
+    enrollUrl: SPRINT_REGISTER_PATH,
     giftUrl: withReference(p.stripeGiftUrl, SPRINT_REFERENCE.gift),
   }
 }

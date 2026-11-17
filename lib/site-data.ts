@@ -107,6 +107,7 @@ export async function getSprintPricing(): Promise<SprintPricing> {
       priceCents: data.full_price_cents,
       stripeEnrollUrl: data.stripe_full_url,
       stripeGiftUrl: data.stripe_gift_url ?? DEFAULT_SPRINT_PRICING.stripeGiftUrl,
+      giftRedeemBy: data.gift_redeem_by ? new Date(data.gift_redeem_by).toISOString() : DEFAULT_SPRINT_PRICING.giftRedeemBy,
     }
   } catch { /* fall back to defaults */ }
   return DEFAULT_SPRINT_PRICING

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/admin-auth'
-import { db } from '@/lib/site-data'
+import { db, getSprintPricing } from '@/lib/site-data'
+import { formatEasternDate, giftRedemptionClosed } from '@/lib/program-info'
 import { cancelGift, giftById, redeemUrl, sendCertificate, siteOrigin, type GiftRow } from '@/lib/sprint-gifts'
 
 // ============================================================
@@ -33,7 +34,10 @@ export async function GET(req: NextRequest) {
   for (const e of emails ?? []) if (!lastEmail.has(e.gift_id)) lastEmail.set(e.gift_id, e)
 
   const origin = siteOrigin(req.nextUrl.origin)
+  const { giftRedeemBy } = await getSprintPricing()
   return NextResponse.json({
+    redeemBy: formatEasternDate(giftRedeemBy),
+    redemptionClosed: giftRedemptionClosed(giftRedeemBy),
     gifts: rows.map(g => {
       const pay = payBy.get(g.stripe_payment_id)
       return {

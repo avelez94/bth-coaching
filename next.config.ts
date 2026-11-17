@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
       { source: '/api/:path*', headers: noindex },
       // Sprint gift redemption: private links, never indexed, cached or
       // passed on to other sites as a referrer
+      { source: '/sprint/register', headers: [...noindex, { key: 'Cache-Control', value: 'private, no-store' }] },
       { source: '/sprint/redeem', headers: [
         ...noindex,
         { key: 'Referrer-Policy', value: 'no-referrer' },

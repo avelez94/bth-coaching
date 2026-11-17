@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/admin-auth'
 import { db, getPricing, getSprintPricing } from '@/lib/site-data'
-import { PROGRAM_KEYS, type ProgramKey, type ProgramPricing, type SprintPricing } from '@/lib/program-info'
+import { PROGRAM_KEYS, endOfDayEastern, type ProgramKey, type ProgramPricing, type SprintPricing } from '@/lib/program-info'
 
 // GET /api/admin/pricing: current prices and Stripe links for every program
 export async function GET(req: NextRequest) {
@@ -17,6 +17,9 @@ function validateSprint(p: SprintPricing): string[] {
   if (!Number.isInteger(p.priceCents) || p.priceCents < 1000 || p.priceCents > 10000000) errs.push('Sprint price must be between $10 and $100,000.')
   if (!isStripe(p.stripeEnrollUrl)) errs.push('The enroll link must be a Stripe payment link starting with https://buy.stripe.com/')
   if (!isStripe(p.stripeGiftUrl)) errs.push('The gift link must be a Stripe payment link starting with https://buy.stripe.com/')
+  // Must be 11:59:59 PM Eastern on a real calendar date, as the Admin form sends it
+  const day = typeof p.giftRedeemBy === 'string' ? p.giftRedeemBy.slice(0, 10) : ''
+  if (!day || endOfDayEastern(day) !== p.giftRedeemBy) errs.push('Choose the last day a gift can be claimed.')
   return errs
 }
 
@@ -47,6 +50,7 @@ export async function PUT(req: NextRequest) {
       full_price_cents: sp.priceCents,
       stripe_full_url: sp.stripeEnrollUrl.trim(),
       stripe_gift_url: sp.stripeGiftUrl.trim(),
+      gift_redeem_by: sp.giftRedeemBy,
       installment_amount_cents: null,
       installment_count: null,
       stripe_installment_url: null,

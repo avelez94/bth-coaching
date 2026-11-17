@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db, getSettings } from '@/lib/site-data'
 import { adminRecipient, sendEmail } from '@/lib/email'
 import { sprintPurchaseEmail } from '@/lib/email-templates'
-import { SPRINT_REFERENCE, usd } from '@/lib/program-info'
+import { SPRINT_REFERENCE, sprintRegistrationId, usd } from '@/lib/program-info'
 import { ENROLLMENT_EMAIL_COLUMNS, sendCompletionEmails, type EnrollmentRow } from '@/lib/enrollment-emails'
 import { UUID, verifyStripeSignature, type CheckoutSession, type StripeCharge } from '@/lib/stripe-webhook'
 import { ensureGiftForPayment, recordRefund, sendCertificateOnce, siteOrigin } from '@/lib/sprint-gifts'
 import { applyInstallmentPlan } from '@/lib/installment-plan-sync'
+import { markRegistrationFailed, markRegistrationPaid, sendRegistrationEmails } from '@/lib/sprint-registration'
 
 // ============================================================
 // POST /api/stripe/webhook
@@ -20,7 +21,8 @@ import { applyInstallmentPlan } from '@/lib/installment-plan-sync'
 //   charge.refunded                           a refund issued in Stripe
 //
 // Each enrollment's Stripe link carries its enrollment ID as
-// client_reference_id; the Sprint links carry sprint_self or sprint_gift.
+// client_reference_id; the Sprint links carry sprint_self_<registration ID>
+// (or plain sprint_self from an older link) or sprint_gift.
 // A paid sprint_gift checkout creates one gift and emails its certificate.
 // A paid monthly installment enrollment is then set in Stripe to stop by
 // itself after its last payment (6 or 10); if that cannot be confirmed
@@ -70,7 +72,10 @@ export async function POST(req: NextRequest) {
   const paid = !failed && (s.payment_status === 'paid' || s.payment_status === 'no_payment_required')
   const paymentStatus = failed ? 'failed' : s.payment_status
   const ref = s.client_reference_id ?? ''
-  const kind = UUID.test(ref) ? 'enrollment' : ref === SPRINT_REFERENCE.self ? 'sprint_self' : ref === SPRINT_REFERENCE.gift ? 'sprint_gift' : 'other'
+  const registrationId = sprintRegistrationId(ref)
+  const kind = UUID.test(ref) ? 'enrollment'
+    : ref === SPRINT_REFERENCE.self || registrationId ? 'sprint_self'
+    : ref === SPRINT_REFERENCE.gift ? 'sprint_gift' : 'other'
   const email = s.customer_details?.email ?? s.customer_email ?? null
   const name = s.customer_details?.name ?? null
 
@@ -142,8 +147,24 @@ export async function POST(req: NextRequest) {
       await sendCertificateOnce(gift, siteOrigin(req.nextUrl.origin))
     }
 
-    // 4. Sprint purchase for themselves: tell John once (unchanged)
-    if (kind === 'sprint_self' && newlyPaid) {
+    // 4. Sprint purchase for themselves, registered on /sprint/register:
+    //    mark the registration Paid once, then confirm to the participant
+    //    and notify John. A repeated event finds it already Paid.
+    if (kind === 'sprint_self' && registrationId) {
+      if (failed) await markRegistrationFailed(registrationId, s.id)
+      else if (paid) {
+        const reg = await markRegistrationPaid(registrationId, { sessionId: s.id, paymentId: payment?.id ?? null, amountCents: s.amount_total, livemode: s.livemode })
+        // The registration is already Paid; email problems never undo that
+        if (reg) { try { await sendRegistrationEmails(reg) } catch (e) { console.error('[sprint] registration emails failed:', e) } }
+      }
+    }
+    const registrationFound = kind === 'sprint_self' && registrationId
+      ? Boolean((await db().from('sprint_registrations').select('id').eq('id', registrationId).maybeSingle()).data)
+      : false
+
+    // 5. Sprint purchase without a registration on record (older link, or a
+    //    registration that no longer exists): tell John once so nothing is missed
+    if (kind === 'sprint_self' && !registrationFound && newlyPaid) {
       await sendEmail({
         kind: 'sprint_purchase', to: adminRecipient(settings), ...(email ? { replyTo: email } : {}),
         ...sprintPurchaseEmail({ gift: false, name: name ?? '', email: email ?? '', amount: usd(s.amount_total ?? 0), sessionRef: s.id }, footer),

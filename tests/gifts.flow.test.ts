@@ -58,7 +58,7 @@ class Q {
       const list = Array.isArray(this.payload) ? this.payload : [this.payload!]
       const made: Row[] = []
       for (const p of list) {
-        const row: Row = { id: randomUUID(), created_at: new Date().toISOString(), status: this.t === 'sprint_gifts' ? 'purchased' : undefined, ...p }
+        const row: Row = { id: randomUUID(), created_at: new Date().toISOString(), status: this.t === 'sprint_gifts' ? 'purchased' : this.t === 'sprint_registrations' ? 'pending_payment' : undefined, ...p }
         if (this.dup(row)) return { data: null, error: { code: '23505', message: 'duplicate key' } }
         rows.push(row); made.push(row)
       }
@@ -86,6 +86,9 @@ class Q {
 }
 const fakeDb = { from: (t: string) => new Q(t) }
 
+// The gift redemption deadline the stand-in database reports (tests can move it)
+let sprintRedeemBy = '2027-01-10T23:59:59-05:00'
+
 // ---------- email recorder ----------
 const sent: { from: string; to: string; subject: string; text: string; html: string; attachments?: { filename: string; content: Buffer }[] }[] = []
 
@@ -110,11 +113,14 @@ test.before(async () => {
   })
   const { PAGE_DEFAULTS } = await import('../lib/site-content')
   const { DEFAULT_SETTINGS } = await import('../lib/site-settings')
+  const { DEFAULT_SPRINT_PRICING } = await import('../lib/program-info')
   mock.module(url('lib/site-data.ts'), {
     namedExports: {
       db: () => fakeDb,
       getSettings: async () => DEFAULT_SETTINGS,
       getPageContent: async (p: keyof typeof PAGE_DEFAULTS) => PAGE_DEFAULTS[p],
+      getSprintPricing: async () => ({ ...DEFAULT_SPRINT_PRICING, giftRedeemBy: sprintRedeemBy }),
+      isPageActive: async () => true,
     },
   })
   mock.module(url('lib/admin-auth.ts'), { namedExports: { verifyAdminToken: (req: Request) => req.headers.get('x-test-admin') === 'yes' } })
@@ -159,7 +165,7 @@ test('1-5, 12: paid gift webhook creates one gift, one code, one certificate ema
   assert.equal(giftEmails().length, 1)
   const m = giftEmails()[0]
   assert.equal(m.to, 'test-inbox@example.test')
-  assert.ok(m.text.includes(String(g.code)) && m.text.includes(`/sprint/redeem?token=${g.token}`) && m.text.includes('January 5, 2027'))
+  assert.ok(m.text.includes(String(g.code)) && m.text.includes(`/sprint/redeem?token=${g.token}`) && m.text.includes('January 10, 2027'))
   assert.ok(m.html.includes('TEST MODE') && m.html.includes('buyer@example.test'))
   assert.equal(m.attachments?.length, 1)
   assert.ok(m.attachments![0].filename.endsWith('.pdf') && m.attachments![0].content.subarray(0, 5).toString() === '%PDF-')
@@ -198,7 +204,7 @@ test('6-9: recipient registers once; the second attempt is blocked and reveals n
   const g = tables.sprint_gifts[0]
   assert.deepEqual(
     await routes.gifts.publicGiftState({ token: String(g.token) }),
-    { state: 'valid', code: g.code, purchaserFirstName: 'Pat', token: g.token },
+    { state: 'valid', code: g.code, purchaserFirstName: 'Pat', redeemBy: 'January 10, 2027', token: g.token },
   )
   const bad = await routes.redeem.POST(post('/api/sprint/redeem', { token: g.token, name: 'R', email: 'nope' }))
   assert.equal(bad.status, 400)
@@ -281,4 +287,85 @@ test('no gift email in this run went anywhere but the test inbox', () => {
   assert.ok(sent.length > 0)
   // (The self purchase notice to John is the existing, unchanged flow and is not a gift email.)
   for (const m of sent.filter(x => !x.subject.startsWith('New 8 Pillar Sprint registration'))) assert.equal(m.to, 'test-inbox@example.test', m.subject)
+})
+
+// ---------- gift redemption deadline ----------
+test('after the gift deadline an unused gift cannot be redeemed, and stays on record', async () => {
+  await routes.webhook.POST(stripeEvent('evt_dl', 'checkout.session.completed', session('cs_test_DL', 'sprint_gift', 'pi_test_DL')))
+  const g = tables.sprint_gifts.find(x => x.stripe_session_id === 'cs_test_DL')!
+  const saved = sprintRedeemBy
+  try {
+    sprintRedeemBy = new Date(Date.now() - 60_000).toISOString() // deadline just passed
+    assert.deepEqual(await routes.gifts.publicGiftState({ token: String(g.token) }), { state: 'closed', closedOn: new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(sprintRedeemBy)) })
+    const r = await routes.redeem.POST(post('/api/sprint/redeem', { token: g.token, name: 'Late Person', email: 'late@example.test' }))
+    assert.equal(r.status, 410)
+    assert.deepEqual(await r.json(), { error: 'Registration for Sprint gifts has closed, so this gift can no longer be redeemed.', state: 'closed' })
+    assert.equal(g.status, 'purchased', 'not deleted or changed')
+    assert.equal(g.recipient_email ?? null, null)
+    assert.ok(tables.stripe_payments.some(p => p.stripe_session_id === 'cs_test_DL'), 'payment record kept')
+    // a redeemed gift still reports Redeemed, not Closed
+    const used = tables.sprint_gifts.find(x => x.status === 'redeemed')!
+    assert.deepEqual(await routes.gifts.publicGiftState({ token: String(used.token) }), { state: 'redeemed' })
+  } finally { sprintRedeemBy = saved }
+  // before the deadline it works
+  const ok = await routes.redeem.POST(post('/api/sprint/redeem', { token: g.token, name: 'On Time', email: 'ontime@example.test' }))
+  assert.equal(ok.status, 200)
+})
+
+// ---------- Sprint self registration ----------
+test('self registration: register, pay, paid once, emails once; nothing marked paid without the webhook', async () => {
+  const register = await import('../app/api/sprint/register/route')
+  const bad = await register.POST(post('/api/sprint/register', { name: 'X', email: 'nope' }))
+  assert.equal(bad.status, 400)
+  const before = tables.sprint_registrations?.length ?? 0
+
+  const r = await register.POST(post('/api/sprint/register', { name: '  Sam   Participant ', email: 'Sam@Example.test', phone: '555 0100' }))
+  assert.equal(r.status, 200)
+  const { url } = await r.json()
+  const u = new URL(url)
+  assert.equal(u.origin + u.pathname, 'https://buy.stripe.com/eVq6oH9Pv3f70w784A3sI05', 'the existing Stripe link')
+  assert.equal(u.searchParams.get('prefilled_email'), 'sam@example.test')
+  const ref = u.searchParams.get('client_reference_id')!
+  assert.match(ref, /^sprint_self_[0-9a-f-]{36}$/)
+  assert.equal(tables.sprint_registrations.length, before + 1)
+  const reg = tables.sprint_registrations.find(x => `sprint_self_${x.id}` === ref)!
+  assert.equal(reg.name, 'Sam Participant'); assert.equal(reg.email, 'sam@example.test'); assert.equal(reg.phone, '555 0100')
+  assert.equal(reg.status ?? 'pending_payment', 'pending_payment', 'not paid just for registering')
+  assert.equal(reg.terms_version ?? null, null, 'no terms recorded while none are approved')
+
+  const sentBefore = sent.length
+  const paidEvent = () => stripeEvent('evt_reg', 'checkout.session.completed', { ...session('cs_test_REG', ref, 'pi_test_REG'), customer_details: { email: 'sam@example.test', name: 'Sam P' } })
+  assert.equal((await routes.webhook.POST(paidEvent())).status, 200)
+  assert.equal(reg.status, 'paid')
+  assert.ok(reg.paid_at)
+  assert.equal(reg.stripe_session_id, 'cs_test_REG')
+  const pay = tables.stripe_payments.find(p => p.stripe_session_id === 'cs_test_REG')!
+  assert.equal(pay.kind, 'sprint_self')
+  assert.equal(reg.stripe_payment_id, pay.id)
+  const newMail = sent.slice(sentBefore)
+  assert.equal(newMail.filter(m => m.subject === 'You are registered for the 8 Pillar Sprint').length, 1, 'participant confirmation once')
+  assert.equal(newMail.filter(m => m.subject.startsWith('New 8 Pillar Sprint registration: Sam Participant')).length, 1, 'John notice once, with the participant')
+  assert.ok(newMail.every(m => m.to === 'test-inbox@example.test'), 'test inbox only outside production')
+
+  // Stripe repeats the event and sends the async success too: nothing new
+  await routes.webhook.POST(paidEvent())
+  await routes.webhook.POST(stripeEvent('evt_reg2', 'checkout.session.async_payment_succeeded', { ...session('cs_test_REG', ref, 'pi_test_REG') }))
+  assert.equal(sent.length, sentBefore + 2)
+  assert.equal(tables.stripe_payments.filter(p => p.stripe_session_id === 'cs_test_REG').length, 1)
+})
+
+test('self registration: a failed bank payment is marked failed, not paid', async () => {
+  const register = await import('../app/api/sprint/register/route')
+  const { url } = await (await register.POST(post('/api/sprint/register', { name: 'Fay Failed', email: 'fay@example.test' }))).json()
+  const ref = new URL(url).searchParams.get('client_reference_id')!
+  await routes.webhook.POST(stripeEvent('evt_f1', 'checkout.session.async_payment_failed', { ...session('cs_test_F', ref, 'pi_test_F'), payment_status: 'unpaid' }))
+  const reg = tables.sprint_registrations.find(x => `sprint_self_${x.id}` === ref)!
+  assert.equal(reg.status, 'payment_failed')
+})
+
+test('an older plain Sprint link, or a registration not on record, still notifies John once', async () => {
+  const before = sent.filter(m => m.subject.startsWith('New 8 Pillar Sprint registration')).length
+  await routes.webhook.POST(stripeEvent('evt_old', 'checkout.session.completed', session('cs_test_OLD', 'sprint_self_00000000-0000-4000-8000-000000000000', 'pi_test_OLD')))
+  await routes.webhook.POST(stripeEvent('evt_old', 'checkout.session.completed', session('cs_test_OLD', 'sprint_self_00000000-0000-4000-8000-000000000000', 'pi_test_OLD')))
+  assert.equal(sent.filter(m => m.subject.startsWith('New 8 Pillar Sprint registration')).length, before + 1)
 })

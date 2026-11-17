@@ -53,6 +53,7 @@ export const REDEEM_MESSAGE = {
   redeemed: 'This gift has already been redeemed.',
   refunded: 'This gift was refunded, so it can no longer be redeemed.',
   cancelled: 'This gift is no longer active, so it can no longer be redeemed.',
+  closed: 'Registration for Sprint gifts has closed, so this gift can no longer be redeemed.',
 } as const
 
 export const redeemPath = (token: string) => `/sprint/redeem?token=${encodeURIComponent(token)}`

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import { PROGRAM_KEYS, SPRINT_LABEL, programLabel, usd, type ProgramKey, type ProgramPricing, type SprintPricing } from '@/lib/program-info'
+import { PROGRAM_KEYS, SPRINT_LABEL, easternDate, endOfDayEastern, formatEasternDate, programLabel, usd, type ProgramKey, type ProgramPricing, type SprintPricing } from '@/lib/program-info'
 import type { ViewProps } from '../page'
 
 // Form values are kept as text so John can type freely; converted on save.
@@ -183,11 +183,11 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
 }
 
 // ------------------------------------------------------------
-// 8 Pillar Sprint: one price and two Stripe links. Both buttons on the
-// Sprint page go straight to Stripe (no agreement to sign).
+// 8 Pillar Sprint: one price, two Stripe links and the last day a
+// gift can be claimed. No coaching agreement for the Sprint.
 // ------------------------------------------------------------
-interface SprintForm { price: string; enrollUrl: string; giftUrl: string }
-const sprintForm = (p: SprintPricing): SprintForm => ({ price: String(p.priceCents / 100), enrollUrl: p.stripeEnrollUrl, giftUrl: p.stripeGiftUrl })
+interface SprintForm { price: string; enrollUrl: string; giftUrl: string; redeemBy: string }
+const sprintForm = (p: SprintPricing): SprintForm => ({ price: String(p.priceCents / 100), enrollUrl: p.stripeEnrollUrl, giftUrl: p.stripeGiftUrl, redeemBy: easternDate(p.giftRedeemBy) })
 
 function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   saved: SprintPricing; onSaved: (p: SprintPricing) => void; setCardDirty: (d: boolean) => void; toast: ViewProps['toast']
@@ -195,7 +195,8 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   const [f, setF] = useState<SprintForm>(sprintForm(saved))
   const [confirming, setConfirming] = useState(false)
   const [saving, setSaving] = useState(false)
-  const next: SprintPricing = { priceCents: dollarsToCents(f.price), stripeEnrollUrl: f.enrollUrl.trim(), stripeGiftUrl: f.giftUrl.trim() }
+  const redeemBy = endOfDayEastern(f.redeemBy)
+  const next: SprintPricing = { priceCents: dollarsToCents(f.price), stripeEnrollUrl: f.enrollUrl.trim(), stripeGiftUrl: f.giftUrl.trim(), giftRedeemBy: redeemBy ?? '' }
   const dirty = JSON.stringify(sprintForm(saved)) !== JSON.stringify(f)
   useEffect(() => { setCardDirty(dirty) }, [dirty, setCardDirty])
 
@@ -203,6 +204,7 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   if (!Number.isFinite(next.priceCents) || next.priceCents < 1000) errs.push('Enter a Sprint price of at least $10.')
   if (!STRIPE_RE.test(next.stripeEnrollUrl)) errs.push('The enroll link must be a Stripe payment link (https://buy.stripe.com/...).')
   if (!STRIPE_RE.test(next.stripeGiftUrl)) errs.push('The gift link must be a Stripe payment link (https://buy.stripe.com/...).')
+  if (!redeemBy) errs.push('Choose the last day a gift can be claimed.')
 
   const lines: string[] = []
   const warnings: string[] = []
@@ -213,6 +215,7 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   }
   if (saved.stripeEnrollUrl !== next.stripeEnrollUrl) lines.push('The Enroll in the Sprint buttons will open the new Stripe link.')
   if (saved.stripeGiftUrl !== next.stripeGiftUrl) lines.push('The Give the Sprint as a gift buttons will open the new Stripe link.')
+  if (redeemBy && easternDate(saved.giftRedeemBy) !== f.redeemBy) lines.push(`Gift recipients will be able to claim their seat until ${formatEasternDate(redeemBy)} at 11:59 PM Eastern. New gift certificates will show this date.`)
 
   async function save() {
     setSaving(true)
@@ -227,20 +230,25 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   return (
     <div className="card" style={{ marginTop: 18, maxWidth: 640 }}>
       <div className="card-title">{SPRINT_LABEL}</div>
-      <div className="card-sub">Now: {usd(saved.priceCents)} per person. Both Sprint buttons go straight to Stripe, with no agreement to sign.</div>
+      <div className="card-sub">Now: {usd(saved.priceCents)} per person. Gifts can be claimed until {formatEasternDate(saved.giftRedeemBy)} at 11:59 PM Eastern.</div>
       <div className="field">
         <label className="field-label" htmlFor="sprint-price">Sprint price</label>
         <div className="money"><span>$</span><input id="sprint-price" className="field-input" inputMode="decimal" value={f.price} onChange={e => setF({ ...f, price: e.target.value })} /></div>
       </div>
       <div className="field">
         <label className="field-label" htmlFor="sprint-enroll">Enroll in the Sprint: Stripe link</label>
-        <span className="field-hint">The payment link for someone joining the Sprint themselves.</span>
+        <span className="field-hint">The payment link for someone joining the Sprint themselves. They fill in a short registration on the website first, then pay here.</span>
         <input id="sprint-enroll" className="field-input" value={f.enrollUrl} onChange={e => setF({ ...f, enrollUrl: e.target.value })} />
       </div>
       <div className="field">
         <label className="field-label" htmlFor="sprint-gift">Give the Sprint as a gift: Stripe link</label>
         <span className="field-hint">The payment link for someone buying the Sprint for another person.</span>
         <input id="sprint-gift" className="field-input" value={f.giftUrl} onChange={e => setF({ ...f, giftUrl: e.target.value })} />
+      </div>
+      <div className="field">
+        <label className="field-label" htmlFor="sprint-redeem-by">Last day to claim a gift</label>
+        <span className="field-hint">Gift recipients can claim their seat until 11:59 PM Eastern on this day. After that, an unused gift stays on record here but can no longer be claimed.</span>
+        <input id="sprint-redeem-by" type="date" className="field-input" style={{ maxWidth: 220 }} value={f.redeemBy} onChange={e => setF({ ...f, redeemBy: e.target.value })} />
       </div>
       {dirty && errs.length > 0 && <div className="field-error" style={{ marginTop: 12 }}>{errs.map(e => <div key={e}>{e}</div>)}</div>}
       <div style={{ display: 'flex', gap: 10, marginTop: 18 }}>
