@@ -31,6 +31,8 @@ export interface CheckoutSession {
   mode: 'payment' | 'subscription' | 'setup'
   livemode: boolean
   payment_intent?: string | null
+  /** The subscription a subscription mode checkout created */
+  subscription?: string | { id: string } | null
 }
 
 /** The fields of a Charge (charge.refunded) this site uses */

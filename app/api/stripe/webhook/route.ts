@@ -6,6 +6,7 @@ import { SPRINT_REFERENCE, usd } from '@/lib/program-info'
 import { ENROLLMENT_EMAIL_COLUMNS, sendCompletionEmails, type EnrollmentRow } from '@/lib/enrollment-emails'
 import { UUID, verifyStripeSignature, type CheckoutSession, type StripeCharge } from '@/lib/stripe-webhook'
 import { ensureGiftForPayment, recordRefund, sendCertificateOnce, siteOrigin } from '@/lib/sprint-gifts'
+import { applyInstallmentPlan } from '@/lib/installment-plan-sync'
 
 // ============================================================
 // POST /api/stripe/webhook
@@ -21,6 +22,9 @@ import { ensureGiftForPayment, recordRefund, sendCertificateOnce, siteOrigin } f
 // Each enrollment's Stripe link carries its enrollment ID as
 // client_reference_id; the Sprint links carry sprint_self or sprint_gift.
 // A paid sprint_gift checkout creates one gift and emails its certificate.
+// A paid monthly installment enrollment is then set in Stripe to stop by
+// itself after its last payment (6 or 10); if that cannot be confirmed
+// the response is 500 so Stripe retries, and the admin flags the plan.
 // Requests without a valid Stripe signature are rejected.
 // Safe to receive the same event more than once.
 // ============================================================
@@ -121,6 +125,9 @@ export async function POST(req: NextRequest) {
         if (error) throw error
         const e = updated?.[0] as EnrollmentRow | undefined
         if (e) await sendCompletionEmails(e, { testMode: false })
+        // Monthly installments: end the plan after its last payment.
+        // Runs on every delivery until Stripe confirms it, then does nothing.
+        await applyInstallmentPlan(ref, s)
       }
     }
 

@@ -37,7 +37,11 @@ export async function GET(req: NextRequest) {
       paid_at,
       amount_paid_cents,
       amount_due_today_cents,
-      price_total_cents
+      price_total_cents,
+      price_installment_count,
+      installment_plan_status,
+      installment_plan_payments,
+      installment_plan_ends_at
     `)
     .order('signed_at', { ascending: false })
 

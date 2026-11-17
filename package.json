@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "node --import tsx --test tests/seo.unit.test.ts tests/core.unit.test.ts tests/gifts.unit.test.ts",
     "test:site": "node --test tests/site.test.mjs",
-    "test:gifts": "node --require ./tests/helpers/server-only.cjs --import tsx --experimental-test-module-mocks --test tests/gifts.flow.test.ts"
+    "test:gifts": "node --require ./tests/helpers/server-only.cjs --import tsx --experimental-test-module-mocks --test tests/gifts.flow.test.ts",
+    "test:installments": "node --require ./tests/helpers/server-only.cjs --import tsx --experimental-test-module-mocks --test tests/installments.test.ts"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",

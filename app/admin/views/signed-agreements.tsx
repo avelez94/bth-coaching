@@ -10,6 +10,10 @@ interface Enrollment {
   pdfUrl: string | null; pdfDownloadUrl: string | null
   paid_at: string | null; amount_paid_cents: number | null
   emails: { client?: string; admin?: string; error?: string } | null
+  price_installment_count: number | null
+  installment_plan_status: 'scheduled' | 'failed' | null
+  installment_plan_payments: number | null
+  installment_plan_ends_at: string | null
 }
 
 const PROGRAM: Record<string, string> = { 'executive-coaching': 'Executive Coaching', '8-pillars': '8 Pillars Leadership Program' }
@@ -20,6 +24,27 @@ const STATUS: Record<string, { label: string; color: string }> = {
   abandoned: { label: 'Not completed', color: 'rgba(255,255,255,0.4)' },
   test: { label: 'Test', color: '#ffc107' },
 }
+const endsOn = (iso: string) => new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: 'short', day: 'numeric' }).format(new Date(iso))
+
+// How a monthly plan will end, in plain words
+function PlanNote({ e }: { e: Enrollment }) {
+  if (e.payment_option !== 'installment' || e.status !== 'paid') return null
+  const n = e.installment_plan_payments ?? e.price_installment_count
+  if (e.installment_plan_status === 'scheduled') {
+    return (
+      <div style={{ fontSize: 11, color: '#4ade80', marginTop: 2 }}>
+        {n} monthly payments &bull; scheduled to end after payment {n}
+        {e.installment_plan_ends_at && <div className="muted">Billing stops {endsOn(e.installment_plan_ends_at)}</div>}
+      </div>
+    )
+  }
+  return (
+    <div style={{ fontSize: 11, color: '#f87171', marginTop: 2 }}>
+      Needs attention: the automatic stop after payment {n ?? ''} is not set yet, so billing would continue monthly. Let your web developer know.
+    </div>
+  )
+}
+
 const signedOn = (iso: string) => new Intl.DateTimeFormat('en-US', {
   timeZone: 'America/New_York', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short',
 }).format(new Date(iso))
@@ -114,7 +139,7 @@ function AgreementTable({ rows, kind, sending, onResend }: {
                   <td style={{ fontWeight: 600, color: '#fff' }}>{e.first_name} {e.last_name} {e.test_mode && <span className="tag test">Test</span>}</td>
                   <td>{e.email}</td>
                   <td>{PROGRAM[e.program] ?? e.program}</td>
-                  <td>{e.payment_option === 'full' ? 'Pay in full' : 'Monthly installments'}</td>
+                  <td>{e.payment_option === 'full' ? 'Pay in full' : 'Monthly installments'}<PlanNote e={e} /></td>
                   <td style={{ whiteSpace: 'nowrap' }}>{signedOn(e.signed_at)}</td>
                   <td>{e.agreement_version}</td>
                   <td style={{ color: st.color, whiteSpace: 'nowrap' }}>
