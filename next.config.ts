@@ -4,6 +4,8 @@ const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]
 const isProduction = process.env.VERCEL_ENV === 'production'
 
 const nextConfig: NextConfig = {
+  // Local dev only: do not generate editor helper files in the project
+  agentRules: false,
   // Put titles, descriptions and link preview tags in the first HTML the
   // server sends, for every visitor and crawler, without needing JavaScript.
   htmlLimitedBots: /.*/,
