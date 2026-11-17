@@ -4,8 +4,8 @@ import { useSettingsForm, type SettingField } from './settings-form'
 import type { ViewProps } from '../page'
 
 const LINKS: SettingField[] = [
-  { key: 'bookingFreeCallUrl', label: 'Free 15-Minute Call: booking link', help: 'Used by every "Schedule a Free 15-Minute Call" button on the site. Leave blank to keep the buttons turned off.', placeholder: 'https://outlook.office365.com/book/...' },
-  { key: 'bookingOrgConsultUrl', label: '30-Minute Organizational Consultation: booking link', help: 'Used by the "Schedule an Organizational Consultation" buttons on For Organizations.', placeholder: 'https://outlook.office365.com/book/...' },
+  { key: 'bookingFreeCallUrl', label: 'Free 15-Minute Call: booking link', help: 'Used by every "Schedule a Free 15-Minute Call" button on the site. Leave blank to keep the buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
+  { key: 'bookingOrgConsultUrl', label: '30-Minute Organizational Consultation: booking link', help: 'Used by every "Schedule an Organizational Consultation" button on the site: For Organizations (2), Sample Engagements, The 8 Pillars and Contact. Leave blank to keep those buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
 ]
 
 const BASE_QUESTIONS = [
