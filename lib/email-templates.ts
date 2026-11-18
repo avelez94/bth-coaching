@@ -315,8 +315,8 @@ export function giftRedeemedAdminEmail(x: { recipientName: string; recipientEmai
 // ------------------------------------------------------------
 // Contact form
 // ------------------------------------------------------------
-export function contactAdminEmail(x: { name: string; email: string; organization?: string; message: string }, footer: Footer): Email {
-  const rows: [string, string][] = [['Name', x.name], ['Email', x.email], ...(x.organization ? [['Organization', x.organization] as [string, string]] : [])]
+export function contactAdminEmail(x: { name: string; email: string; phone?: string; organization?: string; message: string }, footer: Footer): Email {
+  const rows: [string, string][] = [['Name', x.name], ['Email', x.email], ...(x.phone ? [['Phone', x.phone] as [string, string]] : []), ...(x.organization ? [['Organization', x.organization] as [string, string]] : [])]
   const subject = `New message from ${x.name}`
   const body = [
     p(`<strong>New message from the website contact form.</strong> Reply to this email to answer ${esc(x.name)} directly.`),

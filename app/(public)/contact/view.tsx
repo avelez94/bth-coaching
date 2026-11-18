@@ -10,7 +10,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
   const email = contact?.email ?? 'john@mccrackencoaching.com'
   const phone = contact?.phone ?? '703-705-2225'
   const location = contact?.location ?? 'Washington, DC area | Virtual worldwide'
-  const [form, setForm] = useState({ name: '', email: '', organization: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', organization: '', message: '' })
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
@@ -20,8 +20,12 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
   const openedAt = useRef(Date.now())
 
   async function handleSubmit() {
-    if (!form.name || !form.email || !form.message) {
-      setError('Please fill in your name, email, and message.')
+    if (!form.name.trim() || !form.email.trim() || !form.phone.trim() || !form.message.trim()) {
+      setError('Please fill in your name, email, phone number, and message.')
+      return
+    }
+    if (form.phone.replace(/\D/g, '').length < 10) {
+      setError('Please enter a phone number with area code.')
       return
     }
     setSending(true)
@@ -40,7 +44,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
       }
       if (!res.ok) throw new Error('Failed')
       setSent(true)
-      setForm({ name: '', email: '', organization: '', message: '' })
+      setForm({ name: '', email: '', phone: '', organization: '', message: '' })
     } catch {
       setError(`Something went wrong. Please try again or email ${email} directly.`)
     }
@@ -86,6 +90,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
                       value={form.name}
                       onChange={e => setForm({ ...form, name: e.target.value })}
                       autoComplete="name"
+                      required
                     />
                   </div>
                   <div className="field">
@@ -97,6 +102,19 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
                       value={form.email}
                       onChange={e => setForm({ ...form, email: e.target.value })}
                       autoComplete="email"
+                      required
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="phone">Phone</label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      placeholder="Your phone number"
+                      value={form.phone}
+                      onChange={e => setForm({ ...form, phone: e.target.value })}
+                      autoComplete="tel"
+                      required
                     />
                   </div>
                   <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
@@ -120,6 +138,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
                       id="message"
                       value={form.message}
                       onChange={e => setForm({ ...form, message: e.target.value })}
+                      required
                     />
                   </div>
                   <button

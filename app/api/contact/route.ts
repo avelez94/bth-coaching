@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => ({}))
     const name = String(body?.name ?? '').trim()
     const email = String(body?.email ?? '').trim()
+    const phone = String(body?.phone ?? '').trim()
     const organization = String(body?.organization ?? '').trim()
     const message = String(body?.message ?? '').trim()
 
@@ -29,10 +30,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true })
     }
 
-    if (!name || !email || !message) {
+    if (!name || !email || !phone || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || name.length > 200 || organization.length > 200 || message.length > 5000) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || phone.replace(/\D/g, '').length < 10 || phone.length > 40 || name.length > 200 || organization.length > 200 || message.length > 5000) {
       return NextResponse.json({ error: 'Please check your details and try again.' }, { status: 400 })
     }
 
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
     const footer = { contactEmail: settings.contactEmail, phone: settings.phone }
     const toJohn = await sendEmail({
       kind: 'contact_admin', to: adminRecipient(settings), replyTo: email,
-      ...contactAdminEmail({ name, email, organization, message }, footer),
+      ...contactAdminEmail({ name, email, phone, organization, message }, footer),
     })
     if (toJohn.status !== 'sent') {
       return NextResponse.json({ error: 'Something went wrong' }, { status: 502 })

@@ -46,3 +46,12 @@ test('contact form: hidden trap field, timing check and hourly limits', () => {
   assert.match(view, /id="website"[^>]*tabIndex=\{-1\}/)
   assert.match(view, /elapsedMs: Date\.now\(\) - openedAt\.current/)
 })
+
+test('contact form: phone and email are required', () => {
+  const route = src('app/api/contact/route.ts')
+  assert.match(route, /!name \|\| !email \|\| !phone \|\| !message/)
+  assert.match(route, /phone\.replace\(\/\\D\/g, ''\)\.length < 10/)
+  const view = src('app/(public)/contact/view.tsx')
+  assert.match(view, /id="phone"[\s\S]{0,300}required/)
+  assert.match(view, /id="email"[\s\S]{0,300}required/)
+})
