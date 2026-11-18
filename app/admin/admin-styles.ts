@@ -24,7 +24,7 @@ export const ADMIN_STYLES = `
   .nav-item:hover { color: #fff; background: rgba(255,255,255,0.03); }
   .nav-item.active { color: #C9A23A; border-left-color: #C9A23A; background: rgba(201,162,58,0.06); }
   .nav-item:focus-visible, .save-btn:focus-visible, .ghost-btn:focus-visible { outline: 2px solid #C9A23A; outline-offset: 2px; }
-  .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 8px; }
   .sidebar-footer a { font-size: 11px; color: rgba(255,255,255,0.4); text-decoration: none; }
   .sidebar-footer a:hover { color: #C9A23A; }
   .signout-btn { font-size: 11px; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; transition: color 0.2s; }
@@ -161,7 +161,8 @@ export const ADMIN_STYLES = `
   .login-link:hover { color: #C9A23A; }
   .login-ok { border: 1px solid rgba(74,222,128,0.35); background: rgba(74,222,128,0.07); color: rgba(255,255,255,0.85); padding: 12px 14px; font-size: 13px; line-height: 1.55; margin-bottom: 16px; }
   .login-note { color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.55; margin: -6px 0 16px; }
-  .sidebar-who { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 10px; word-break: break-all; }
+  .sidebar-who { flex: 1 0 100%; font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.6; overflow-wrap: anywhere; }
+  .sidebar-who strong { display: block; color: rgba(255,255,255,0.75); font-weight: 500; }
   .role-tag { display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid rgba(201,162,58,0.45); color: #C9A23A; }
   .role-tag.dev { border-color: rgba(147,197,253,0.45); color: #93c5fd; }
   .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }

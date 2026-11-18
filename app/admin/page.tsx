@@ -199,7 +199,7 @@ export default function AdminPanel() {
           </div>
 
           <div className="sidebar-footer">
-            {me && <div className="sidebar-who">Signed in as {me.email}<br /><span className={`role-tag ${me.role === 'developer' ? 'dev' : ''}`}>{me.role === 'owner' ? 'Owner' : 'Developer'}</span></div>}
+            {me && <div className="sidebar-who">Signed in as <strong>{me.email}</strong><span className={`role-tag ${me.role === 'developer' ? 'dev' : ''}`}>{me.role === 'owner' ? 'Owner' : 'Developer'}</span></div>}
             <a href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
             <button className="signout-btn" onClick={() => {
               if (dirty && !window.confirm('You have unsaved changes. Sign out anyway?')) return
