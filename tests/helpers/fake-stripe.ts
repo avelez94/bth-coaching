@@ -12,6 +12,10 @@
 //    (including the removed "iterations") are rejected.
 //  * With end_behavior "cancel", the subscription's cancel_at becomes the
 //    end of the last phase.
+//  * As seen on the live account (Nov 17 2026): when the schedule update
+//    re-applies a discount, Stripe issues a NEW discount ID for the same
+//    coupon and promotion code. A subscription returns discount IDs unless
+//    expand[]=discounts is asked for.
 // paymentsBeforeEnd() counts the monthly charges Stripe would make.
 // ============================================================
 import { addMonthsUTC } from '../../lib/installment-plan'
@@ -47,11 +51,13 @@ export class FakeStripe {
   extraPhaseField: Obj | null = null
   private n = 0
 
-  addSubscription(o: { id: string; start: number; amount?: number; promo?: boolean; tax?: boolean; interval?: string }) {
+  addSubscription(o: { id: string; start: number; amount?: number; promo?: boolean; tax?: boolean; interval?: string; repeating?: boolean }) {
     const sub: Obj = {
       id: o.id, object: 'subscription', status: 'active', customer: 'cus_' + o.id, currency: 'usd',
       start_date: o.start, billing_cycle_anchor: o.start, cancel_at: null, cancel_at_period_end: false, schedule: null,
-      discounts: o.promo === false ? [] : ['di_' + o.id], // ALANTETEST, 100% off forever
+      // ALANTETEST, 100% off forever (or a repeating coupon whose end restarts if re-issued)
+      discounts: o.promo === false ? [] : [{ id: 'di_' + o.id, object: 'discount', source: { type: 'coupon', coupon: 'coupon_alantetest' }, promotion_code: 'promo_alantetest',
+        end: o.repeating ? addMonthsUTC(o.start, 3) : null, _repeating: Boolean(o.repeating) }],
       automatic_tax: { enabled: o.tax !== false, liability: { type: 'self' } },
       default_payment_method: 'pm_' + o.id,
       metadata: { from: 'payment_link' },
@@ -85,7 +91,11 @@ export class FakeStripe {
 
     let m = u.pathname.match(/^\/v1\/subscriptions\/([^/]+)$/)
     if (m && req.method === 'GET') {
-      const s = this.subs.get(m[1]); return s ? json(200, clone(s)) : err(404, 'No such subscription')
+      const s = this.subs.get(m[1]); if (!s) return err(404, 'No such subscription')
+      const out = clone(s)
+      const expanded = [...u.searchParams.entries()].some(([k, v]) => k.startsWith('expand') && v === 'discounts')
+      if (!expanded) out.discounts = (out.discounts as Obj[]).map(d => d.id)
+      return json(200, out)
     }
     m = u.pathname.match(/^\/v1\/subscription_schedules\/([^/]+)$/)
     if (m && req.method === 'GET') {
@@ -104,7 +114,7 @@ export class FakeStripe {
         phases: [{
           start_date: item.current_period_start, end_date: item.current_period_end,
           items: [{ price: (item.price as Obj).id, plan: (item.price as Obj).id, quantity: item.quantity, discounts: [], metadata: {}, tax_rates: [], billing_thresholds: null }],
-          discounts: (sub.discounts as string[]).map(d => ({ coupon: null, discount: d, promotion_code: null })),
+          discounts: (sub.discounts as Obj[]).map(d => ({ coupon: null, discount: d.id, promotion_code: null })),
           automatic_tax: { ...(sub.automatic_tax as Obj), disabled_reason: null },
           currency: sub.currency, default_payment_method: sub.default_payment_method, default_tax_rates: [],
           collection_method: 'charge_automatically', description: null,
@@ -134,11 +144,20 @@ export class FakeStripe {
       const end = dur ? addMonthsUTC(Number(p.start_date), Number(dur.interval_count)) : p.end_date ? Number(p.end_date) : null
       const items = p.items as Obj[]
       // As documented: settings not passed again are unset
-      const discounts = ((p.discounts as Obj[] | undefined) ?? []).map(d => String(d.discount ?? d.coupon ?? d.promotion_code))
+      // A discount ID that is no longer on the subscription is rejected
+      for (const d of (p.discounts as Obj[] | undefined) ?? []) {
+        if (d.discount && !(sub.discounts as Obj[]).some(x => x.id === d.discount)) return err(400, `No such discount: '${d.discount}'`)
+      }
+      // Re-applying a discount issues a new discount ID for the same coupon
+      const discounts: Obj[] = ((p.discounts as Obj[] | undefined) ?? []).map(d => {
+        const old = (sub.discounts as Obj[]).find(x => x.id === d.discount)
+        const base = old ?? { source: { type: 'coupon', coupon: d.coupon ?? null }, promotion_code: d.promotion_code ?? null, end: null, _repeating: false }
+        return { ...base, id: `di_new_${++this.n}`, object: 'discount', end: base._repeating ? addMonthsUTC(Number(p.start_date), 3) + 86400 * 5 : base.end }
+      })
       sched.phases = [{
         ...cur, end_date: end,
         items: items.map(i => ({ price: i.price, plan: i.price, quantity: Number(i.quantity ?? 1), discounts: [], metadata: i.metadata ?? {}, tax_rates: [], billing_thresholds: null })),
-        discounts: discounts.map(d => ({ coupon: null, discount: d, promotion_code: null })),
+        discounts: discounts.map(d => ({ coupon: null, discount: d.id, promotion_code: null })),
         automatic_tax: { enabled: (p.automatic_tax as Obj | undefined)?.enabled === 'true', liability: { type: 'self' }, disabled_reason: null },
         default_payment_method: p.default_payment_method ?? null,
         metadata: p.metadata ?? {},

@@ -195,13 +195,23 @@ export function planIsCorrect(sched: StripeSchedule, sub: StripeSubscription, pa
 
 /** What must not change when the plan is given an end. Returns the names of anything that did. */
 export function changedSettings(before: StripeSubscription, after: StripeSubscription): string[] {
-  const ids = (l?: Ref[] | null) => (l ?? []).map(idOf).sort().join(',')
   const it = (s: StripeSubscription) => s.items.data[0]
+  // Stripe issues a new discount ID when a schedule takes over the plan.
+  // What matters is the discount itself: same coupon, same promotion code,
+  // same end (a repeating coupon that restarted would show a new end).
+  const discountKey = (d: unknown) => {
+    if (typeof d === 'string') return d
+    const x = d as { id?: string; coupon?: Ref; source?: { coupon?: Ref }; promotion_code?: Ref; end?: number | null }
+    const coupon = idOf(x.source?.coupon) ?? idOf(x.coupon)
+    if (!coupon) return x.id ?? '?'
+    return `${coupon}|${idOf(x.promotion_code) ?? ''}|${x.end ?? 'forever'}`
+  }
+  const discounts = (l?: unknown[] | null) => (l ?? []).map(discountKey).sort().join(',')
   const checks: [string, unknown, unknown][] = [
     ['customer', idOf(before.customer), idOf(after.customer)],
     ['price', it(before)?.price.id, it(after)?.price.id],
     ['quantity', it(before)?.quantity ?? 1, it(after)?.quantity ?? 1],
-    ['discounts', ids(before.discounts), ids(after.discounts)],
+    ['discounts', discounts(before.discounts), discounts(after.discounts)],
     ['automatic tax', Boolean(before.automatic_tax?.enabled), Boolean(after.automatic_tax?.enabled)],
     ['payment method', idOf(before.default_payment_method), idOf(after.default_payment_method)],
     ['billing date', before.billing_cycle_anchor, after.billing_cycle_anchor],
@@ -218,7 +228,9 @@ export async function ensureFixedInstallmentPlan(
 ): Promise<PlanResult> {
   if (!Number.isInteger(o.payments) || o.payments < 2 || o.payments > 36) throw new NeedsReview(`unexpected number of payments (${o.payments})`)
   const subPath = `/v1/subscriptions/${encodeURIComponent(o.subscriptionId)}`
-  const before = await stripe.get<StripeSubscription>(subPath)
+  // Discounts expanded so they can be compared by what they are, not by ID
+  const expand = { expand: ['discounts'] }
+  const before = await stripe.get<StripeSubscription>(subPath, expand)
   assertInstallmentSubscription(before, o.amountCents)
 
   let sched: StripeSchedule
@@ -252,7 +264,7 @@ export async function ensureFixedInstallmentPlan(
     phases: [fixedPhaseParams(phase, o.payments)],
   })
 
-  const after = await stripe.get<StripeSubscription>(subPath)
+  const after = await stripe.get<StripeSubscription>(subPath, expand)
   if (!planIsCorrect(updated, after, o.payments)) throw new NeedsReview(`Stripe did not confirm an end after payment ${o.payments}`, true)
   const changed = changedSettings(before, after)
   if (changed.length) throw new NeedsReview(`these settings changed when the end was set: ${changed.join(', ')}`, true)

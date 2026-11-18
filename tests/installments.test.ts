@@ -46,7 +46,12 @@ for (const [program, payments] of [['Executive Coaching', 6], ['8 Pillars', 10]]
     assert.equal(r.endsAt, addMonthsUTC(START, payments))
 
     // Nothing else about the subscription changed
-    assert.deepEqual(sub.discounts, ['di_sub_A'], 'ALANTETEST discount still attached')
+    const disc = sub.discounts as Row[]
+    assert.equal(disc.length, 1, 'ALANTETEST discount still attached')
+    assert.equal((disc[0].source as Row).coupon, 'coupon_alantetest')
+    assert.equal(disc[0].promotion_code, 'promo_alantetest')
+    assert.equal(disc[0].end, null, 'still 100% off forever')
+    assert.notEqual(disc[0].id, 'di_sub_A', 'Stripe re-issued the discount ID, as it does live')
     assert.equal((sub.automatic_tax as Row).enabled, true, 'automatic tax unchanged')
     assert.equal(sub.default_payment_method, 'pm_sub_A')
     assert.equal(sub.customer, 'cus_sub_A')
@@ -70,6 +75,12 @@ for (const [program, payments] of [['Executive Coaching', 6], ['8 Pillars', 10]]
     assert.ok(stripe.requests.every(q => q.version === STRIPE_API_VERSION && q.auth === 'Bearer rk_test_local_only'))
   })
 }
+
+test('a discount that really changed (repeating coupon restarted) is flagged after the change', async () => {
+  stripe.addSubscription({ id: 'sub_P', start: START, repeating: true })
+  await assert.rejects(ensureFixedInstallmentPlan(client(), { subscriptionId: 'sub_P', payments: 6, amountCents: 60000, enrollmentId: 'e' }),
+    (e: unknown) => e instanceof NeedsReview && e.sticky && /discounts/.test((e as Error).message))
+})
 
 test('a plan without a promo code or tax stays that way', async () => {
   stripe.addSubscription({ id: 'sub_B', start: START, promo: false, tax: false })
