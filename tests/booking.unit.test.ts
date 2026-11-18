@@ -34,3 +34,15 @@ test('each booking button uses the right Admin link', () => {
     assert.ok(s.includes('booking?.free') && s.includes('booking?.org'), f)
   }
 })
+
+test('contact form: hidden trap field, timing check and hourly limits', () => {
+  const route = src('app/api/contact/route.ts')
+  assert.match(route, /body\?\.website/)
+  assert.match(route, /MIN_FILL_MS/)
+  assert.match(route, /attempts\('contact-ip'/)
+  assert.match(route, /attempts\('contact-email'/)
+  assert.match(route, /status: 429/)
+  const view = src('app/(public)/contact/view.tsx')
+  assert.match(view, /id="website"[^>]*tabIndex=\{-1\}/)
+  assert.match(view, /elapsedMs: Date\.now\(\) - openedAt\.current/)
+})

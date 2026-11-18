@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSettings } from '@/lib/site-data'
 import { adminRecipient, sendEmail } from '@/lib/email'
 import { contactAdminEmail, contactSenderEmail } from '@/lib/email-templates'
+import { attempts, clientIp, recordAttempt } from '@/lib/admin-auth'
+
+// Spam limits: a few messages an hour from one connection, fewer to one
+// address, so the form cannot flood John's inbox or be used to send
+// confirmations to strangers.
+const PER_IP_HOUR = 5
+const PER_EMAIL_HOUR = 3
+const MIN_FILL_MS = 2500
 
 // POST /api/contact: the Contact page form. Sends the message to John
 // (reply goes straight to the visitor) and a short confirmation to the
@@ -14,12 +22,26 @@ export async function POST(req: NextRequest) {
     const organization = String(body?.organization ?? '').trim()
     const message = String(body?.message ?? '').trim()
 
+    // Bots: the hidden field is filled in, or the form was sent the instant
+    // it loaded. Answer as if it worked so they learn nothing; send nothing.
+    const elapsed = Number(body?.elapsedMs)
+    if (String(body?.website ?? '').trim() || (Number.isFinite(elapsed) && elapsed < MIN_FILL_MS)) {
+      return NextResponse.json({ success: true })
+    }
+
     if (!name || !email || !message) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || name.length > 200 || organization.length > 200 || message.length > 5000) {
       return NextResponse.json({ error: 'Please check your details and try again.' }, { status: 400 })
     }
+
+    const ip = clientIp(req)
+    if ((await attempts('contact-ip', ip, 60)) >= PER_IP_HOUR || (await attempts('contact-email', email, 60)) >= PER_EMAIL_HOUR) {
+      return NextResponse.json({ error: 'Too many messages for now. Please try again in an hour, or email directly.' }, { status: 429 })
+    }
+    await recordAttempt('contact-ip', ip)
+    await recordAttempt('contact-email', email)
 
     const settings = await getSettings()
     const footer = { contactEmail: settings.contactEmail, phone: settings.phone }

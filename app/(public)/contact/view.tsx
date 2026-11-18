@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import './contact.css'
 import ScheduleButton from '../../components/schedule-button'
 import { telHref } from '@/lib/site-settings'
@@ -14,6 +14,10 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
   const [error, setError] = useState('')
+  // Spam protection: a hidden field people never see (bots fill it in) and
+  // the time the form has been open (bots submit instantly)
+  const [trap, setTrap] = useState('')
+  const openedAt = useRef(Date.now())
 
   async function handleSubmit() {
     if (!form.name || !form.email || !form.message) {
@@ -26,8 +30,14 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, website: trap, elapsedMs: Date.now() - openedAt.current }),
       })
+      if (res.status === 429) {
+        const d = await res.json().catch(() => ({}))
+        setError(d.error || `Too many messages for now. Please try again later or email ${email} directly.`)
+        setSending(false)
+        return
+      }
       if (!res.ok) throw new Error('Failed')
       setSent(true)
       setForm({ name: '', email: '', organization: '', message: '' })
@@ -88,6 +98,10 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
                       onChange={e => setForm({ ...form, email: e.target.value })}
                       autoComplete="email"
                     />
+                  </div>
+                  <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+                    <label htmlFor="website">Leave this field empty</label>
+                    <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={trap} onChange={e => setTrap(e.target.value)} />
                   </div>
                   <div className="field">
                     <label htmlFor="organization">Organization <span className="field-optional">(optional)</span></label>
