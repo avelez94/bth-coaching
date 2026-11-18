@@ -56,6 +56,8 @@ const KIND: Record<string, string> = {
   enrollment_client: 'Enrollment, to client', enrollment_admin: 'Enrollment, to you', resend_copy: 'Resent agreement',
   payment_received: 'Payment received', sprint_purchase: 'Sprint purchase', contact_admin: 'Contact form, to you',
   contact_sender: 'Contact form, to visitor', test: 'Test email',
+  sprint_registered: 'Sprint registration, to participant', gift_certificate: 'Sprint gift certificate, to buyer',
+  gift_redeemed_recipient: 'Sprint gift claimed, to participant', gift_redeemed_admin: 'Sprint gift claimed, to you',
 }
 
 // Email delivery: whether it is set up, a test button, and recent sends
