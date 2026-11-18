@@ -151,6 +151,10 @@
   color: rgba(247,244,237,0.50);
   margin-top: 4px;
 }
+.footer-credit-sep {
+  margin: 0 8px;
+  opacity: 0.6;
+}
 .footer-credit-heart {
   color: var(--gold);
   opacity: 0.7;
