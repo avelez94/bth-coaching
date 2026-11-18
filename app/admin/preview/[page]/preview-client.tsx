@@ -15,7 +15,7 @@ import { fillDeadline } from '@/lib/program-info'
 const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
   home: dynamic(() => import('@/app/(public)/home-view').then(m => {
     const Home = m.default
-    return function HomeAdapter({ c, booking, engagements }: ViewProps) { return <Home c={c} bookingUrl={booking?.free} engagements={engagements} /> }
+    return function HomeAdapter({ c, booking, engagements }: ViewProps) { return <Home c={c} bookingUrl={booking?.main} engagements={engagements} /> }
   })),
   'executive-coaching': dynamic(() => import('@/app/(public)/executive-coaching/view')),
   'leader-development': dynamic(() => import('@/app/(public)/leader-development/view')),

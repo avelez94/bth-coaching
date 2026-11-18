@@ -154,7 +154,7 @@ export default function ContactView({ c, booking, contact }: ViewProps) {
             className="contact-closing-signature"
             aria-hidden="true"
           />
-          <ScheduleButton url={booking?.free} className="btn-closing-schedule">
+          <ScheduleButton url={booking?.main} className="btn-closing-schedule">
             Schedule a Free 15-Minute Call
           </ScheduleButton>
         </div>

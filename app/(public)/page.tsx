@@ -19,7 +19,7 @@ export default async function Home() {
   return (
     <>
       <JsonLd data={[organization(tagline, settings), website(tagline)]} />
-      <HomeView c={props.c} bookingUrl={props.booking?.free} engagements={props.engagements} />
+      <HomeView c={props.c} bookingUrl={props.booking?.main} engagements={props.engagements} />
     </>
   )
 }

@@ -15,6 +15,7 @@ export interface SiteSettings {
   linkedinCompanyUrl: string
   linkedinPersonalUrl: string
   footerTagline: string
+  bookingMainUrl: string
   bookingFreeCallUrl: string
   bookingOrgConsultUrl: string
 }
@@ -28,6 +29,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   linkedinCompanyUrl: 'https://www.linkedin.com/company/beyond-the-horizon-executive-coaching-and-consulting/',
   linkedinPersonalUrl: 'https://www.linkedin.com/in/johnmccracken3/',
   footerTagline: 'Together, we get beyond your horizon.',
+  bookingMainUrl: '',
   bookingFreeCallUrl: '',
   bookingOrgConsultUrl: '',
 }
@@ -42,6 +44,7 @@ export const SETTING_KEYS: Record<keyof SiteSettings, string> = {
   linkedinCompanyUrl: 'linkedin_company_url',
   linkedinPersonalUrl: 'linkedin_personal_url',
   footerTagline: 'footer_tagline',
+  bookingMainUrl: 'booking_main_url',
   bookingFreeCallUrl: 'booking_free_call_url',
   bookingOrgConsultUrl: 'booking_org_consult_url',
 }
@@ -65,6 +68,7 @@ export function validateSetting(key: keyof SiteSettings, raw: string): SettingCh
     case 'linkedinPersonalUrl':
       if (!value) return { ok: true, value }
       return isUrl(value) && /linkedin\.com/i.test(value) ? { ok: true, value } : { ok: false, error: 'Paste the full LinkedIn address, starting with https://' }
+    case 'bookingMainUrl':
     case 'bookingFreeCallUrl':
     case 'bookingOrgConsultUrl':
       if (!value) return { ok: true, value }
@@ -72,4 +76,11 @@ export function validateSetting(key: keyof SiteSettings, raw: string): SettingCh
     default:
       return value ? { ok: true, value } : { ok: false, error: 'This field cannot be empty.' }
   }
+}
+
+// The link for general "Schedule" buttons (navigation, footer, Home, About):
+// the Main Booking Page, where visitors choose Individual or Organizational.
+// Falls back to the Individual Consultation link if it is ever left blank.
+export function mainBookingUrl(s: Pick<SiteSettings, 'bookingMainUrl' | 'bookingFreeCallUrl'>): string {
+  return s.bookingMainUrl?.trim() || s.bookingFreeCallUrl
 }

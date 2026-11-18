@@ -1,6 +1,6 @@
 import './footer.css'
 import ScheduleButton from './schedule-button'
-import { telHref, type SiteSettings } from '@/lib/site-settings'
+import { mainBookingUrl, telHref, type SiteSettings } from '@/lib/site-settings'
 import { DEFAULT_VISIBILITY, OPTIONAL_PAGES, type PageVisibility } from '@/lib/optional-pages'
 
 const IconMail = () => (
@@ -80,7 +80,7 @@ export default function Footer({ settings, visible = DEFAULT_VISIBILITY }: { set
                 <IconPhone />
                 {settings.phone}
               </a>
-              <ScheduleButton url={settings.bookingFreeCallUrl} className="footer-schedule-placeholder">
+              <ScheduleButton url={mainBookingUrl(settings)} className="footer-schedule-placeholder">
                 Schedule a Free 15-Minute Call →
               </ScheduleButton>
               {settings.linkedinCompanyUrl && (

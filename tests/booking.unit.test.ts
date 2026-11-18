@@ -1,0 +1,36 @@
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { mainBookingUrl } from '../lib/site-settings'
+
+const src = (f: string) => readFileSync(f, 'utf8')
+
+test('general buttons use the Main Booking Page, falling back to Individual', () => {
+  assert.equal(mainBookingUrl({ bookingMainUrl: 'https://main', bookingFreeCallUrl: 'https://ind' }), 'https://main')
+  assert.equal(mainBookingUrl({ bookingMainUrl: '  ', bookingFreeCallUrl: 'https://ind' }), 'https://ind')
+})
+
+test('each booking button uses the right Admin link', () => {
+  // Main Booking Page: navigation (desktop and phone), footer, Home, About, Contact closing
+  assert.match(src('app/(public)/layout.tsx'), /<Nav bookingUrl=\{mainBookingUrl\(settings\)\}/)
+  assert.match(src('app/components/footer.tsx'), /ScheduleButton url=\{mainBookingUrl\(settings\)\}/)
+  assert.match(src('app/(public)/page.tsx'), /bookingUrl=\{props\.booking\?\.main\}/)
+  assert.match(src('app/(public)/about/view.tsx'), /href=\{booking\.main\}/)
+  assert.match(src('app/(public)/contact/view.tsx'), /url=\{booking\?\.main\} className="btn-closing-schedule"/)
+  // Individual Consultation: individual service pages
+  for (const f of ['executive-coaching', 'leader-development']) {
+    const s = src(`app/(public)/${f}/view.tsx`)
+    assert.ok(s.includes('booking?.free') && !s.includes('booking?.org') && !s.includes('booking?.main'), f)
+  }
+  assert.ok(src('app/(public)/sprint/view.tsx').includes('booking?.free'))
+  // Organizational Consultation: organization pages
+  for (const f of ['for-organizations', 'sample-engagements']) {
+    const s = src(`app/(public)/${f}/view.tsx`)
+    assert.ok(s.includes('booking?.org') && !s.includes('booking?.free') && !s.includes('booking?.main'), f)
+  }
+  // Paired buttons: Individual beside Organizational on The 8 Pillars and Contact
+  for (const f of ['the-8-pillars', 'contact']) {
+    const s = src(`app/(public)/${f}/view.tsx`)
+    assert.ok(s.includes('booking?.free') && s.includes('booking?.org'), f)
+  }
+})

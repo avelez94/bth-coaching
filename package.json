@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --require ./tests/helpers/server-only.cjs --import tsx --test tests/seo.unit.test.ts tests/core.unit.test.ts tests/gifts.unit.test.ts tests/admin-auth.unit.test.ts",
+    "test": "node --require ./tests/helpers/server-only.cjs --import tsx --test tests/seo.unit.test.ts tests/core.unit.test.ts tests/gifts.unit.test.ts tests/admin-auth.unit.test.ts tests/booking.unit.test.ts",
     "test:site": "node --test tests/site.test.mjs",
     "test:gifts": "node --require ./tests/helpers/server-only.cjs --import tsx --experimental-test-module-mocks --test tests/gifts.flow.test.ts",
     "test:installments": "node --require ./tests/helpers/server-only.cjs --import tsx --experimental-test-module-mocks --test tests/installments.test.ts"

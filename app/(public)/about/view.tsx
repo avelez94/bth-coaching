@@ -265,8 +265,8 @@ export default function AboutView({ c, booking }: ViewProps) {
             className="closing-signature"
             aria-hidden="true"
           />
-          {booking?.free
-            ? <a className="btn btn-gold" href={booking.free} target="_blank" rel="noopener noreferrer" style={{marginTop: '32px'}}>Schedule a Free 15-Minute Call</a>
+          {booking?.main
+            ? <a className="btn btn-gold" href={booking.main} target="_blank" rel="noopener noreferrer" style={{marginTop: '32px'}}>Schedule a Free 15-Minute Call</a>
             : <ScheduleButton className="btn btn-gold" disabledStyle={{marginTop: '32px', opacity: 0.72, cursor: 'not-allowed'}}>Schedule a Free 15-Minute Call</ScheduleButton>}
         </div>
       </section>

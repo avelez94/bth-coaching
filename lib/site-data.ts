@@ -5,7 +5,7 @@ import {
   DEFAULT_PRICING, DEFAULT_SPRINT_PRICING, PROGRAM_KEYS, buildProgramConfig,
   type ProgramConfig, type ProgramKey, type ProgramPricing, type SprintPricing,
 } from './program-info'
-import { DEFAULT_SETTINGS, SETTING_KEYS, type SiteSettings } from './site-settings'
+import { DEFAULT_SETTINGS, SETTING_KEYS, type SiteSettings, mainBookingUrl } from './site-settings'
 import { PAGE_DEFAULTS, type PageKey } from './site-content'
 import { AGREEMENT_HASH, AGREEMENT_TEXT, AGREEMENT_VERSION } from './agreement'
 import {
@@ -188,7 +188,7 @@ export async function getViewProps(page: PageKey): Promise<import('./view-props'
     ...(sprint ? { sprint: sprintPublic(sprint) } : {}),
     visible,
     programs: { 'executive-coaching': toPublic(programs['executive-coaching']), '8-pillars': toPublic(programs['8-pillars']) },
-    booking: { free: settings.bookingFreeCallUrl, org: settings.bookingOrgConsultUrl },
+    booking: { main: mainBookingUrl(settings), free: settings.bookingFreeCallUrl, org: settings.bookingOrgConsultUrl },
     contact: { email: settings.contactEmail, phone: settings.phone, location: settings.location },
   }
 }

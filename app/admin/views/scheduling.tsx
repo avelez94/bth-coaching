@@ -4,8 +4,9 @@ import { useSettingsForm, type SettingField } from './settings-form'
 import type { ViewProps } from '../page'
 
 const LINKS: SettingField[] = [
-  { key: 'bookingFreeCallUrl', label: 'Free 15-Minute Call: booking link', help: 'Used by every "Schedule a Free 15-Minute Call" button on the site. Leave blank to keep the buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
-  { key: 'bookingOrgConsultUrl', label: '30-Minute Organizational Consultation: booking link', help: 'Used by every "Schedule an Organizational Consultation" button on the site: For Organizations (2), Sample Engagements, The 8 Pillars and Contact. Leave blank to keep those buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
+  { key: 'bookingMainUrl', label: 'Main Booking Page', help: 'Your Microsoft Bookings home page, where visitors choose Individual or Organizational. Used by the general "Schedule a Free 15-Minute Call" buttons: the top menu (computer and phone), the footer, the Home page (top and bottom), About, and the bottom of Contact.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
+  { key: 'bookingFreeCallUrl', label: 'Individual Consultation: booking link', help: 'Used by the buttons on individual coaching pages: Executive Coaching, 8 Pillars Leadership, the 8 Pillar Sprint, and the individual button beside the organizational one on The 8 Pillars and Contact. Leave blank to keep those buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
+  { key: 'bookingOrgConsultUrl', label: 'Organizational Consultation: booking link', help: 'Used by every "Schedule an Organizational Consultation" button: For Organizations (2), Sample Engagements, The 8 Pillars and Contact. Leave blank to keep those buttons turned off.', placeholder: 'https://bookings.cloud.microsoft/book/...' },
 ]
 
 const BASE_QUESTIONS = [
@@ -40,9 +41,11 @@ export default function SchedulingView(props: ViewProps) {
             <div className="eyebrow">Booking links</div>
             {LINKS.map(renderField)}
             <p className="field-hint" style={{ marginTop: 14 }}>
-              {saved?.bookingFreeCallUrl
-                ? 'The Free 15-Minute Call buttons are live and open your booking page.'
-                : 'The Free 15-Minute Call buttons are currently turned off (shown faded) until a link is saved.'}
+              {saved?.bookingMainUrl
+                ? 'The general buttons open your Main Booking Page. Service pages open their own booking page.'
+                : saved?.bookingFreeCallUrl
+                  ? 'No Main Booking Page is saved yet, so the general buttons use the Individual Consultation link.'
+                  : 'The booking buttons are turned off (shown faded) until a link is saved.'}
             </p>
           </div>
         )}

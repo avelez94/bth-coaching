@@ -15,7 +15,7 @@ export interface EngagementPreview {
 // Props every editable page view receives (live page and admin preview)
 export interface ViewProps {
   c: PageContent
-  booking?: { free?: string; org?: string }
+  booking?: { main?: string; free?: string; org?: string }
   programs?: Record<ProgramKey, PublicProgramInfo>
   contact?: { email: string; phone: string; location: string }
   /** Home only: the Sample Engagements examples, as saved on that page */
