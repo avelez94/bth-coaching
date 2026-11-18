@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { verifyStripeSignature } from '../lib/stripe-webhook'
-import { withReference, sprintPublic, DEFAULT_SPRINT_PRICING, sprintSelfReference, sprintRegistrationId, endOfDayEastern, easternDate, formatEasternDate, giftRedemptionClosed } from '../lib/program-info'
+import { withReference, sprintPublic, DEFAULT_SPRINT_PRICING, sprintSelfReference, sprintRegistrationId, endOfDayEastern, easternDate, formatEasternDate, giftRedemptionClosed, fillDeadline } from '../lib/program-info'
 import { PAGE_SCHEMA, PAGE_DEFAULTS, faqProgramFor } from '../lib/site-content'
 import { OPTIONAL_PAGES, OPTIONAL_PAGE_KEYS } from '../lib/optional-pages'
 import { enrollmentClientEmail, contactAdminEmail, esc } from '../lib/email-templates'
@@ -88,4 +88,20 @@ test('emails escape everything a visitor typed', () => {
   assert.ok(!e.html.includes('<script>'))
   assert.ok(e.text.includes('Executive Coaching'))
   assert.ok(!/[–—]/.test(e.subject + e.text))
+})
+
+test('Sprint and FAQ copy show the one registration deadline everywhere', () => {
+  const deadline = DEFAULT_SPRINT_PRICING.giftRedeemBy
+  for (const page of ['sprint', 'faq'] as const) {
+    const filled = Object.values(PAGE_DEFAULTS[page] as Record<string, string>).map(v => fillDeadline(v, deadline)).join('\n')
+    assert.ok(!/January 5|Jan\.? 5\b/.test(filled), `${page}: no January 5`)
+    assert.ok(!filled.includes('{deadline'), `${page}: no placeholder left`)
+  }
+  const s = PAGE_DEFAULTS.sprint as Record<string, string>
+  assert.equal(fillDeadline(s['details.register'], deadline), 'January 10, 2027')
+  assert.equal(fillDeadline(s['refund.1.lead'], deadline), 'Until January 10, 2027:')
+  assert.equal(fillDeadline(s['refund.2.lead'], deadline), 'After January 10:')
+  assert.ok(fillDeadline(s['gift.body2'], deadline).includes('registers by January 10 and decides'))
+  // the date can change in one place
+  assert.equal(fillDeadline(s['details.register'], '2027-01-12T23:59:59-05:00'), 'January 12, 2027')
 })

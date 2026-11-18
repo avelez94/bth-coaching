@@ -46,8 +46,14 @@ const LANDSCAPE_4x3: ImageSpec = { ratio: '4:3 landscape', recommended: '2400 ×
 const SQUARE: ImageSpec = { ratio: 'square (1:1)', recommended: '1600 × 1600 pixels or larger', minWidth: 1000, aspect: 1 }
 
 // Short builders for field definitions
-const line = (key: string, label: string, def: string, extra: Partial<FieldDef> = {}): FieldDef => ({ key, label, type: 'text', default: def, ...extra })
-const para = (key: string, label: string, def: string, extra: Partial<FieldDef> = {}): FieldDef => ({ key, label, type: 'textarea', default: def, ...extra })
+// {deadline} and {deadline_short} in Sprint and FAQ text show the Sprint
+// registration deadline set in Admin under Pricing ("January 10, 2027" and
+// "January 10"), so every page, email and certificate shows the same date.
+export const DEADLINE_HELP = 'Where you see {deadline} or {deadline_short}, the website shows the Sprint registration deadline from Pricing (for example "January 10, 2027" or "January 10"). Keep them to change the date in one place.'
+const withDeadlineHelp = (def: string, extra: Partial<FieldDef>): Partial<FieldDef> =>
+  def.includes('{deadline') ? { ...extra, help: [extra.help, DEADLINE_HELP].filter(Boolean).join(' ') } : extra
+const line = (key: string, label: string, def: string, extra: Partial<FieldDef> = {}): FieldDef => ({ key, label, type: 'text', default: def, ...withDeadlineHelp(def, extra) })
+const para = (key: string, label: string, def: string, extra: Partial<FieldDef> = {}): FieldDef => ({ key, label, type: 'textarea', default: def, ...withDeadlineHelp(def, extra) })
 const photo = (key: string, label: string, def: string, image: ImageSpec, help?: string): FieldDef => ({ key, label, type: 'image', default: def, image, help })
 const PRICE_NOTE = 'The price shown in this section comes from Pricing & Payments.'
 
@@ -86,7 +92,7 @@ export const FAQ_SECTIONS: { id: string; heading: string; items: FaqItem[] }[] =
   { id: 'programs', heading: 'The programs', items: [
     { q: 'What can I expect from the 8 Pillars Leadership Program?', program: '8-pillars', a: `Ten months of leadership development and coaching built around the 8 Pillars, the areas of life that shape how well you lead. Month 1 is an 8 Pillars assessment and a half-day kickoff, in person or virtual, where you define what success looks like for you. In months 2 through 9 we take one pillar a month, with two sessions: a structured pillar session that uses a focused set of questions, and an open coaching session where you set the agenda. Month 10 is for review and integration, and you leave with commitments you've defined and a plan for what's next.` },
     { q: 'What can I expect from the 8 Pillar Sprint?', program: 'sprint', a: `An eight-week group program in which you build a one-page personal framework, one pillar per week, anchored in your own values. It meets on eight Tuesday evenings, January 12 to March 2, 2027, for 75 minutes by video, with 6 to 12 participants. Before Week 1 you complete a short self-assessment and receive a one-page snapshot of where you stand across the 8 Pillars. Each session follows the same rhythm: look back at last week's commitment, work through one pillar, reflect with a partner, and set one small commitment to test that week. You finish with your completed framework and a second self-assessment to see what moved. The Sprint is facilitated group learning, not one-on-one coaching.` },
-    { q: 'Can I give the Sprint as a gift?', a: `Yes. You'll receive a gift certificate to pass along, and the recipient registers by January 5 and decides whether to join. As the giver, you won't see their self-assessment, attendance, or anything discussed in the sessions. Gifts can be fully refunded or transferred until January 5, 2027.` },
+    { q: 'Can I give the Sprint as a gift?', a: `Yes. You'll receive a gift certificate to pass along, and the recipient registers by {deadline_short} and decides whether to join. As the giver, you won't see their self-assessment, attendance, or anything discussed in the sessions. Gifts can be fully refunded or transferred until {deadline}.` },
     { q: 'How is the Sprint different from the 8 Pillars Leadership Program?', a: `The Sprint is eight weeks in a small group, and you leave with a personal framework. The 8 Pillars Leadership Program is ten months of intensive one-on-one work, where you put that framework into practice with a coach and make the change last.` },
     { q: 'What can I expect from Executive Coaching?', program: 'executive-coaching', a: `Six months, twelve one-hour sessions about every two weeks, starting with an 8 Pillars whole-person assessment. You bring what matters most, and we work through it together: your values, perspectives, what's within your control or influence, and an action plan. Each session ends with a commitment you define, and the final session covers reflection, integration, and a plan for what's next.` },
     { q: 'How do I choose the right program?', a: `If you have a specific challenge in front of you and want focused support, Executive Coaching fits. If you want to build a stronger foundation across your whole life and leadership, the 8 Pillars Leadership Program fits. If you want a structured start in a small group, the 8 Pillar Sprint fits. If you're not sure, that's what the free 15-minute call is for. We'll figure it out together, and there's no pressure to commit.` },
@@ -729,13 +735,13 @@ export const PAGE_SCHEMA = {
         line('details.investment.label', 'Investment: label', 'Investment'),
         line('details.investment.suffix', 'Words after the price', 'per person', { help: 'The price itself comes from Pricing & Payments.' }),
         line('details.register.label', 'Register by: label', 'Register by'),
-        line('details.register', 'Register by', 'January 5, 2027'),
+        line('details.register', 'Register by', '{deadline}'),
       ] },
       { id: 'refunds', title: 'Refunds and cancellations', description: 'The five refund terms. Each starts with a few words in bold.', fields: [
         line('refunds.heading', 'Heading', 'Refunds and cancellations'),
         ...([
-          ['Until January 5, 2027:', 'full refund, or transfer your seat to someone else.'],
-          ['After January 5:', 'fees are non-refundable.'],
+          ['Until {deadline}:', 'full refund, or transfer your seat to someone else.'],
+          ['After {deadline_short}:', 'fees are non-refundable.'],
           ['If fewer than 6 people register,', "the Sprint still runs. You'll have the choice to continue with a smaller group or take a full refund."],
           ['Missed sessions', "aren't refunded. You'll receive a one-page summary after every session, and you can use your one-on-one session to catch up."],
           ['Gifts', 'follow the same terms. Any refund goes to the person who paid.'],
@@ -747,7 +753,7 @@ export const PAGE_SCHEMA = {
       { id: 'gift', title: 'Give the Sprint as a gift', description: 'How gifts work, with the gift button.', fields: [
         line('gift.heading', 'Heading', 'Give the Sprint as a gift'),
         para('gift.body1', 'Paragraph 1', 'Know someone who wants to maximize their performance despite multiple challenges? Give them eight weeks to build a framework of their own.'),
-        para('gift.body2', 'Paragraph 2', "When you buy the Sprint as a gift, you'll receive a gift certificate by email to pass along. Your recipient registers by January 5 and decides for themselves whether to join. The choice is theirs, which is part of what makes it work."),
+        para('gift.body2', 'Paragraph 2', "When you buy the Sprint as a gift, you'll receive a gift certificate by email to pass along. Your recipient registers by {deadline_short} and decides for themselves whether to join. The choice is theirs, which is part of what makes it work."),
         line('gift.1.lead', 'Point 1: words in bold', 'Their privacy is protected.'),
         para('gift.1.text', 'Point 1: rest', "You won't see their self-assessment, attendance, or anything discussed in the sessions."),
         line('gift.2.lead', 'Point 2: words in bold', 'If they decide not to join,'),

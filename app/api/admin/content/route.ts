@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/admin-auth'
-import { db, getPageContent } from '@/lib/site-data'
+import { db, getRawPageContent } from '@/lib/site-data'
 import { PAGE_KEYS, fieldDef, maxLength, type PageKey } from '@/lib/site-content'
 
 const SUPABASE_IMAGES = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/`
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const page = req.nextUrl.searchParams.get('page') as PageKey
   if (!PAGE_KEYS.includes(page)) return NextResponse.json({ error: 'Unknown page.' }, { status: 400 })
-  return NextResponse.json({ content: await getPageContent(page) })
+  return NextResponse.json({ content: await getRawPageContent(page) })
 }
 
 // PUT /api/admin/content  Body: { page, values: { [fieldKey]: string } }
@@ -42,5 +42,5 @@ export async function PUT(req: NextRequest) {
 
   const { error } = await db().from('site_content').upsert(rows, { onConflict: 'page,key' })
   if (error) return NextResponse.json({ error: 'Could not save. Please try again.' }, { status: 500 })
-  return NextResponse.json({ content: await getPageContent(page) })
+  return NextResponse.json({ content: await getRawPageContent(page) })
 }

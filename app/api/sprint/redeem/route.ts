@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   if (!EMAIL.test(email) || email.length > 254) return fail('Please enter a valid email address.', 400)
   if (phone.length > 40) return fail('Please check your phone number.', 400)
 
-  // Sprint participant terms: only when John has approved them (currently none)
+  // Sprint participant terms (approved by John): the box must be ticked
   if (SPRINT_PARTICIPANT_TERMS && body.acceptTerms !== true) {
     return fail('Please confirm you have read and accept the terms.', 400)
   }

@@ -100,7 +100,7 @@ export default function SprintPurchasesView({ toast }: ViewProps) {
         <h2 className="section-heading">Gifts {gifts && <span className="muted">({gifts.length})</span>}</h2>
         <p className="field-hint" style={{ marginBottom: 12 }}>
           When Stripe confirms a gift payment, a gift certificate with its own code and link is emailed to the buyer automatically. The recipient uses it to register. Each gift can be claimed once.
-          {deadline && <> Gifts can be claimed until {deadline.redeemBy} at 11:59 PM Eastern{deadline.closed ? ' (that date has passed)' : ''}. You can change this date under Pricing.</>}
+          {deadline && <> Gifts can be claimed until the Sprint registration deadline, {deadline.redeemBy} at 11:59 PM Eastern{deadline.closed ? ' (that date has passed)' : ''}. You can change this date under Pricing.</>}
         </p>
         {gifts === null && <p className="muted">Loading…</p>}
         {gifts && gifts.length === 0 && <div className="card"><p className="card-sub" style={{ margin: 0 }}>No gifts yet. They appear here as soon as Stripe confirms a gift payment.</p></div>}

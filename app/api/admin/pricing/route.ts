@@ -19,7 +19,7 @@ function validateSprint(p: SprintPricing): string[] {
   if (!isStripe(p.stripeGiftUrl)) errs.push('The gift link must be a Stripe payment link starting with https://buy.stripe.com/')
   // Must be 11:59:59 PM Eastern on a real calendar date, as the Admin form sends it
   const day = typeof p.giftRedeemBy === 'string' ? p.giftRedeemBy.slice(0, 10) : ''
-  if (!day || endOfDayEastern(day) !== p.giftRedeemBy) errs.push('Choose the last day a gift can be claimed.')
+  if (!day || endOfDayEastern(day) !== p.giftRedeemBy) errs.push('Choose the Sprint registration deadline.')
   return errs
 }
 

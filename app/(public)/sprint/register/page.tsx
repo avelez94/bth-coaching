@@ -4,13 +4,14 @@ import '../redeem/redeem.css'
 import RegisterForm from './register-form'
 import { getPageContent, getSettings, getSprintPricing, isPageActive } from '@/lib/site-data'
 import { OPTIONAL_PAGES } from '@/lib/optional-pages'
-import { usd } from '@/lib/program-info'
-import { SPRINT_PARTICIPANT_TERMS } from '@/lib/sprint-terms'
+import { formatEasternDate, sprintRegistrationClosed, usd } from '@/lib/program-info'
+import { sprintTermsFor } from '@/lib/sprint-terms'
 
 // ============================================================
 // /sprint/register: someone joining the 8 Pillar Sprint themselves
-// gives their details (and, once approved, accepts the Sprint terms),
-// then continues to Stripe to pay. Never indexed.
+// gives their details and accepts the Sprint participant terms, then
+// continues to Stripe to pay. Closed after the registration deadline
+// (Admin > Pricing). Never indexed.
 // ============================================================
 
 export const metadata: Metadata = {
@@ -40,8 +41,14 @@ export default async function SprintRegister() {
             <div><dt>Investment</dt><dd>{usd(sprint.priceCents)}</dd></div>
             <div><dt>{c['details.register.label']}</dt><dd>{c['details.register']}</dd></div>
           </dl>
-          <p className="rd-lead">Enter your details below, then continue to Stripe to pay securely. Your email is filled in for you there.</p>
-          <RegisterForm terms={SPRINT_PARTICIPANT_TERMS} />
+          {sprintRegistrationClosed(sprint.giftRedeemBy) ? (
+            <p className="rd-status rd-status-error" role="alert">Registration for the 8 Pillar Sprint closed on {formatEasternDate(sprint.giftRedeemBy)}.</p>
+          ) : (
+            <>
+              <p className="rd-lead">Enter your details below, read the Sprint terms, then continue to Stripe to pay securely. Your email is filled in for you there.</p>
+              <RegisterForm terms={sprintTermsFor(sprint.giftRedeemBy)} />
+            </>
+          )}
           <p className="rd-help">
             Buying the Sprint for someone else? <a href="/sprint#gift">Give the Sprint as a gift</a> instead.
             Questions? Contact John at <a href={`mailto:${settings.contactEmail}`}>{settings.contactEmail}</a> or {settings.phone}.

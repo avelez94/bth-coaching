@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { CODE_ALPHABET, CODE_PATTERN, generateCode, generateToken, isToken, normalizeCode, REDEEM_MESSAGE, redeemPath } from '../lib/sprint-gift-codes'
 import { generateGiftCertificatePDF, CERTIFICATE_INSTRUCTION } from '../lib/gift-certificate-pdf'
 import { giftCertificateEmail, giftRedeemedRecipientEmail, giftRedeemedAdminEmail, giftAdminNoticeEmail } from '../lib/email-templates'
-import { SPRINT_PARTICIPANT_TERMS } from '../lib/sprint-terms'
+import { SPRINT_PARTICIPANT_TERMS, sprintTermsFor } from '../lib/sprint-terms'
 
 test('gift tokens are 256 bit, url safe and unique', () => {
   const seen = new Set<string>()
@@ -45,7 +45,7 @@ test('redemption messages are the agreed wording and contain no personal data', 
 test('the certificate PDF is generated with the required content', async () => {
   const bytes = await generateGiftCertificatePDF({
     purchaserName: 'Pat Buyer', recipientName: null, code: 'SPRINT-AAAA-BBBB-CCCC',
-    link: `https://example.test/sprint/redeem?token=${generateToken()}`, registerBy: 'January 5, 2027',
+    link: `https://example.test/sprint/redeem?token=${generateToken()}`, registerBy: 'January 10, 2027',
     dates: 'Eight Tuesdays', time: '7:00 PM', format: 'Video', terms: ['Gifts follow the same terms.'],
     contactName: 'John McCracken', contactEmail: 'john@example.test', contactPhone: '555', website: 'example.test',
   })
@@ -58,10 +58,10 @@ test('the certificate PDF is generated with the required content', async () => {
 test('gift emails escape every value and mark test sends', () => {
   const footer = { contactEmail: 'john@example.test', phone: '555' }
   const evil = '<script>alert(1)</script>'
-  const a = giftCertificateEmail({ purchaserName: evil, code: 'SPRINT-AAAA-BBBB-CCCC', link: 'https://x.test/r?token=t', registerBy: 'Jan 5', giftTerm: 'Gifts follow the same terms.' }, footer, 'real@buyer.test')
+  const a = giftCertificateEmail({ purchaserName: evil, code: 'SPRINT-AAAA-BBBB-CCCC', link: 'https://x.test/r?token=t', registerBy: 'Jan 10', giftTerm: 'Gifts follow the same terms.' }, footer, 'real@buyer.test')
   assert.ok(!a.html.includes('<script>'))
   assert.ok(a.html.includes('TEST MODE') && a.html.includes('real@buyer.test'))
-  assert.ok(a.text.includes('SPRINT-AAAA-BBBB-CCCC') && a.text.includes('https://x.test/r?token=t') && a.text.includes('Jan 5'))
+  assert.ok(a.text.includes('SPRINT-AAAA-BBBB-CCCC') && a.text.includes('https://x.test/r?token=t') && a.text.includes('Jan 10'))
   const live = giftCertificateEmail({ purchaserName: 'Pat', code: 'C', link: 'L', registerBy: 'D', giftTerm: '' }, footer, null)
   assert.ok(!live.html.includes('TEST MODE'))
   for (const e of [
@@ -75,6 +75,16 @@ test('gift emails escape every value and mark test sends', () => {
   }
 })
 
-test('no participant agreement or terms step is active for the Sprint yet', () => {
-  assert.equal(SPRINT_PARTICIPANT_TERMS, null)
+test('Sprint participant terms: John\'s approved acknowledgment, one date for everything', () => {
+  const t = SPRINT_PARTICIPANT_TERMS!
+  assert.ok(t, 'active')
+  assert.equal(t.acceptLabel, 'I have read and accept the 8 Pillar Sprint participant terms.')
+  assert.equal(t.version, 'sprint-terms-2026-11-17')
+  const filled = sprintTermsFor('2027-01-10T23:59:59-05:00')!
+  assert.ok(filled.text.includes('Until January 10, 2027: full refund, or transfer your seat to someone else.'))
+  assert.ok(filled.text.includes('After January 10: fees are non-refundable.'))
+  assert.ok(filled.text.includes('how anonymized information either stays in the room or may be shared'))
+  assert.ok(filled.text.includes('Time: 7:00 to 8:15 PM Eastern'))
+  assert.ok(!/January 5|\{deadline/.test(filled.text))
+  assert.ok(!/agreement|signature|waiver|arbitration|indemn/i.test(filled.text), 'no coaching agreement or new legal terms')
 })

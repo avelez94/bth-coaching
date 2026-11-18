@@ -122,7 +122,20 @@ export async function getPrograms(): Promise<Record<ProgramKey, ProgramConfig>> 
 }
 
 // Page text and image URLs, merged over the page's built-in defaults.
+// Page text as visitors see it. In Sprint and FAQ text, {deadline} and
+// {deadline_short} become the Sprint registration deadline from Pricing.
 export async function getPageContent<P extends PageKey>(page: P): Promise<(typeof PAGE_DEFAULTS)[P]> {
+  const raw = await getRawPageContent(page)
+  if (page !== 'sprint' && page !== 'faq') return raw
+  const { giftRedeemBy } = await getSprintPricing()
+  const { fillDeadline } = await import('./program-info')
+  const out: Record<string, string> = {}
+  for (const [k, v] of Object.entries(raw as Record<string, string>)) out[k] = typeof v === 'string' ? fillDeadline(v, giftRedeemBy) : v
+  return out as (typeof PAGE_DEFAULTS)[P]
+}
+
+// Page text exactly as saved (Admin editor), placeholders kept
+export async function getRawPageContent<P extends PageKey>(page: P): Promise<(typeof PAGE_DEFAULTS)[P]> {
   await connection()
   const defaults = PAGE_DEFAULTS[page]
   try {

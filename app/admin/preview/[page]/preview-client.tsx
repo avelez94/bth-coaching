@@ -8,6 +8,7 @@ import type { PageContent, PageKey } from '@/lib/site-content'
 import type { SiteSettings } from '@/lib/site-settings'
 import type { ViewProps } from '@/lib/view-props'
 import type { PageVisibility } from '@/lib/optional-pages'
+import { fillDeadline } from '@/lib/program-info'
 
 // Each view is loaded on its own so only that page's stylesheet is present,
 // matching the live page exactly (several pages share class names).
@@ -27,13 +28,15 @@ const VIEWS: Record<PageKey, ComponentType<ViewProps>> = {
   contact: dynamic(() => import('@/app/(public)/contact/view')),
 }
 
-export default function PreviewClient({ page, base, settings, visible }: { page: PageKey; base: ViewProps; settings: SiteSettings; visible: PageVisibility }) {
+export default function PreviewClient({ page, base, settings, visible, deadline }: { page: PageKey; base: ViewProps; settings: SiteSettings; visible: PageVisibility; deadline: string }) {
   const [content, setContent] = useState<PageContent>(base.c)
 
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
       if (e.origin !== window.location.origin || e.data?.type !== 'bth-preview' || e.data.page !== page) return
-      setContent(e.data.content)
+      // The draft keeps {deadline} placeholders; show the date as visitors will
+      const draft = e.data.content as Record<string, string>
+      setContent(Object.fromEntries(Object.entries(draft).map(([k, v]) => [k, typeof v === 'string' ? fillDeadline(v, deadline) : v])) as PageContent)
     }
     window.addEventListener('message', onMsg)
     window.parent?.postMessage({ type: 'bth-preview-ready' }, window.location.origin)
@@ -41,7 +44,7 @@ export default function PreviewClient({ page, base, settings, visible }: { page:
     const block = (e: MouseEvent) => { if ((e.target as HTMLElement).closest('a, button')) e.preventDefault() }
     document.addEventListener('click', block, true)
     return () => { window.removeEventListener('message', onMsg); document.removeEventListener('click', block, true) }
-  }, [page])
+  }, [page, deadline])
 
   const View = VIEWS[page]
   return (

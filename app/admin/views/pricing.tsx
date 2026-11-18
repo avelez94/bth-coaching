@@ -183,8 +183,9 @@ export default function PricingView({ setDirty, toast }: ViewProps) {
 }
 
 // ------------------------------------------------------------
-// 8 Pillar Sprint: one price, two Stripe links and the last day a
-// gift can be claimed. No coaching agreement for the Sprint.
+// 8 Pillar Sprint: one price, two Stripe links and the registration
+// deadline (also the gift claim and refund/transfer date shown in the
+// Sprint copy). No coaching agreement for the Sprint.
 // ------------------------------------------------------------
 interface SprintForm { price: string; enrollUrl: string; giftUrl: string; redeemBy: string }
 const sprintForm = (p: SprintPricing): SprintForm => ({ price: String(p.priceCents / 100), enrollUrl: p.stripeEnrollUrl, giftUrl: p.stripeGiftUrl, redeemBy: easternDate(p.giftRedeemBy) })
@@ -204,7 +205,7 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   if (!Number.isFinite(next.priceCents) || next.priceCents < 1000) errs.push('Enter a Sprint price of at least $10.')
   if (!STRIPE_RE.test(next.stripeEnrollUrl)) errs.push('The enroll link must be a Stripe payment link (https://buy.stripe.com/...).')
   if (!STRIPE_RE.test(next.stripeGiftUrl)) errs.push('The gift link must be a Stripe payment link (https://buy.stripe.com/...).')
-  if (!redeemBy) errs.push('Choose the last day a gift can be claimed.')
+  if (!redeemBy) errs.push('Choose the Sprint registration deadline.')
 
   const lines: string[] = []
   const warnings: string[] = []
@@ -215,7 +216,7 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   }
   if (saved.stripeEnrollUrl !== next.stripeEnrollUrl) lines.push('The Enroll in the Sprint buttons will open the new Stripe link.')
   if (saved.stripeGiftUrl !== next.stripeGiftUrl) lines.push('The Give the Sprint as a gift buttons will open the new Stripe link.')
-  if (redeemBy && easternDate(saved.giftRedeemBy) !== f.redeemBy) lines.push(`Gift recipients will be able to claim their seat until ${formatEasternDate(redeemBy)} at 11:59 PM Eastern. New gift certificates will show this date.`)
+  if (redeemBy && easternDate(saved.giftRedeemBy) !== f.redeemBy) lines.push(`The Sprint registration deadline will become ${formatEasternDate(redeemBy)} at 11:59 PM Eastern. The Sprint page, FAQ, terms, emails and new gift certificates will all show this date, and registration and gift claims close after it.`)
 
   async function save() {
     setSaving(true)
@@ -230,7 +231,7 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
   return (
     <div className="card" style={{ marginTop: 18, maxWidth: 640 }}>
       <div className="card-title">{SPRINT_LABEL}</div>
-      <div className="card-sub">Now: {usd(saved.priceCents)} per person. Gifts can be claimed until {formatEasternDate(saved.giftRedeemBy)} at 11:59 PM Eastern.</div>
+      <div className="card-sub">Now: {usd(saved.priceCents)} per person. Registration deadline: {formatEasternDate(saved.giftRedeemBy)} at 11:59 PM Eastern.</div>
       <div className="field">
         <label className="field-label" htmlFor="sprint-price">Sprint price</label>
         <div className="money"><span>$</span><input id="sprint-price" className="field-input" inputMode="decimal" value={f.price} onChange={e => setF({ ...f, price: e.target.value })} /></div>
@@ -246,8 +247,8 @@ function SprintCard({ saved, onSaved, setCardDirty, toast }: {
         <input id="sprint-gift" className="field-input" value={f.giftUrl} onChange={e => setF({ ...f, giftUrl: e.target.value })} />
       </div>
       <div className="field">
-        <label className="field-label" htmlFor="sprint-redeem-by">Last day to claim a gift</label>
-        <span className="field-hint">Gift recipients can claim their seat until 11:59 PM Eastern on this day. After that, an unused gift stays on record here but can no longer be claimed.</span>
+        <label className="field-label" htmlFor="sprint-redeem-by">Registration deadline</label>
+        <span className="field-hint">One date for everything: the last day to register, to claim a gift, and for a refund or transfer (as the Sprint page and terms say). Registration and gift claims close at 11:59 PM Eastern on this day. An unused gift stays on record but can no longer be claimed.</span>
         <input id="sprint-redeem-by" type="date" className="field-input" style={{ maxWidth: 220 }} value={f.redeemBy} onChange={e => setF({ ...f, redeemBy: e.target.value })} />
       </div>
       {dirty && errs.length > 0 && <div className="field-error" style={{ marginTop: 12 }}>{errs.map(e => <div key={e}>{e}</div>)}</div>}

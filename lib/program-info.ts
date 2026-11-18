@@ -37,7 +37,11 @@ export interface SprintPricing {
   priceCents: number
   stripeEnrollUrl: string
   stripeGiftUrl: string
-  /** Last moment a gift can be redeemed (ISO time; 11:59:59 PM Eastern on the chosen day) */
+  /**
+   * The Sprint registration deadline, 11:59:59 PM Eastern on the chosen day
+   * (ISO time). One date for everything: registering, claiming a gift, and
+   * the last day for a refund or transfer in the Sprint copy.
+   */
   giftRedeemBy: string
 }
 
@@ -75,10 +79,22 @@ export function formatEasternDate(iso: string): string {
   return new Intl.DateTimeFormat('en-US', { timeZone: EASTERN, month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(iso))
 }
 
-/** True once the gift redemption deadline has passed */
+/** "January 10" */
+export function formatEasternMonthDay(iso: string): string {
+  return new Intl.DateTimeFormat('en-US', { timeZone: EASTERN, month: 'long', day: 'numeric' }).format(new Date(iso))
+}
+
+/** True once the Sprint registration deadline (also the gift claim deadline) has passed */
 export function giftRedemptionClosed(redeemBy: string, now = new Date()): boolean {
   const t = new Date(redeemBy).getTime()
   return Number.isFinite(t) && now.getTime() > t
+}
+export const sprintRegistrationClosed = giftRedemptionClosed
+
+/** Fills {deadline} ("January 10, 2027") and {deadline_short} ("January 10") */
+export function fillDeadline(text: string, deadlineIso: string): string {
+  if (!text.includes('{deadline')) return text
+  return text.replaceAll('{deadline_short}', formatEasternMonthDay(deadlineIso)).replaceAll('{deadline}', formatEasternDate(deadlineIso))
 }
 
 export const SPRINT_LABEL = '8 Pillar Sprint'

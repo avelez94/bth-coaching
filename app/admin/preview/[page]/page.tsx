@@ -1,6 +1,6 @@
 import PreviewClient from './preview-client'
 import { PAGE_KEYS, type PageKey } from '@/lib/site-content'
-import { getPageVisibility, getSettings, getViewProps } from '@/lib/site-data'
+import { getPageVisibility, getSettings, getSprintPricing, getViewProps } from '@/lib/site-data'
 import { notFound } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { verifyToken } from '@/app/api/admin/auth/route'
@@ -13,6 +13,6 @@ export default async function PreviewPage({ params }: { params: Promise<{ page: 
   if (!verifyToken(session)) notFound()
   const { page } = await params
   if (!PAGE_KEYS.includes(page as PageKey)) notFound()
-  const [props, settings, visible] = await Promise.all([getViewProps(page as PageKey), getSettings(), getPageVisibility()])
-  return <PreviewClient page={page as PageKey} base={props} settings={settings} visible={visible} />
+  const [props, settings, visible, sprint] = await Promise.all([getViewProps(page as PageKey), getSettings(), getPageVisibility(), getSprintPricing()])
+  return <PreviewClient page={page as PageKey} base={props} settings={settings} visible={visible} deadline={sprint.giftRedeemBy} />
 }

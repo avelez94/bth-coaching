@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSprintPricing, isPageActive } from '@/lib/site-data'
 import { createRegistration } from '@/lib/sprint-registration'
-import { sprintSelfReference, withReference } from '@/lib/program-info'
+import { formatEasternDate, sprintRegistrationClosed, sprintSelfReference, withReference } from '@/lib/program-info'
 import { SPRINT_PARTICIPANT_TERMS } from '@/lib/sprint-terms'
 
 // ============================================================
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
   if (!EMAIL.test(email) || email.length > 254) return fail('Please enter a valid email address.', 400)
   if (phone.length > 40) return fail('Please check your phone number.', 400)
 
-  // Sprint participant terms: only once John has approved them (currently none)
+  // Sprint participant terms (approved by John): the box must be ticked
   if (SPRINT_PARTICIPANT_TERMS && body.acceptTerms !== true) {
     return fail('Please confirm you have read and accept the terms.', 400)
   }
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
   try {
     if (!(await isPageActive('sprint'))) return fail('Registration for the 8 Pillar Sprint is not open right now.', 409)
     const sprint = await getSprintPricing()
+    if (sprintRegistrationClosed(sprint.giftRedeemBy)) return fail(`Registration for the 8 Pillar Sprint closed on ${formatEasternDate(sprint.giftRedeemBy)}.`, 410)
     const reg = await createRegistration({ name, email, phone: phone || null, termsVersion: SPRINT_PARTICIPANT_TERMS?.version ?? null })
     // Same Stripe link as before, tagged with this registration, email prefilled
     const url = withReference(sprint.stripeEnrollUrl, sprintSelfReference(reg.id), email)

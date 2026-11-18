@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import './redeem.css'
 import RedeemForm from './redeem-form'
-import { getPageContent, getSettings } from '@/lib/site-data'
+import { getPageContent, getSettings, getSprintPricing } from '@/lib/site-data'
 import { isToken, normalizeCode, REDEEM_MESSAGE } from '@/lib/sprint-gift-codes'
 import { publicGiftState, type PublicGiftState } from '@/lib/sprint-gifts'
-import { SPRINT_PARTICIPANT_TERMS } from '@/lib/sprint-terms'
+import { sprintTermsFor } from '@/lib/sprint-terms'
 
 // ============================================================
 // /sprint/redeem: where a Sprint gift recipient claims their seat.
@@ -37,7 +37,7 @@ export default async function Redeem({ searchParams }: { searchParams: Search })
     state = { state: 'enter' }
   }
 
-  const [c, settings] = await Promise.all([getPageContent('sprint'), getSettings()])
+  const [c, settings, sprint] = await Promise.all([getPageContent('sprint'), getSettings(), getSprintPricing()])
   const contact = (
     <p className="rd-help">
       Questions? Contact John at <a href={`mailto:${settings.contactEmail}`}>{settings.contactEmail}</a> or {settings.phone}.
@@ -89,7 +89,7 @@ export default async function Redeem({ searchParams }: { searchParams: Search })
 
           {state.state === 'valid' && 'token' in state && state.token && (
             <>
-              <RedeemForm token={state.token} terms={SPRINT_PARTICIPANT_TERMS}>
+              <RedeemForm token={state.token} terms={sprintTermsFor(sprint.giftRedeemBy)}>
                 <>
                   <p className="rd-status rd-status-ok">
                     This gift is valid{state.purchaserFirstName ? `, a gift from ${state.purchaserFirstName}` : ''}.
