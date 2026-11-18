@@ -69,7 +69,7 @@ export default function AccountView({ me, onSignedOut }: ViewProps & { me: Admin
               <label className="field-label" htmlFor="conf">New password again</label>
               <input id="conf" className="field-input" type="password" autoComplete="new-password" value={confirm} onChange={e => setConfirm(e.target.value)} required minLength={12} />
             </div>
-            <button className="save-btn" type="submit" disabled={busy || !current || !next || !confirm}>{busy ? 'Saving…' : 'Change password'}</button>
+            <button className="save-btn" type="submit" style={{ marginTop: 8 }} disabled={busy || !current || !next || !confirm}>{busy ? 'Saving…' : 'Change password'}</button>
             <p className="field-hint" style={{ marginTop: 12 }}>You will be signed out on every device and asked to sign in again. A confirmation email goes to {me.email}.</p>
           </form>
         </div>
