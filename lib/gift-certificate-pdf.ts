@@ -91,6 +91,8 @@ export async function generateGiftCertificatePDF(c: CertificateContent): Promise
   doc.setTitle('8 Pillar Sprint Gift Certificate')
   doc.setAuthor('Beyond the Horizon Executive Coaching & Consulting')
   doc.setSubject(`Gift certificate ${c.code}`)
+  doc.setCreator('Beyond the Horizon Executive Coaching & Consulting')
+  doc.setProducer('Beyond the Horizon Executive Coaching & Consulting')
 
   const page = doc.addPage([W, H])
   page.drawRectangle({ x: 0, y: 0, width: W, height: H, color: C.ivory })

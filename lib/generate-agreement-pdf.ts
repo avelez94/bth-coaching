@@ -111,6 +111,16 @@ export async function generateAgreementPDF(record: EnrollmentRecord): Promise<Ui
   }
   const logo = await doc.embedPng(logoBytes)
 
+  // Document properties: the business, not the PDF library, is the author
+  const programName = record.program === '8-pillars' ? 'The 8 Pillars Leadership Program' : 'Executive Coaching'
+  doc.setTitle(`Coaching Agreement: ${programName}`)
+  doc.setAuthor(COACH_DEFAULTS.firm)
+  doc.setSubject(`Signed coaching agreement for ${record.firstName} ${record.lastName}`)
+  doc.setCreator(COACH_DEFAULTS.firm)
+  doc.setProducer(COACH_DEFAULTS.firm)
+  doc.setCreationDate(record.signedAt)
+  doc.setModificationDate(record.signedAt)
+
   const signedAtText = etDateTime(record.signedAt)
   const effectiveDateText = etDate(record.signedAt)
   const fullName = `${record.firstName} ${record.lastName}`.trim()
