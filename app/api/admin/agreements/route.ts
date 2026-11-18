@@ -11,7 +11,7 @@ const supabaseAdmin = createClient(
 // GET /api/admin/agreements
 // Returns all agreement versions, most recent first
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) {
+  if (!(await verifyAdminToken(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 // Existing versions and signed agreements are never modified.
 // Body: { version, effective_date, content, notes? }
 export async function POST(req: NextRequest) {
-  if (!verifyAdminToken(req)) {
+  if (!(await verifyAdminToken(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
 // Set a specific agreement version as active
 // Body: { id }
 export async function PATCH(req: NextRequest) {
-  if (!verifyAdminToken(req)) {
+  if (!(await verifyAdminToken(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

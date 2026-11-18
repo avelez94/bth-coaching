@@ -1,85 +1,79 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createHmac, timingSafeEqual } from 'crypto'
+import { timingSafeEqual } from 'crypto'
+import { db } from '@/lib/site-data'
+import {
+  adminFromRequest, attempts, audit, checkPassword, clearSessionCookie, clientIp, hashPassword,
+  normalizeEmail, recordAttempt, setSessionCookie, type AdminUser,
+} from '@/lib/admin-auth'
 
-// Session tokens are HMAC-SHA256 signatures over "bth-admin:<issuedAt>".
-// Valid for SESSION_TTL_MS milliseconds (8 hours).
-// The token is stored only in an HttpOnly, Secure, SameSite=Strict cookie —
-// never in localStorage, sessionStorage, or returned to client JS.
-const SESSION_TTL_MS = 8 * 60 * 60 * 1000 // 8 hours
-const COOKIE_NAME = 'bth_admin_session'
+// Too many failed sign ins in 15 minutes pauses sign in for that email
+// address or network for the rest of the window.
+const WINDOW_MIN = 15
+const MAX_PER_EMAIL = 5
+const MAX_PER_IP = 20
 
-function secret(): string {
-  const s = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD
-  if (!s) throw new Error('ADMIN_SESSION_SECRET is not set')
-  return s
+const sameSecret = (a: string, b: string) => {
+  const x = Buffer.from(a), y = Buffer.from(b)
+  return x.length === y.length && timingSafeEqual(x, y)
 }
 
-export function issueToken(issuedAt: number): string {
-  const payload = `bth-admin:${issuedAt}`
-  const sig = createHmac('sha256', secret()).update(payload).digest('hex')
-  return `${issuedAt}.${sig}`
-}
-
-export function verifyToken(token: string): boolean {
-  try {
-    const dot = token.indexOf('.')
-    if (dot === -1) return false
-    const issuedAt = parseInt(token.slice(0, dot), 10)
-    if (isNaN(issuedAt)) return false
-    if (Date.now() - issuedAt > SESSION_TTL_MS) return false
-    const expected = issueToken(issuedAt)
-    // Constant-time comparison — prevents timing attacks
-    const a = Buffer.from(expected)
-    const b = Buffer.from(token.padEnd(expected.length, '\0').slice(0, expected.length))
-    return a.length === b.length && timingSafeEqual(a, b)
-  } catch { return false }
-}
-
-// POST /api/admin/auth
-// Verifies the admin password and sets an HttpOnly session cookie.
-// The token is never returned in the response body — the browser holds it.
+// POST /api/admin/auth  { email, password }: signs in and sets the session cookie
 export async function POST(req: NextRequest) {
   try {
-    const { password } = await req.json()
-    if (!password || password !== process.env.ADMIN_PASSWORD) {
-      return NextResponse.json({ error: 'Incorrect password' }, { status: 401 })
+    const body = await req.json().catch(() => ({}))
+    const email = normalizeEmail(body.email)
+    const password = typeof body.password === 'string' ? body.password : ''
+    const ip = clientIp(req)
+
+    if ((await attempts('login', email, WINDOW_MIN)) >= MAX_PER_EMAIL || (await attempts('login-ip', ip, WINDOW_MIN)) >= MAX_PER_IP) {
+      return NextResponse.json({ error: 'Too many attempts. Wait 15 minutes, or use Forgot password.' }, { status: 429 })
     }
-    const token = issueToken(Date.now())
-    const response = NextResponse.json({ success: true })
-    response.cookies.set(COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: SESSION_TTL_MS / 1000, // seconds
-      path: '/',
-    })
-    return response
-  } catch {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+
+    const { data } = email
+      ? await db().from('admin_users').select('id, email, name, role, status, session_version, password_hash').eq('email', email).maybeSingle()
+      : { data: null }
+    const row = data as (AdminUser & { password_hash: string | null }) | null
+    const active = row?.status === 'active' ? row : null
+
+    let ok = Boolean(password) && await checkPassword(password, active?.password_hash ?? null)
+
+    // One time move from the old shared Admin password: the Owner account
+    // has no stored password yet, so the existing password is accepted once
+    // and saved as the Owner's own (hashed). After that it is never read.
+    const legacy = process.env.ADMIN_PASSWORD
+    if (!ok && active && active.role === 'owner' && !active.password_hash && legacy && password && sameSecret(password, legacy)) {
+      await db().from('admin_users').update({ password_hash: await hashPassword(password), password_changed_at: new Date().toISOString() }).eq('id', active.id)
+      await audit('password_set_from_previous', active, active.email)
+      ok = true
+    }
+
+    if (!ok || !active) {
+      await recordAttempt('login', email || '(blank)')
+      await recordAttempt('login-ip', ip)
+      return NextResponse.json({ error: 'That email and password do not match an Admin account.' }, { status: 401 })
+    }
+
+    await db().from('admin_users').update({ last_login_at: new Date().toISOString() }).eq('id', active.id)
+    await audit('signed_in', active)
+    const res = NextResponse.json({ success: true })
+    setSessionCookie(res, active)
+    return res
+  } catch (e) {
+    console.error('[admin-auth] sign in failed:', e instanceof Error ? e.message : 'unknown error')
+    return NextResponse.json({ error: 'Sign in is unavailable right now.' }, { status: 500 })
   }
 }
 
-// GET /api/admin/auth
-// Checks whether the current session cookie is still valid.
-// Used by the admin page on load to decide if the session is still alive.
+// GET /api/admin/auth: who is signed in (no secrets), or 401
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get(COOKIE_NAME)?.value || ''
-  if (verifyToken(token)) {
-    return NextResponse.json({ valid: true })
-  }
-  return NextResponse.json({ valid: false }, { status: 401 })
+  const user = await adminFromRequest(req)
+  if (!user) return NextResponse.json({ valid: false }, { status: 401 })
+  return NextResponse.json({ valid: true, user: { email: user.email, name: user.name, role: user.role } })
 }
 
-// DELETE /api/admin/auth
-// Signs out by clearing the session cookie server-side.
+// DELETE /api/admin/auth: signs out
 export async function DELETE() {
-  const response = NextResponse.json({ success: true })
-  response.cookies.set(COOKIE_NAME, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 0,
-    path: '/',
-  })
-  return response
+  const res = NextResponse.json({ success: true })
+  clearSessionCookie(res)
+  return res
 }

@@ -14,7 +14,7 @@ import { cancelGift, giftById, redeemUrl, sendCertificate, siteOrigin, type Gift
 // ============================================================
 
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const { data: gifts, error } = await db().from('sprint_gifts').select('*').order('created_at', { ascending: false })
   if (error) return NextResponse.json({ error: 'Could not load gifts.' }, { status: 500 })
   const rows = (gifts ?? []) as GiftRow[]
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json().catch(() => ({})) as { action?: string; id?: string; note?: string }
   if (typeof body.id !== 'string') return NextResponse.json({ error: 'Missing gift.' }, { status: 400 })
   const gift = await giftById(body.id).catch(() => null)

@@ -58,6 +58,8 @@ const KIND: Record<string, string> = {
   contact_sender: 'Contact form, to visitor', test: 'Test email',
   sprint_registered: 'Sprint registration, to participant', gift_certificate: 'Sprint gift certificate, to buyer',
   gift_redeemed_recipient: 'Sprint gift claimed, to participant', gift_redeemed_admin: 'Sprint gift claimed, to you',
+  admin_password_reset: 'Admin password reset link', admin_invite: 'Developer invitation',
+  admin_password_changed: 'Admin password changed notice', admin_access_notice: 'Admin access notice',
 }
 
 // Email delivery: whether it is set up, a test button, and recent sends

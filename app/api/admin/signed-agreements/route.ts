@@ -10,7 +10,7 @@ const supabaseAdmin = createClient(
 // GET /api/admin/signed-agreements
 // Returns all enrollment records for the admin dashboard
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) {
+  if (!(await verifyAdminToken(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

@@ -30,6 +30,7 @@ export type EmailKind =
   | 'payment_received' | 'sprint_purchase'
   | 'gift_certificate' | 'gift_redeemed_recipient' | 'gift_redeemed_admin' | 'sprint_registered'
   | 'contact_admin' | 'contact_sender' | 'test'
+  | 'admin_password_reset' | 'admin_invite' | 'admin_password_changed' | 'admin_access_notice'
 
 export interface Attachment { filename: string; content: Buffer }
 

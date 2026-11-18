@@ -5,7 +5,7 @@ import { PROGRAM_KEYS, endOfDayEastern, type ProgramKey, type ProgramPricing, ty
 
 // GET /api/admin/pricing: current prices and Stripe links for every program
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const [pricing, sprint] = await Promise.all([getPricing(), getSprintPricing()])
   return NextResponse.json({ pricing, sprint })
 }
@@ -38,7 +38,7 @@ function validate(p: ProgramPricing): string[] {
 //   Body: { program: ProgramKey, pricing: ProgramPricing }  or  { program: 'sprint', sprint: SprintPricing }
 // Affects future enrollments only. Each enrollment stores the price it was signed at.
 export async function PUT(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json().catch(() => null)
   if (body?.program === 'sprint') {
     const sp = body?.sprint as SprintPricing

@@ -5,14 +5,14 @@ import { SETTING_KEYS, validateSetting, type SiteSettings } from '@/lib/site-set
 
 // GET /api/admin/settings: current Site Settings and booking links
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   return NextResponse.json({ settings: await getSettings() })
 }
 
 // PUT /api/admin/settings  Body: { settings: Partial<SiteSettings> }
 // Validates every field, then saves. Nothing is saved if any field is invalid.
 export async function PUT(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json().catch(() => null)
   const incoming = body?.settings
   if (!incoming || typeof incoming !== 'object') return NextResponse.json({ error: 'Nothing to save.' }, { status: 400 })

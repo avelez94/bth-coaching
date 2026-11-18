@@ -8,7 +8,7 @@ import { db } from '@/lib/site-data'
 //   awaiting:      people who registered on /sprint/register but whose
 //                  payment Stripe has not confirmed (not enrolled)
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const [{ data, error }, { data: regs, error: regErr }] = await Promise.all([
     db().from('stripe_payments')
       .select('id, created_at, kind, customer_name, customer_email, amount_total_cents, payment_status, livemode, stripe_session_id, amount_refunded_cents, refunded_at')

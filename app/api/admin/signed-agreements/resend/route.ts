@@ -9,7 +9,7 @@ import { isProgramKey, programLabel, SPRINT_LABEL } from '@/lib/program-info'
 // Emails the client a copy of their signed agreement, attached exactly as
 // it was stored at signing. Body: { enrollmentId }
 export async function POST(req: NextRequest) {
-  if (!verifyAdminToken(req)) {
+  if (!(await verifyAdminToken(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

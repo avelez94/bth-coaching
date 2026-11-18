@@ -157,4 +157,12 @@ export const ADMIN_STYLES = `
     .grid-2, .field-row { grid-template-columns: 1fr; }
     .kv { grid-template-columns: 1fr; }
   }
+  .login-link { background: none; border: none; color: rgba(255,255,255,0.55); font-family: 'Inter', sans-serif; font-size: 12.5px; cursor: pointer; padding: 14px 0 0; text-decoration: underline; display: block; margin: 0 auto; }
+  .login-link:hover { color: #C9A23A; }
+  .login-ok { border: 1px solid rgba(74,222,128,0.35); background: rgba(74,222,128,0.07); color: rgba(255,255,255,0.85); padding: 12px 14px; font-size: 13px; line-height: 1.55; margin-bottom: 16px; }
+  .login-note { color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.55; margin: -6px 0 16px; }
+  .sidebar-who { font-size: 11px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 10px; word-break: break-all; }
+  .role-tag { display: inline-block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border: 1px solid rgba(201,162,58,0.45); color: #C9A23A; }
+  .role-tag.dev { border-color: rgba(147,197,253,0.45); color: #93c5fd; }
+  .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 `

@@ -347,3 +347,56 @@ export function setupTestEmail(footer: Footer): Email {
   const text = `This is a test email from the Beyond the Horizon website.\n\nIf you are reading it, email sending is set up correctly.${textFooter(footer)}`
   return { subject, html: layout({ preheader: subject, body, footer }), text }
 }
+
+// ------------------------------------------------------------
+// Admin accounts: password reset, invitations, security notices.
+// Links carry a single use token after "#", so it never reaches a
+// server log. No password is ever included in an email.
+// ------------------------------------------------------------
+const adminButton = (href: string, label: string) =>
+  `<p style="margin:8px 0 24px;"><a href="${esc(href)}" style="display:inline-block;background:${C.navy};color:#ffffff;text-decoration:none;padding:12px 22px;font-weight:bold;">${esc(label)}</a></p>`
+const ignoreNote = 'If you did not expect this email, you can ignore it. Nothing changes unless the link is used.'
+
+export function adminResetEmail(x: { name: string | null; link: string; minutes: number }, footer: Footer): Email {
+  const subject = 'Reset your website Admin password'
+  const hello = x.name ? `Hello ${x.name},` : 'Hello,'
+  const body = [
+    p(esc(hello)),
+    p('Someone asked to reset the password for your Beyond the Horizon website Admin account. Use the button below to choose a new password.'),
+    adminButton(x.link, 'Choose a new password'),
+    p(`This link works once and expires in ${x.minutes} minutes.`),
+    p(esc(ignoreNote)),
+  ].join('\n')
+  const text = `${hello}\n\nSomeone asked to reset the password for your Beyond the Horizon website Admin account. Open this link to choose a new password:\n\n${x.link}\n\nThis link works once and expires in ${x.minutes} minutes.\n\n${ignoreNote}${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}
+
+export function adminInviteEmail(x: { inviterName: string; link: string; expires: string }, footer: Footer): Email {
+  const subject = 'You have been given Developer access to the Beyond the Horizon website'
+  const body = [
+    p('Hello,'),
+    p(`${esc(x.inviterName)} has invited you to the Beyond the Horizon website Admin as a Developer. Use the button below to set your own password and activate your account.`),
+    adminButton(x.link, 'Accept invitation'),
+    p(`This invitation works once and expires on ${esc(x.expires)}.`),
+    p(esc(ignoreNote)),
+  ].join('\n')
+  const text = `Hello,\n\n${x.inviterName} has invited you to the Beyond the Horizon website Admin as a Developer. Open this link to set your own password and activate your account:\n\n${x.link}\n\nThis invitation works once and expires on ${x.expires}.\n\n${ignoreNote}${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}
+
+export function adminPasswordChangedEmail(x: { name: string | null; when: string; how: 'changed' | 'reset' }, footer: Footer): Email {
+  const subject = 'Your website Admin password was changed'
+  const hello = x.name ? `Hello ${x.name},` : 'Hello,'
+  const line = `The password for your Beyond the Horizon website Admin account was ${x.how === 'reset' ? 'reset' : 'changed'} on ${x.when}. Every device that was signed in has been signed out.`
+  const warn = 'If this was not you, use Forgot password on the Admin sign in page right away to choose a new one.'
+  const body = [p(esc(hello)), p(esc(line)), p(esc(warn))].join('\n')
+  const text = `${hello}\n\n${line}\n\n${warn}${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}
+
+export function adminAccessNoticeEmail(x: { line: string }, footer: Footer): Email {
+  const subject = 'Website Admin access update'
+  const body = [p('Hello,'), p(esc(x.line)), p('You can review everyone with access under Users & Access in your website Admin.')].join('\n')
+  const text = `Hello,\n\n${x.line}\n\nYou can review everyone with access under Users & Access in your website Admin.${textFooter(footer)}`
+  return { subject, html: layout({ preheader: subject, body, footer }), text }
+}

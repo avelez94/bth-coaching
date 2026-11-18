@@ -7,7 +7,7 @@ const SUPABASE_IMAGES = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/obje
 
 // GET /api/admin/content?page=home: saved content for one page (defaults filled in)
 export async function GET(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const page = req.nextUrl.searchParams.get('page') as PageKey
   if (!PAGE_KEYS.includes(page)) return NextResponse.json({ error: 'Unknown page.' }, { status: 400 })
   return NextResponse.json({ content: await getRawPageContent(page) })
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 // Only fields defined for that page are accepted. Required text cannot be
 // blank, length is capped so layouts hold, and images must be site images.
 export async function PUT(req: NextRequest) {
-  if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!(await verifyAdminToken(req))) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   const body = await req.json().catch(() => null)
   const page = body?.page as PageKey
   const values = body?.values as Record<string, unknown>

@@ -10,9 +10,12 @@ import SettingsView from './views/site-settings'
 import AgreementView from './views/agreement'
 import SignedView from './views/signed-agreements'
 import SprintPurchasesView from './views/sprint-purchases'
+import AccountView from './views/account'
+import UsersView from './views/users'
 import { isOptionalPage, type OptionalPageKey, type PageStatus } from '@/lib/optional-pages'
 
-type ViewKey = PageKey | 'pricing' | 'scheduling' | 'settings' | 'agreement' | 'signed' | 'sprint-purchases'
+type ViewKey = PageKey | 'pricing' | 'scheduling' | 'settings' | 'agreement' | 'signed' | 'sprint-purchases' | 'account' | 'users'
+export interface AdminMe { email: string; name: string | null; role: 'owner' | 'developer' }
 
 // Sidebar: plain-language groups. Website pages appear in the order of the
 // site's own navigation. Pages not yet connected to the editor are shown
@@ -47,15 +50,33 @@ export interface ViewProps {
 
 export default function AdminPanel() {
   const [authed, setAuthed] = useState<boolean | null>(null)
+  const [me, setMe] = useState<AdminMe | null>(null)
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [loginNote, setLoginNote] = useState('')
+  const [forgot, setForgot] = useState(false)
+  const [busy, setBusy] = useState(false)
   const [view, setView] = useState<ViewKey>('home')
   const [dirty, setDirty] = useState(false)
   const [toastMsg, setToastMsg] = useState<{ text: string; err: boolean } | null>(null)
   const [statuses, setStatuses] = useState<Record<OptionalPageKey, PageStatus> | null>(null)
 
   useEffect(() => {
-    fetch('/api/admin/auth').then(r => setAuthed(r.ok)).catch(() => setAuthed(false))
+    checkSession()
+  }, [])
+
+  function checkSession() {
+    return fetch('/api/admin/auth').then(async r => {
+      const d = r.ok ? await r.json() : null
+      setMe(d?.user ?? null)
+      setAuthed(Boolean(d?.valid))
+    }).catch(() => setAuthed(false))
+  }
+
+  // After a password change every session ends, so return to sign in
+  const signedOut = useCallback((note: string) => {
+    setDirty(false); setView('home'); setMe(null); setAuthed(false); setLoginNote(note)
   }, [])
 
   // Page Status (Active / Hidden) for the optional pages, shown in the sidebar
@@ -85,9 +106,20 @@ export default function AdminPanel() {
 
   async function login(e?: React.FormEvent) {
     e?.preventDefault()
-    setLoginError('')
-    const res = await fetch('/api/admin/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) })
-    if (res.ok) { setAuthed(true); setPassword('') } else setLoginError('That password is not correct.')
+    setLoginError(''); setLoginNote(''); setBusy(true)
+    const res = await fetch('/api/admin/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) })
+    const d = await res.json().catch(() => ({}))
+    setBusy(false)
+    if (res.ok) { setPassword(''); await checkSession() } else setLoginError(d.error || 'Sign in did not work. Try again.')
+  }
+
+  async function requestReset(e?: React.FormEvent) {
+    e?.preventDefault()
+    setLoginError(''); setLoginNote(''); setBusy(true)
+    const res = await fetch('/api/admin/password/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+    const d = await res.json().catch(() => ({}))
+    setBusy(false)
+    if (res.ok) { setLoginNote(d.message); setForgot(false) } else setLoginError(d.error || 'That did not work. Try again.')
   }
 
   if (authed === null) {
@@ -99,14 +131,23 @@ export default function AdminPanel() {
       <>
         <style>{ADMIN_STYLES}</style>
         <div className="login-wrap">
-          <form className="login-card" onSubmit={login}>
+          <form className="login-card" onSubmit={forgot ? requestReset : login}>
             <div className="login-logo">Beyond the Horizon</div>
             <div className="login-sub">Website Admin</div>
-            <div className="login-title">Sign in</div>
-            {loginError && <div className="login-error">{loginError}</div>}
-            <label htmlFor="pw" className="field-hint">Password</label>
-            <input id="pw" className="login-input" type="password" value={password} onChange={e => setPassword(e.target.value)} autoFocus autoComplete="current-password" />
-            <button className="login-btn" type="submit">Sign in</button>
+            <div className="login-title">{forgot ? 'Reset your password' : 'Sign in'}</div>
+            {loginNote && <div className="login-ok" role="status">{loginNote}</div>}
+            {loginError && <div className="login-error" role="alert">{loginError}</div>}
+            {forgot && <p className="login-note">Enter the email you sign in with. We will email you a link to choose a new password.</p>}
+            <label htmlFor="em" className="field-hint">Email</label>
+            <input id="em" className="login-input" type="email" value={email} onChange={e => setEmail(e.target.value)} autoFocus autoComplete="username" required />
+            {!forgot && <>
+              <label htmlFor="pw" className="field-hint">Password</label>
+              <input id="pw" className="login-input" type="password" value={password} onChange={e => setPassword(e.target.value)} autoComplete="current-password" required />
+            </>}
+            <button className="login-btn" type="submit" disabled={busy}>{busy ? 'One moment…' : forgot ? 'Email me a reset link' : 'Sign in'}</button>
+            <button type="button" className="login-link" onClick={() => { setForgot(!forgot); setLoginError('') }}>
+              {forgot ? 'Back to sign in' : 'Forgot password?'}
+            </button>
           </form>
         </div>
       </>
@@ -149,11 +190,20 @@ export default function AdminPanel() {
             ))}
           </div>
 
+          <div className="sidebar-group">
+            <div className="sidebar-group-label">Account</div>
+            <button className={`nav-item ${view === 'account' ? 'active' : ''}`} onClick={() => go('account')}>Your Account</button>
+            {me?.role === 'owner' && (
+              <button className={`nav-item ${view === 'users' ? 'active' : ''}`} onClick={() => go('users')}>Users &amp; Access</button>
+            )}
+          </div>
+
           <div className="sidebar-footer">
+            {me && <div className="sidebar-who">Signed in as {me.email}<br /><span className={`role-tag ${me.role === 'developer' ? 'dev' : ''}`}>{me.role === 'owner' ? 'Owner' : 'Developer'}</span></div>}
             <a href="/" target="_blank" rel="noopener noreferrer">View website ↗</a>
             <button className="signout-btn" onClick={() => {
               if (dirty && !window.confirm('You have unsaved changes. Sign out anyway?')) return
-              fetch('/api/admin/auth', { method: 'DELETE' }).finally(() => setAuthed(false))
+              fetch('/api/admin/auth', { method: 'DELETE' }).finally(() => { setAuthed(false); setMe(null) })
             }}>Sign out</button>
           </div>
         </nav>
@@ -178,6 +228,8 @@ export default function AdminPanel() {
           {view === 'agreement' && <AgreementView {...props} />}
           {view === 'signed' && <SignedView {...props} />}
           {view === 'sprint-purchases' && <SprintPurchasesView {...props} />}
+          {view === 'account' && me && <AccountView {...props} me={me} onSignedOut={signedOut} />}
+          {view === 'users' && me?.role === 'owner' && <UsersView {...props} />}
         </div>
       </div>
       {toastMsg && <div className={`toast ${toastMsg.err ? 'err' : ''}`} role="status">{toastMsg.text}</div>}
