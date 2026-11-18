@@ -24,6 +24,15 @@ export async function GET(req: NextRequest) {
 // POST /api/admin/email: send a short test email to the notification address
 export async function POST(req: NextRequest) {
   if (!verifyAdminToken(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // TEMPORARY (launch QA): a plain delivery test to one named address. Removed after use.
+  const body = await req.json().catch(() => ({})) as { deliveryTestTo?: unknown }
+  if (typeof body.deliveryTestTo === 'string') {
+    const to = body.deliveryTestTo.trim()
+    if (!/^[^\s@,;]+@[^\s@,;]+\.[^\s@,;]+$/.test(to) || to.length > 254) return NextResponse.json({ error: 'Invalid address' }, { status: 400 })
+    const line = 'This is a technical delivery test for Beyond the Horizon. No action is needed.'
+    const r = await sendEmail({ kind: 'test', to, subject: 'BTH Email Delivery Test, No Action Needed', text: line, html: `<p>${line}</p>` })
+    return NextResponse.json(r, { status: r.status === 'sent' ? 200 : 502 })
+  }
   const settings = await getSettings()
   const to = adminRecipient(settings)
   const result = await sendEmail({ kind: 'test', to, ...setupTestEmail({ contactEmail: settings.contactEmail, phone: settings.phone }) })
