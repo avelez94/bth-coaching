@@ -56,3 +56,15 @@ test('a gift certificate link is on the real domain, even if the setting is a Ve
   const link = `${publicSiteUrl('https://bth-coaching.vercel.app')}${redeemPath('A'.repeat(43))}`
   assert.ok(link.startsWith('https://mccrackencoaching.com/sprint/redeem?token='), link)
 })
+
+test('the old Vercel address redirects to the real domain, keeping the path; other hosts and API calls do not', async () => {
+  const { NextRequest } = await import('next/server')
+  const { proxy } = await import('../proxy')
+  const req = (url: string, host: string) => new NextRequest(url, { headers: { host } })
+  const r = proxy(req('https://bth-coaching.vercel.app/about?ref=x', 'bth-coaching.vercel.app'))
+  assert.equal(r.status, 308)
+  assert.equal(r.headers.get('location'), 'https://mccrackencoaching.com/about?ref=x')
+  assert.equal(proxy(req('https://bth-coaching.vercel.app/api/stripe/webhook', 'bth-coaching.vercel.app')).headers.get('location'), null)
+  assert.equal(proxy(req('https://mccrackencoaching.com/about', 'mccrackencoaching.com')).headers.get('location'), null)
+  assert.equal(proxy(req('https://bth-coaching-abc123-cutrated-mile.vercel.app/about', 'bth-coaching-abc123-cutrated-mile.vercel.app')).headers.get('location'), null)
+})
