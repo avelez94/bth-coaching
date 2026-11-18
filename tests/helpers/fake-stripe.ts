@@ -14,7 +14,7 @@
 //    end of the last phase.
 //  * As seen on the live account (Nov 17 2026): when the schedule update
 //    re-applies a discount, Stripe issues a NEW discount ID for the same
-//    coupon and promotion code. A subscription returns discount IDs unless
+//    coupon, and the promotion code is no longer linked to it. A subscription returns discount IDs unless
 //    expand[]=discounts is asked for.
 // paymentsBeforeEnd() counts the monthly charges Stripe would make.
 // ============================================================
@@ -152,7 +152,7 @@ export class FakeStripe {
       const discounts: Obj[] = ((p.discounts as Obj[] | undefined) ?? []).map(d => {
         const old = (sub.discounts as Obj[]).find(x => x.id === d.discount)
         const base = old ?? { source: { type: 'coupon', coupon: d.coupon ?? null }, promotion_code: d.promotion_code ?? null, end: null, _repeating: false }
-        return { ...base, id: `di_new_${++this.n}`, object: 'discount', end: base._repeating ? addMonthsUTC(Number(p.start_date), 3) + 86400 * 5 : base.end }
+        return { ...base, id: `di_new_${++this.n}`, object: 'discount', promotion_code: null, end: base._repeating ? addMonthsUTC(Number(p.start_date), 3) + 86400 * 5 : base.end }
       })
       sched.phases = [{
         ...cur, end_date: end,

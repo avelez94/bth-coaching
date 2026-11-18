@@ -196,15 +196,17 @@ export function planIsCorrect(sched: StripeSchedule, sub: StripeSubscription, pa
 /** What must not change when the plan is given an end. Returns the names of anything that did. */
 export function changedSettings(before: StripeSubscription, after: StripeSubscription): string[] {
   const it = (s: StripeSubscription) => s.items.data[0]
-  // Stripe issues a new discount ID when a schedule takes over the plan.
-  // What matters is the discount itself: same coupon, same promotion code,
-  // same end (a repeating coupon that restarted would show a new end).
+  // When a schedule takes over the plan, Stripe re-issues the discount: new
+  // ID, and the promotion code it came from is no longer linked (seen live,
+  // Nov 17 2026; the code stays on the checkout and first invoice). What
+  // sets the price is the coupon and when it ends, so those are compared:
+  // a different coupon, or a repeating coupon that restarted, is flagged.
   const discountKey = (d: unknown) => {
     if (typeof d === 'string') return d
-    const x = d as { id?: string; coupon?: Ref; source?: { coupon?: Ref }; promotion_code?: Ref; end?: number | null }
+    const x = d as { id?: string; coupon?: Ref; source?: { coupon?: Ref }; end?: number | null }
     const coupon = idOf(x.source?.coupon) ?? idOf(x.coupon)
     if (!coupon) return x.id ?? '?'
-    return `${coupon}|${idOf(x.promotion_code) ?? ''}|${x.end ?? 'forever'}`
+    return `${coupon}|${x.end ?? 'forever'}`
   }
   const discounts = (l?: unknown[] | null) => (l ?? []).map(discountKey).sort().join(',')
   const checks: [string, unknown, unknown][] = [
