@@ -39,6 +39,14 @@ test('Stripe links carry the reference that the webhook matches on', () => {
   assert.equal(new URL(s.giftUrl).searchParams.get('client_reference_id'), 'sprint_gift')
 })
 
+test('after the registration deadline the Sprint page offers no seat or gift', () => {
+  const past = sprintPublic({ ...DEFAULT_SPRINT_PRICING, giftRedeemBy: '2020-01-10T23:59:59-05:00' })
+  assert.equal(past.closed, true)
+  assert.equal(past.closedOn, 'January 10, 2020')
+  const future = sprintPublic({ ...DEFAULT_SPRINT_PRICING, giftRedeemBy: '2999-01-10T23:59:59-05:00' })
+  assert.equal(future.closed, false)
+})
+
 test('gift deadline is 11:59 PM Eastern, in both standard and daylight time', () => {
   assert.equal(DEFAULT_SPRINT_PRICING.giftRedeemBy, '2027-01-10T23:59:59-05:00')
   assert.equal(endOfDayEastern('2027-01-10'), '2027-01-10T23:59:59-05:00')

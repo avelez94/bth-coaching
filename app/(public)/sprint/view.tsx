@@ -24,10 +24,15 @@ export default function SprintView({ c, booking, sprint }: ViewProps) {
     [c['details.register.label'], c['details.register']],
   ]
 
+  // After the registration deadline (Admin > Pricing) neither button is
+  // shown, so no one can buy a seat or a gift that can no longer be used
+  const closed = Boolean(sprint?.closed)
   const enroll = (className: string) =>
-    sprint ? <a href={sprint.enrollUrl} className={className}>{c['btn.enroll']}</a> : null
+    !sprint ? null
+      : closed ? <p className="sp-closed" role="status">Registration for the 8 Pillar Sprint closed on {sprint.closedOn}.</p>
+      : <a href={sprint.enrollUrl} className={className}>{c['btn.enroll']}</a>
   const gift = (className: string) =>
-    sprint ? <a href={sprint.giftUrl} className={className}>{c['btn.gift']}</a> : null
+    sprint && !closed ? <a href={sprint.giftUrl} className={className}>{c['btn.gift']}</a> : null
   const quote = (className: string) => (
     <figure className={className}>
       <blockquote>{c['hero.quote']}</blockquote>

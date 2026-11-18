@@ -232,3 +232,6 @@
     align-self: start;
   }
 }
+
+/* Shown instead of the buttons after the registration deadline */
+.sp-closed { margin: 0; font-weight: 600; }

@@ -109,6 +109,9 @@ export interface PublicSprintInfo {
   priceCents: number
   enrollUrl: string
   giftUrl: string
+  /** Past the registration deadline: no new registrations or gifts */
+  closed: boolean
+  closedOn: string             // "January 10, 2027"
 }
 
 export function withReference(url: string, ref: string, email?: string): string {
@@ -137,6 +140,8 @@ export function sprintPublic(p: SprintPricing): PublicSprintInfo {
     priceCents: p.priceCents,
     enrollUrl: SPRINT_REGISTER_PATH,
     giftUrl: withReference(p.stripeGiftUrl, SPRINT_REFERENCE.gift),
+    closed: sprintRegistrationClosed(p.giftRedeemBy),
+    closedOn: formatEasternDate(p.giftRedeemBy),
   }
 }
 
