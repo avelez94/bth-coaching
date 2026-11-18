@@ -10,9 +10,23 @@ import type { Metadata } from 'next'
 export const SITE_NAME = 'Beyond the Horizon Executive Coaching & Consulting'
 export const SHORT_NAME = 'Beyond the Horizon'
 
-// The public address. Set NEXT_PUBLIC_SITE_URL in Vercel to change it
-// (for example once the domain is connected). No trailing slash.
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://mccrackencoaching.com').replace(/\/+$/, '')
+// The public address, used in every link the site sends out: gift
+// certificates, emails, canonical tags, the sitemap. Set
+// NEXT_PUBLIC_SITE_URL in Vercel to change it. No trailing slash.
+// A Vercel hosting address (*.vercel.app) is never the public address,
+// so such a value is ignored and the real domain is used instead.
+export const CANONICAL_SITE_URL = 'https://mccrackencoaching.com'
+export function publicSiteUrl(value: string | undefined): string {
+  const v = (value ?? '').trim().replace(/\/+$/, '')
+  try {
+    const u = new URL(v)
+    if (u.protocol !== 'https:' || u.hostname.endsWith('.vercel.app')) return CANONICAL_SITE_URL
+    return v
+  } catch {
+    return CANONICAL_SITE_URL
+  }
+}
+export const SITE_URL = publicSiteUrl(process.env.NEXT_PUBLIC_SITE_URL)
 
 // Word for word everywhere the site describes itself. The Home page
 // supporting statement defaults to this, and a test keeps them identical.

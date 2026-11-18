@@ -1,7 +1,8 @@
 // Fast checks that need no running server: npm test
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { DESCRIPTION, PUBLIC_PAGES, SITE_NAME, TAGLINE, homeDescription, jsonLd, pageMetadata } from '../lib/seo'
+import { DESCRIPTION, PUBLIC_PAGES, SITE_NAME, SITE_URL, TAGLINE, homeDescription, jsonLd, pageMetadata, publicSiteUrl } from '../lib/seo'
+import { redeemPath } from '../lib/sprint-gift-codes'
 import { PAGE_DEFAULTS, PAGE_SCHEMA } from '../lib/site-content'
 import { organization, website } from '../lib/structured-data'
 import { DEFAULT_SETTINGS } from '../lib/site-settings'
@@ -38,4 +39,20 @@ test('structured data can never break out of its script tag', () => {
   const out = jsonLd({ name: evil })
   assert.ok(!out.includes('<') && !out.includes('>') && !out.includes('&') && !out.includes('\u2028'))
   assert.deepEqual(JSON.parse(out), { name: evil })
+})
+
+test('links sent to clients never use a Vercel hosting address', () => {
+  assert.equal(publicSiteUrl('https://bth-coaching.vercel.app'), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl('https://bth-coaching-git-main-cutrated-mile.vercel.app/'), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl(undefined), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl('not a url'), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl('http://mccrackencoaching.com'), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl('https://mccrackencoaching.com/'), 'https://mccrackencoaching.com')
+  assert.equal(publicSiteUrl('https://www.mccrackencoaching.com'), 'https://www.mccrackencoaching.com')
+  assert.ok(!SITE_URL.includes('vercel.app'))
+})
+
+test('a gift certificate link is on the real domain, even if the setting is a Vercel address', () => {
+  const link = `${publicSiteUrl('https://bth-coaching.vercel.app')}${redeemPath('A'.repeat(43))}`
+  assert.ok(link.startsWith('https://mccrackencoaching.com/sprint/redeem?token='), link)
 })
