@@ -31,6 +31,42 @@
 }
 
 /* ============================================================
+   QUOTE STRIP (below the navigation row, part of the fixed header)
+============================================================ */
+.nav-quote {
+  margin: 0 auto;
+  max-width: 1320px;
+  padding: 0 60px 9px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 14px;
+  row-gap: 1px;
+  text-align: center;
+}
+
+.nav-quote blockquote {
+  margin: 0;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  color: var(--navy);
+  opacity: 0.74;
+}
+
+.nav-quote figcaption {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6B7A8D;
+  white-space: nowrap;
+}
+
+/* ============================================================
    DESKTOP LINKS
 ============================================================ */
 .nav-links {
@@ -280,6 +316,7 @@
 ============================================================ */
 @media (max-width: 1024px) {
   .nav-inner { padding: 5px 40px; }
+  .nav-quote { padding: 0 40px 9px; }
 }
 
 @media (max-width: 860px) {
@@ -291,6 +328,15 @@
   .nav-brand img { height: 86px; }
   .nav-links, .nav-cta { display: none; }
   .nav-hamburger { display: flex; }
+  .nav-quote {
+    padding: 0 24px 8px;
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+    flex-direction: column;
+    align-items: center;
+  }
+  .nav-quote blockquote { font-size: 0.86rem; line-height: 1.28; max-width: 30em; }
+  .nav-quote figcaption { font-size: 0.62rem; }
 }
 
 /* Live booking link (after a Microsoft Bookings URL is saved in Admin > Scheduling) */

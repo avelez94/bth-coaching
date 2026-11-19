@@ -41,7 +41,7 @@ export async function getSettings(): Promise<SiteSettings> {
     const out = { ...DEFAULT_SETTINGS }
     for (const field of Object.keys(SETTING_KEYS) as (keyof SiteSettings)[]) {
       const v = byKey.get(SETTING_KEYS[field])
-      if (typeof v === 'string' && (v.trim() || field.startsWith('booking') || field.startsWith('linkedin'))) out[field] = v
+      if (typeof v === 'string' && (v.trim() || field.startsWith('booking') || field.startsWith('linkedin') || field.startsWith('navQuote'))) out[field] = v
     }
     return out
   } catch {

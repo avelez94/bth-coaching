@@ -4,6 +4,7 @@ import Nav from './components/nav'
 import Footer from './components/footer'
 import { getPageVisibility, getSettings } from '@/lib/site-data'
 import './not-found.css'
+import { mainBookingUrl } from '@/lib/site-settings'
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -15,7 +16,7 @@ export default async function NotFound() {
   const [settings, visible] = await Promise.all([getSettings(), getPageVisibility()])
   return (
     <>
-      <Nav bookingUrl={settings.bookingFreeCallUrl} visible={visible} />
+      <Nav bookingUrl={mainBookingUrl(settings)} visible={visible} quote={{ text: settings.navQuote, by: settings.navQuoteAttribution }} />
       <main className="nf">
         <div className="nf-inner">
           <p className="nf-label">Page not found</p>

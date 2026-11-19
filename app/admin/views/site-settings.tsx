@@ -17,14 +17,19 @@ const FOOTER: SettingField[] = [
   { key: 'footerTagline', label: 'Tagline', help: 'The closing line at the bottom of every page.' },
 ]
 
+const QUOTE: SettingField[] = [
+  { key: 'navQuote', label: 'Navigation quote', help: 'Shown centered under the menu on every page. Quote marks are added for you. Leave blank to hide it.' },
+  { key: 'navQuoteAttribution', label: 'Navigation quote attribution', help: 'Who said it, shown next to the quote.' },
+]
+
 export default function SettingsView(props: ViewProps) {
-  const { draft, renderField, saveBar } = useSettingsForm([...CONTACT, ...FOOTER], props)
+  const { draft, renderField, saveBar } = useSettingsForm([...CONTACT, ...FOOTER, ...QUOTE], props)
   return (
     <>
       <div className="main-topbar">
         <div>
           <div className="main-topbar-title">Site Settings</div>
-          <div className="main-topbar-sub">Your contact details and the information in the footer of every page.</div>
+          <div className="main-topbar-sub">Your contact details, the quote under the menu, and the footer of every page.</div>
         </div>
         {saveBar}
       </div>
@@ -39,6 +44,10 @@ export default function SettingsView(props: ViewProps) {
             <div className="card">
               <div className="eyebrow">Footer</div>
               {FOOTER.map(renderField)}
+            </div>
+            <div className="card">
+              <div className="eyebrow">Quote under the menu</div>
+              {QUOTE.map(renderField)}
             </div>
           </div>
         )}
