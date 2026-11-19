@@ -50,7 +50,7 @@
   margin: 0;
   font-family: 'DM Serif Display', serif;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   line-height: 1.3;
   color: var(--navy);
   opacity: 0.74;
@@ -339,7 +339,7 @@
     padding-right: max(24px, env(safe-area-inset-right));
     line-height: 1.3;
   }
-  .nav-quote blockquote { display: inline; font-size: 0.84rem; }
+  .nav-quote blockquote { display: inline; font-size: 0.8rem; }
   .nav-quote figcaption { display: inline-block; margin-left: 10px; font-size: 0.6rem; }
 }
 
