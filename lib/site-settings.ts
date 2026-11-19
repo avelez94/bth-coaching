@@ -18,6 +18,8 @@ export interface SiteSettings {
   bookingMainUrl: string
   bookingFreeCallUrl: string
   bookingOrgConsultUrl: string
+  navQuote: string
+  navQuoteAttribution: string
 }
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -32,6 +34,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   bookingMainUrl: '',
   bookingFreeCallUrl: '',
   bookingOrgConsultUrl: '',
+  navQuote: 'The winds and the waves are always on the side of the ablest navigator',
+  navQuoteAttribution: 'Edward Gibbon',
 }
 
 // Database keys (site_settings.key) for each setting
@@ -47,6 +51,8 @@ export const SETTING_KEYS: Record<keyof SiteSettings, string> = {
   bookingMainUrl: 'booking_main_url',
   bookingFreeCallUrl: 'booking_free_call_url',
   bookingOrgConsultUrl: 'booking_org_consult_url',
+  navQuote: 'nav_quote',
+  navQuoteAttribution: 'nav_quote_attribution',
 }
 
 export function telHref(phone: string): string {
@@ -73,6 +79,13 @@ export function validateSetting(key: keyof SiteSettings, raw: string): SettingCh
     case 'bookingOrgConsultUrl':
       if (!value) return { ok: true, value }
       return isUrl(value) ? { ok: true, value } : { ok: false, error: 'Paste the full booking page address, starting with https://' }
+    case 'navQuote':
+    case 'navQuoteAttribution': {
+      // Blank hides the quote strip. Typed quote marks are added by the site.
+      const v = value.replace(/^["\u201C\u201D]+|["\u201C\u201D]+$/g, '').trim()
+      const max = key === 'navQuote' ? 160 : 60
+      return v.length <= max ? { ok: true, value: v } : { ok: false, error: `Keep this under ${max} characters so it fits on one line.` }
+    }
     default:
       return value ? { ok: true, value } : { ok: false, error: 'This field cannot be empty.' }
   }

@@ -228,7 +228,7 @@
   .sp-details-grid > .sp-h2,
   .sp-gift-grid > .sp-h2 {
     position: sticky;
-    top: calc(var(--nav-h) + 32px);
+    top: calc(var(--nav-h) + var(--quote-h, 0px) + 32px);
     align-self: start;
   }
 }

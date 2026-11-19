@@ -55,3 +55,16 @@ test('contact form: phone and email are required', () => {
   assert.match(view, /id="phone"[\s\S]{0,300}required/)
   assert.match(view, /id="email"[\s\S]{0,300}required/)
 })
+
+test('quote under the navigation: exact default wording, editable, blank hides it', async () => {
+  const { DEFAULT_SETTINGS, SETTING_KEYS, validateSetting } = await import('../lib/site-settings')
+  assert.equal(DEFAULT_SETTINGS.navQuote, 'The winds and the waves are always on the side of the ablest navigator')
+  assert.equal(DEFAULT_SETTINGS.navQuoteAttribution, 'Edward Gibbon')
+  assert.equal(SETTING_KEYS.navQuote, 'nav_quote')
+  assert.deepEqual(validateSetting('navQuote', '  “Hello” '), { ok: true, value: 'Hello' })
+  assert.deepEqual(validateSetting('navQuote', ''), { ok: true, value: '' })
+  assert.equal(validateSetting('navQuote', 'x'.repeat(200)).ok, false)
+  for (const f of ['app/(public)/layout.tsx', 'app/not-found.tsx', 'app/admin/preview/[page]/preview-client.tsx'])
+    assert.match(src(f), /<Nav bookingUrl=\{mainBookingUrl\(settings\)\} visible=\{visible\} quote=\{\{ text: settings\.navQuote, by: settings\.navQuoteAttribution \}\} \/>/)
+  assert.doesNotMatch(src('app/components/nav.tsx'), /—|&mdash;/)
+})

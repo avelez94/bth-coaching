@@ -7,7 +7,7 @@ export default async function PublicLayout({ children }: { children: React.React
   const [settings, visible] = await Promise.all([getSettings(), getPageVisibility()])
   return (
     <>
-      <Nav bookingUrl={mainBookingUrl(settings)} visible={visible} />
+      <Nav bookingUrl={mainBookingUrl(settings)} visible={visible} quote={{ text: settings.navQuote, by: settings.navQuoteAttribution }} />
       <main>{children}</main>
       <Footer settings={settings} visible={visible} />
     </>

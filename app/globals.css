@@ -20,6 +20,9 @@
   /* Height of the fixed navigation bar. The Nav component keeps this exact
      at runtime (ResizeObserver); these values match nav.css as a fallback. */
   --nav-h: 87px;
+  /* Height of the quote strip under the navigation (0 when it is hidden).
+     Page content is pushed down by exactly this much, below. */
+  --quote-h: 31px;
 
   /* Type scale for text below the headings. Every page stylesheet uses
      these, so supporting copy, captions and labels match across the site.
@@ -38,6 +41,10 @@
 @media (min-width: 1025px) { :root { --fs-body: 1.125rem; } }
 @media (max-width: 1024px) { :root { --nav-h: 97px; } }
 @media (max-width: 860px)  { :root { --nav-h: 95px; } }
+@media (max-width: 600px)  { :root { --quote-h: 53px; } }
+
+/* Content after the fixed header clears the quote strip too */
+.nav-wrap ~ main { margin-top: var(--quote-h, 0px); }
 
 *, *::before, *::after {
   box-sizing: border-box;

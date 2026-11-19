@@ -4,20 +4,34 @@ import { useEffect, useRef, useState } from 'react'
 import './nav.css'
 import ScheduleButton from './schedule-button'
 import { DEFAULT_VISIBILITY, OPTIONAL_PAGES, type PageVisibility } from '@/lib/optional-pages'
+import { DEFAULT_SETTINGS } from '@/lib/site-settings'
 
 type Link = { label: string; href: string }
 
-export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY }: { bookingUrl?: string; visible?: PageVisibility }) {
+const DEFAULT_QUOTE = { text: DEFAULT_SETTINGS.navQuote, by: DEFAULT_SETTINGS.navQuoteAttribution }
+
+export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY, quote = DEFAULT_QUOTE }: { bookingUrl?: string; visible?: PageVisibility; quote?: { text: string; by: string } }) {
+  const quoteText = quote.text.trim()
+  const quoteBy = quote.by.trim()
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
 
-  // Publish the real nav height so page content can always clear it,
+  // Publish the real heights so page content always clears the fixed header,
   // whatever the browser, zoom, font rendering, or screen size.
+  // --nav-h is the navigation row (pages are laid out against it);
+  // --quote-h is the quote strip below it, which shifts <main> down.
   useEffect(() => {
     const el = navRef.current
-    if (!el) return
-    const set = () => document.documentElement.style.setProperty('--nav-h', `${Math.ceil(el.getBoundingClientRect().height)}px`)
+    const row = el?.querySelector('.nav-inner')
+    if (!el || !row) return
+    const set = () => {
+      const total = Math.ceil(el.getBoundingClientRect().height)
+      const nav = Math.ceil(row.getBoundingClientRect().height) + 1
+      const root = document.documentElement.style
+      root.setProperty('--nav-h', `${nav}px`)
+      root.setProperty('--quote-h', `${Math.max(0, total - nav)}px`)
+    }
     set()
     const ro = new ResizeObserver(set)
     ro.observe(el)
@@ -111,6 +125,14 @@ export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY }: { book
             <span /><span /><span />
           </button>
         </div>
+
+        {/* Quote strip under the navigation row (Admin > Site Settings) */}
+        {quoteText && (
+          <figure className="nav-quote">
+            <blockquote>&ldquo;{quoteText}&rdquo;</blockquote>
+            {quoteBy && <figcaption>{quoteBy}</figcaption>}
+          </figure>
+        )}
       </div>
 
       <div className={`nav-mobile ${menuOpen ? 'open' : ''}`}>

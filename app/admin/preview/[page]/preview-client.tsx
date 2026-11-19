@@ -9,6 +9,7 @@ import type { SiteSettings } from '@/lib/site-settings'
 import type { ViewProps } from '@/lib/view-props'
 import type { PageVisibility } from '@/lib/optional-pages'
 import { fillDeadline } from '@/lib/program-info'
+import { mainBookingUrl } from '@/lib/site-settings'
 
 // Each view is loaded on its own so only that page's stylesheet is present,
 // matching the live page exactly (several pages share class names).
@@ -52,7 +53,7 @@ export default function PreviewClient({ page, base, settings, visible, deadline 
       {/* The preview frame is taller than a laptop screen. Keep the Home top
           section at the height it has on a typical laptop (88% of ~820px). */}
       {page === 'home' && <style>{`.hero { min-height: min(88vh, 722px) !important; }`}</style>}
-      <Nav bookingUrl={settings.bookingFreeCallUrl} visible={visible} />
+      <Nav bookingUrl={mainBookingUrl(settings)} visible={visible} quote={{ text: settings.navQuote, by: settings.navQuoteAttribution }} />
       <main><View {...base} c={content} /></main>
       <Footer settings={settings} visible={visible} />
     </>
