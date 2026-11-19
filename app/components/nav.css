@@ -55,7 +55,6 @@
   font-size: 1.15rem;
   line-height: 1.2;
   color: var(--navy);
-  opacity: 0.74;
 }
 
 .nav-quote figcaption {
@@ -64,7 +63,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #6B7A8D;
+  color: #4A5A6E;
   white-space: nowrap;
 }
 
