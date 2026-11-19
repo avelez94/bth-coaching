@@ -17,25 +17,24 @@ export default function Nav({ bookingUrl, visible = DEFAULT_VISIBILITY, quote = 
   const [scrolled, setScrolled] = useState(false)
   const navRef = useRef<HTMLDivElement>(null)
 
-  // Publish the real heights so page content always clears the fixed header,
-  // whatever the browser, zoom, font rendering, or screen size.
-  // --nav-h is the navigation row (pages are laid out against it);
-  // --quote-h is the quote strip below it, which shifts <main> down.
+  // Pages are laid out against --nav-h (the original header height, set in
+  // globals.css). Publish how much taller or shorter the real header is,
+  // --quote-h, so <main> shifts by exactly that and every page keeps its
+  // spacing below the header, whatever the browser, zoom, or screen size.
   useEffect(() => {
     const el = navRef.current
-    const row = el?.querySelector('.nav-inner')
-    if (!el || !row) return
+    if (!el) return
+    const root = document.documentElement
     const set = () => {
       const total = Math.ceil(el.getBoundingClientRect().height)
-      const nav = Math.ceil(row.getBoundingClientRect().height) + 1
-      const root = document.documentElement.style
-      root.setProperty('--nav-h', `${nav}px`)
-      root.setProperty('--quote-h', `${Math.max(0, total - nav)}px`)
+      const base = parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 0
+      root.style.setProperty('--quote-h', `${total - base}px`)
     }
     set()
     const ro = new ResizeObserver(set)
     ro.observe(el)
-    return () => ro.disconnect()
+    window.addEventListener('resize', set)
+    return () => { ro.disconnect(); window.removeEventListener('resize', set) }
   }, [])
 
   useEffect(() => {
