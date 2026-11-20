@@ -22,7 +22,7 @@
      component measures at runtime; <main> shifts by that difference. */
   --nav-h: 87px;
   /* Real header height minus --nav-h (fallback before the measurement). */
-  --quote-h: 21px;
+  --quote-h: 19px;
 
   /* Type scale for text below the headings. Every page stylesheet uses
      these, so supporting copy, captions and labels match across the site.
